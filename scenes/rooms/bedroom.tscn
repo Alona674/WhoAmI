@@ -1,0 +1,101 @@
+[gd_scene format=3 uid="uid://cdhvfv8s0fewa"]
+
+[ext_resource type="Texture2D" uid="uid://dltrt18nwrcwo" path="res://art/rooms/bedroom.png" id="1_cwplf"]
+[ext_resource type="Script" uid="uid://bvnst66gtk202" path="res://scripts/core/bedroom.gd" id="1_thvn2"]
+[ext_resource type="Texture2D" uid="uid://oema56fwcf1y" path="res://art/characters/Michael_front.png" id="2_1vprx"]
+[ext_resource type="Script" uid="uid://bkfw255kjjliw" path="res://scripts/player/player.gd" id="2_whf2s"]
+[ext_resource type="Script" uid="uid://co4g6gokhb7x7" path="res://scripts/interaction/teddy.gd" id="4_khs6t"]
+[ext_resource type="Texture2D" uid="uid://cc8d5b7slw47l" path="res://art/items/Teddy.png" id="5_u2o5o"]
+[ext_resource type="PackedScene" uid="uid://b1d7m4myvd8ma" path="res://scenes/ui/DialogueManager.tscn" id="6_u2o5o"]
+[ext_resource type="Script" uid="uid://ceu0h1yy7x0j0" path="res://scripts/dialogue/dialogue_manager.gd" id="7_v47ap"]
+[ext_resource type="Script" uid="uid://3c4xkneuemol" path="res://scripts/interaction/mama.gd" id="8_ohr7v"]
+[ext_resource type="Texture2D" uid="uid://cp708ub55hx7p" path="res://art/characters/mama.png" id="9_63ydc"]
+[ext_resource type="Script" uid="uid://cxfcvrgtdcxqb" path="res://scripts/interaction/svetik.gd" id="10_ispgn"]
+[ext_resource type="Texture2D" uid="uid://bqimxfevc2gy1" path="res://art/characters/Svetik.png" id="11_thvn2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_whf2s"]
+size = Vector2(475.00012, 1452.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v47ap"]
+size = Vector2(457.49994, 1452.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b2v72"]
+size = Vector2(121, 134)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ispgn"]
+size = Vector2(433.40094, 1495.2153)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c3xs0"]
+size = Vector2(74, 85)
+
+[node name="Bedroom" type="Sprite2D" unique_id=576558266]
+position = Vector2(860, 455)
+script = ExtResource("1_thvn2")
+
+[node name="Background" type="Sprite2D" parent="." unique_id=815008149]
+position = Vector2(162, 84)
+scale = Vector2(1.183, 1.183)
+texture = ExtResource("1_cwplf")
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=420324579]
+z_index = 1
+position = Vector2(0, 200)
+scale = Vector2(0.4, 0.4)
+script = ExtResource("2_whf2s")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player" unique_id=243402793]
+texture = ExtResource("2_1vprx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=1145335172]
+position = Vector2(-10, 16.25)
+scale = Vector2(0.9999998, 0.9999998)
+shape = SubResource("RectangleShape2D_whf2s")
+
+[node name="InteractionArea" type="Area2D" parent="Player" unique_id=755434224]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/InteractionArea" unique_id=478359764]
+position = Vector2(-8.75, 16.25)
+scale = Vector2(0.9999998, 0.9999998)
+shape = SubResource("RectangleShape2D_v47ap")
+
+[node name="Teddy" type="Area2D" parent="." unique_id=2146307104]
+script = ExtResource("4_khs6t")
+
+[node name="Sprite2D" type="Sprite2D" parent="Teddy" unique_id=775851917]
+position = Vector2(424.00003, 126)
+scale = Vector2(0.14702392, 0.12006221)
+texture = ExtResource("5_u2o5o")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Teddy" unique_id=229909424]
+position = Vector2(430, 127)
+shape = SubResource("RectangleShape2D_b2v72")
+
+[node name="DialogueManager" parent="." unique_id=1465301247 instance=ExtResource("6_u2o5o")]
+script = ExtResource("7_v47ap")
+
+[node name="Mama" type="Area2D" parent="." unique_id=1098316269]
+position = Vector2(-392, 157.00003)
+scale = Vector2(0.419, 0.418)
+script = ExtResource("8_ohr7v")
+
+[node name="Sprite2D" type="Sprite2D" parent="Mama" unique_id=140265819]
+position = Vector2(-35.799507, 6.0095825)
+scale = Vector2(0.98821604, 0.9921751)
+texture = ExtResource("9_63ydc")
+flip_h = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mama" unique_id=906429439]
+position = Vector2(-52.505936, 21.531084)
+shape = SubResource("RectangleShape2D_ispgn")
+
+[node name="Svetik" type="Area2D" parent="." unique_id=194835532]
+script = ExtResource("10_ispgn")
+
+[node name="Sprite2D" type="Sprite2D" parent="Svetik" unique_id=1190584467]
+position = Vector2(155.99998, -38.999992)
+scale = Vector2(0.079613596, 0.08811416)
+texture = ExtResource("11_thvn2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Svetik" unique_id=1538211167]
+position = Vector2(156, -39.5)
+shape = SubResource("RectangleShape2D_c3xs0")
