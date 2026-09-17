@@ -12,27 +12,19 @@ var right_texture = preload("res://art/characters/Michael_right.png")
 
 
 func _physics_process(_delta: float) -> void:
-	var input_direction := Input.get_vector(
-		"move_left",
-		"move_right",
-		"move_up",
-		"move_down"
-	)
+	var direction := Input.get_axis("move_left", "move_right")
 
-	velocity = input_direction * speed
+	velocity.x = direction * speed
+	velocity.y = 0
+
 	move_and_slide()
 
-	if input_direction != Vector2.ZERO:
-		if abs(input_direction.x) > abs(input_direction.y):
-			if input_direction.x < 0:
-				sprite.texture = left_texture
-			else:
-				sprite.texture = right_texture
-		else:
-			if input_direction.y < 0:
-				sprite.texture = back_texture
-			else:
-				sprite.texture = front_texture
+	if direction < 0:
+		sprite.texture = left_texture
+	elif direction > 0:
+		sprite.texture = right_texture
+	else:
+		sprite.texture = front_texture
 
 
 func _input(event: InputEvent) -> void:
@@ -41,14 +33,10 @@ func _input(event: InputEvent) -> void:
 
 		if objects.size() > 0:
 			var nearest_object = objects[0]
-			var nearest_distance := global_position.distance_to(
-				nearest_object.global_position
-			)
+			var nearest_distance := global_position.distance_to(nearest_object.global_position)
 
 			for object in objects:
-				var distance := global_position.distance_to(
-					object.global_position
-				)
+				var distance := global_position.distance_to(object.global_position)
 
 				if distance < nearest_distance:
 					nearest_object = object

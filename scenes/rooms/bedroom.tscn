@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://cdhvfv8s0fewa"]
 
-[ext_resource type="Texture2D" uid="uid://dltrt18nwrcwo" path="res://art/rooms/bedroom.png" id="1_cwplf"]
 [ext_resource type="Script" uid="uid://bvnst66gtk202" path="res://scripts/core/bedroom.gd" id="1_thvn2"]
 [ext_resource type="Texture2D" uid="uid://oema56fwcf1y" path="res://art/characters/Michael_front.png" id="2_1vprx"]
+[ext_resource type="Texture2D" uid="uid://dkxliqy5no8la" path="res://art/rooms/bedroom/bedroom_v3.png" id="2_uq8jf"]
 [ext_resource type="Script" uid="uid://bkfw255kjjliw" path="res://scripts/player/player.gd" id="2_whf2s"]
 [ext_resource type="Script" uid="uid://co4g6gokhb7x7" path="res://scripts/interaction/teddy.gd" id="4_khs6t"]
 [ext_resource type="Texture2D" uid="uid://cc8d5b7slw47l" path="res://art/items/Teddy.png" id="5_u2o5o"]
@@ -12,6 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://cp708ub55hx7p" path="res://art/characters/mama.png" id="9_63ydc"]
 [ext_resource type="Script" uid="uid://cxfcvrgtdcxqb" path="res://scripts/interaction/svetik.gd" id="10_ispgn"]
 [ext_resource type="Texture2D" uid="uid://bqimxfevc2gy1" path="res://art/characters/Svetik.png" id="11_thvn2"]
+[ext_resource type="Texture2D" uid="uid://b7irf3yst0v7r" path="res://art/rooms/bedroom/close_door.png" id="13_i1o7g"]
+[ext_resource type="Texture2D" uid="uid://bq84sccdm1jjp" path="res://art/rooms/bedroom/open_door.png" id="14_x0g03"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_whf2s"]
 size = Vector2(475.00012, 1452.5)
@@ -35,7 +37,7 @@ script = ExtResource("1_thvn2")
 [node name="Background" type="Sprite2D" parent="." unique_id=815008149]
 position = Vector2(162, 84)
 scale = Vector2(1.183, 1.183)
-texture = ExtResource("1_cwplf")
+texture = ExtResource("2_uq8jf")
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=420324579]
 z_index = 1
@@ -99,3 +101,14 @@ texture = ExtResource("11_thvn2")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Svetik" unique_id=1538211167]
 position = Vector2(156, -39.5)
 shape = SubResource("RectangleShape2D_c3xs0")
+
+[node name="DoorClosed" type="Sprite2D" parent="." unique_id=1186904402]
+position = Vector2(-614, 86.21097)
+scale = Vector2(0.47005215, 0.86482245)
+texture = ExtResource("13_i1o7g")
+
+[node name="DoorOpen" type="Sprite2D" parent="." unique_id=1414831390]
+visible = false
+position = Vector2(-653.875, 103.50001)
+scale = Vector2(0.4191081, 0.9033204)
+texture = ExtResource("14_x0g03")
