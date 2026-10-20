@@ -2,8 +2,14 @@ extends CharacterBody2D
 
 @export var speed: float = 300.0
 
+# Границы, в которых может ходить Михаил
+@export var left_limit: float = -330.0
+@export var right_limit: float = 1820.0
+
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var interaction_area: Area2D = $InteractionArea
+
+
 
 var front_texture = preload("res://art/characters/Michael_front.png")
 var back_texture = preload("res://art/characters/Michael_backside.png")
@@ -19,6 +25,14 @@ func _physics_process(_delta: float) -> void:
 
 	move_and_slide()
 
+	# Не даём Михаилу выйти за границы комнаты
+	global_position.x = clamp(
+		global_position.x,
+		left_limit,
+		right_limit
+	)
+
+	# Меняем направление взгляда
 	if direction < 0:
 		sprite.texture = left_texture
 	elif direction > 0:
@@ -33,10 +47,14 @@ func _input(event: InputEvent) -> void:
 
 		if objects.size() > 0:
 			var nearest_object = objects[0]
-			var nearest_distance := global_position.distance_to(nearest_object.global_position)
+			var nearest_distance := global_position.distance_to(
+				nearest_object.global_position
+			)
 
 			for object in objects:
-				var distance := global_position.distance_to(object.global_position)
+				var distance := global_position.distance_to(
+					object.global_position
+				)
 
 				if distance < nearest_distance:
 					nearest_object = object
