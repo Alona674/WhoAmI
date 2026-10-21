@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bvnst66gtk202" path="res://scripts/core/bedroom.gd" id="1_thvn2"]
 [ext_resource type="Texture2D" uid="uid://oema56fwcf1y" path="res://art/characters/Michael_front.png" id="2_1vprx"]
-[ext_resource type="Texture2D" uid="uid://d31432jw2abqy" path="res://art/rooms/bedroom/spalnya.png" id="2_63ydc"]
+[ext_resource type="Texture2D" uid="uid://d2x54llndnadc" path="res://art/rooms/bedroom/spalnya.png" id="2_63ydc"]
 [ext_resource type="Script" uid="uid://bkfw255kjjliw" path="res://scripts/player/player.gd" id="2_whf2s"]
 [ext_resource type="Script" uid="uid://co4g6gokhb7x7" path="res://scripts/interaction/teddy.gd" id="4_khs6t"]
 [ext_resource type="PackedScene" uid="uid://b1d7m4myvd8ma" path="res://scenes/ui/DialogueManager.tscn" id="6_u2o5o"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://bqimxfevc2gy1" path="res://art/characters/Svetik.png" id="11_thvn2"]
 [ext_resource type="Script" uid="uid://qidiyv4ycdf3" path="res://scenes/rooms/teddy_2.gd" id="12_c3xs0"]
 [ext_resource type="Texture2D" uid="uid://ct2y8ynolu0od" path="res://art/items/Teddy.png" id="12_thvn2"]
+[ext_resource type="PackedScene" uid="uid://hisq1d0ohn27" path="res://scenes/ui/PauseMenu.tscn" id="14_uq8jf"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_whf2s"]
 size = Vector2(370.00003, 1141.2501)
@@ -129,6 +130,11 @@ texture = ExtResource("12_thvn2")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Teddy2" unique_id=1176873310]
 position = Vector2(198, 268)
 shape = SubResource("RectangleShape2D_uq8jf")
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=1246127785]
+
+[node name="PauseMenu" parent="UILayer" unique_id=1871684007 instance=ExtResource("14_uq8jf")]
+visible = false
 
 [connection signal="body_entered" from="Teddy2" to="Teddy2" method="_on_body_entered"]
 [connection signal="body_exited" from="Teddy2" to="Teddy2" method="_on_body_exited"]
