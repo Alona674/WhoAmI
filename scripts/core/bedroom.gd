@@ -134,3 +134,22 @@ func start_svetik_appearance() -> void:
 		"Светик",
 		"Доброе утро, Михаил."
 	)
+	
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel") and not event.is_echo():
+		var pause_menu = get_node_or_null("UILayer/PauseMenu")
+		if pause_menu == null:
+			return
+
+		pause_menu.visible = not pause_menu.visible
+		get_tree().paused = pause_menu.visible
+
+		get_viewport().set_input_as_handled()
+
+
+func _on_continuebutton_pressed() -> void:
+	get_tree().paused = false
+
+	var pause_menu = get_node_or_null("UILayer/PauseMenu")
+	if pause_menu != null:
+		pause_menu.visible = false
