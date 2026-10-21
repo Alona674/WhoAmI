@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://hisq1d0ohn27"]
+
+[ext_resource type="Script" uid="uid://dpy55ootlpaj5" path="res://scripts/UI/pause_menu.gd" id="1_vb6pq"]
+
+[sub_resource type="FontVariation" id="FontVariation_vb6pq"]
+
+[sub_resource type="FontVariation" id="FontVariation_7ida2"]
+
+[node name="PauseMenu" type="Control" unique_id=1871684007]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vb6pq")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=477308307]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.003921569, 0.007843138, 0.003921569, 0.7372549)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=760864527]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -96.0
+offset_top = -119.5
+offset_right = 204.0
+offset_bottom = 180.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+
+[node name="ContinueButton" type="Button" parent="VBoxContainer" unique_id=174704780]
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_vb6pq")
+theme_override_font_sizes/font_size = 23
+text = "Продолжить"
+
+[node name="SaveButton" type="Button" parent="VBoxContainer" unique_id=822214662]
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_7ida2")
+theme_override_font_sizes/font_size = 23
+text = "Сохранить игру"
+
+[node name="LoadButton" type="Button" parent="VBoxContainer" unique_id=1570768626]
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
+text = "Загрузить игру"
+
+[node name="MainMenuButton" type="Button" parent="VBoxContainer" unique_id=48455489]
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
+text = "Главное меню"
+
+[node name="ExitButton" type="Button" parent="VBoxContainer" unique_id=2030388526]
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
+text = "Выход из игры"
+
+[connection signal="pressed" from="VBoxContainer/ContinueButton" to="." method="_on_continue_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]

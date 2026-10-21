@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://bnrnxc43dyqjq"]
+
+[ext_resource type="Script" uid="uid://df1w3kvbkk3vv" path="res://scripts/UI/main_menu.gd" id="1_6jbdy"]
+[ext_resource type="Texture2D" uid="uid://da85iykia21cs" path="res://art/background/mainmenu.png" id="1_vjtqc"]
+
+[node name="Mainmenu" type="Control" unique_id=776764471]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -3.0
+offset_right = -4.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6jbdy")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1554331600]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.033333335
+anchor_top = -0.033333335
+anchor_right = 1.0333333
+anchor_bottom = 1.0333333
+offset_left = 64.0
+offset_top = 36.0
+offset_right = -64.0
+offset_bottom = -36.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_vjtqc")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="control" type="Control" parent="." unique_id=1976233702]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="control" unique_id=802046379]
+layout_mode = 0
+offset_left = 178.0
+offset_top = 524.0
+offset_right = 628.0
+offset_bottom = 714.0
+theme_override_constants/separation = 40
+
+[node name="startbutton" type="Button" parent="control/VBoxContainer" unique_id=1717710086]
+custom_minimum_size = Vector2(470, 100)
+layout_mode = 2
+text = "Новая игра"
+
+[node name="settingsbutton" type="Button" parent="control/VBoxContainer" unique_id=1285526680]
+custom_minimum_size = Vector2(470, 100)
+layout_mode = 2
+text = "Настройки"
+
+[node name="endbutton" type="Button" parent="control/VBoxContainer" unique_id=657951105]
+custom_minimum_size = Vector2(470, 100)
+layout_mode = 2
+text = "Выход"
+
+[connection signal="pressed" from="control/VBoxContainer/startbutton" to="." method="_on_startbutton_pressed"]
+[connection signal="pressed" from="control/VBoxContainer/settingsbutton" to="." method="_on_settingsbutton_pressed"]
+[connection signal="pressed" from="control/VBoxContainer/endbutton" to="." method="_on_endbutton_pressed"]

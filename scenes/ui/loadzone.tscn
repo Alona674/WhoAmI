@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://dhwgu3ko312kj"]
+
+[ext_resource type="Script" uid="uid://dfxqodub5trq2" path="res://scripts/UI/loadzone.gd" id="1_knkee"]
+[ext_resource type="Texture2D" uid="uid://dmh7ur7wg22qg" path="res://art/background/backset.png" id="1_md21x"]
+
+[node name="LoadZone" type="Control" unique_id=894989274]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_knkee")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1520833663]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_md21x")
+metadata/_edit_use_anchors_ = true
+
+[node name="back_button" type="Button" parent="." unique_id=1888156260]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Назад"
+
+[connection signal="pressed" from="back_button" to="." method="_on_back_button_pressed"]
