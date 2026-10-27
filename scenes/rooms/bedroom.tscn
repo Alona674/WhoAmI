@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bvnst66gtk202" path="res://scripts/core/bedroom.gd" id="1_thvn2"]
 [ext_resource type="Texture2D" uid="uid://oema56fwcf1y" path="res://art/characters/Michael_front.png" id="2_1vprx"]
-[ext_resource type="Texture2D" uid="uid://d2x54llndnadc" path="res://art/rooms/bedroom/spalnya.png" id="2_63ydc"]
+[ext_resource type="Texture2D" uid="uid://d31432jw2abqy" path="res://art/rooms/bedroom/spalnya.png" id="2_63ydc"]
 [ext_resource type="Script" uid="uid://bkfw255kjjliw" path="res://scripts/player/player.gd" id="2_whf2s"]
 [ext_resource type="Script" uid="uid://co4g6gokhb7x7" path="res://scripts/interaction/teddy.gd" id="4_khs6t"]
 [ext_resource type="PackedScene" uid="uid://b1d7m4myvd8ma" path="res://scenes/ui/DialogueManager.tscn" id="6_u2o5o"]
@@ -12,7 +12,6 @@
 [ext_resource type="Script" uid="uid://cxfcvrgtdcxqb" path="res://scripts/interaction/svetik.gd" id="10_ispgn"]
 [ext_resource type="Texture2D" uid="uid://bqimxfevc2gy1" path="res://art/characters/Svetik.png" id="11_thvn2"]
 [ext_resource type="Script" uid="uid://qidiyv4ycdf3" path="res://scenes/rooms/teddy_2.gd" id="12_c3xs0"]
-[ext_resource type="Texture2D" uid="uid://ct2y8ynolu0od" path="res://art/items/Teddy.png" id="12_thvn2"]
 [ext_resource type="PackedScene" uid="uid://hisq1d0ohn27" path="res://scenes/ui/PauseMenu.tscn" id="14_uq8jf"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_whf2s"]
@@ -42,8 +41,8 @@ position = Vector2(860, 455)
 script = ExtResource("1_thvn2")
 
 [node name="Background" type="Sprite2D" parent="." unique_id=815008149]
-position = Vector2(-4, 173)
-scale = Vector2(1.183, 1.183)
+position = Vector2(157.9094, 198.08923)
+scale = Vector2(1.3417742, 1.4303147)
 texture = ExtResource("2_63ydc")
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=420324579]
@@ -53,29 +52,33 @@ scale = Vector2(0.4, 0.4)
 script = ExtResource("2_whf2s")
 
 [node name="Sprite2D" type="Sprite2D" parent="Player" unique_id=243402793]
-position = Vector2(280, 267.50006)
+position = Vector2(280, 542.50006)
 scale = Vector2(0.71728516, 0.7734375)
 texture = ExtResource("2_1vprx")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=1145335172]
-position = Vector2(282.5, 284.99994)
+position = Vector2(287.5, 549.99994)
 scale = Vector2(0.9999997, 0.9999997)
 shape = SubResource("RectangleShape2D_whf2s")
 
 [node name="InteractionArea" type="Area2D" parent="Player" unique_id=755434224]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player/InteractionArea" unique_id=478359764]
-position = Vector2(285, 287.50003)
+position = Vector2(292.5, 547.5)
 scale = Vector2(0.99999976, 0.99999976)
 shape = SubResource("RectangleShape2D_v47ap")
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=419243162]
+limit_left = -374
+limit_top = 117
+limit_right = 2418
+limit_bottom = 1204
 
 [node name="Teddy" type="Area2D" parent="." unique_id=2146307104]
 script = ExtResource("4_khs6t")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Teddy" unique_id=229909424]
-position = Vector2(-107, 280)
+position = Vector2(20, 324)
 shape = SubResource("RectangleShape2D_b2v72")
 
 [node name="DialogueManager" parent="." unique_id=1465301247 instance=ExtResource("6_u2o5o")]
@@ -87,13 +90,13 @@ scale = Vector2(0.419, 0.418)
 script = ExtResource("8_ohr7v")
 
 [node name="Sprite2D" type="Sprite2D" parent="Mama" unique_id=140265819]
-position = Vector2(-1281.6228, 322.9665)
+position = Vector2(-1248.2101, 574.1627)
 scale = Vector2(0.77029556, 0.7519002)
 texture = ExtResource("9_63ydc")
 flip_h = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Mama" unique_id=906429439]
-position = Vector2(-1284.0095, 315.7894)
+position = Vector2(-1264.9165, 566.9856)
 shape = SubResource("RectangleShape2D_ispgn")
 
 [node name="Svetik" type="Area2D" parent="." unique_id=194835532]
@@ -122,13 +125,8 @@ texture = SubResource("CompressedTexture2D_thvn2")
 [node name="Teddy2" type="Area2D" parent="." unique_id=1340832972]
 script = ExtResource("12_c3xs0")
 
-[node name="Sprite2D" type="Sprite2D" parent="Teddy2" unique_id=1691312490]
-position = Vector2(190.99997, 269)
-scale = Vector2(0.12101277, 0.100279115)
-texture = ExtResource("12_thvn2")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Teddy2" unique_id=1176873310]
-position = Vector2(198, 268)
+position = Vector2(24, 334)
 shape = SubResource("RectangleShape2D_uq8jf")
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=1246127785]

@@ -4,7 +4,7 @@ extends CharacterBody2D
 
 # Границы, в которых может ходить Михаил
 @export var left_limit: float = -330.0
-@export var right_limit: float = 1820.0
+@export var right_limit: float = 2100.0
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var interaction_area: Area2D = $InteractionArea
