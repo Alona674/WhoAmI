@@ -43,10 +43,13 @@ func show_dialogue(speaker: String, text: String) -> void:
 	typing = false
 
 
+
 func hide_dialogue() -> void:
+	if not is_open:
+		return
+
 	is_open = false
-	dialogue_box.hide()
-	dialogue_closed.emit()
+	typing = false
 
 	var fade_tween := create_tween()
 	fade_tween.tween_property(
@@ -59,7 +62,7 @@ func hide_dialogue() -> void:
 	await fade_tween.finished
 
 	dialogue_box.hide()
-
+	dialogue_closed.emit()
 
 func _input(event: InputEvent) -> void:
 	if not is_open:

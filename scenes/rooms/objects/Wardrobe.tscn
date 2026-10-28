@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://b1b43a1qe8u1t"]
+
+[ext_resource type="Script" uid="uid://ddwufg8afeieq" path="res://scripts/interaction/wardrobe.gd" id="1_w0o28"]
+[ext_resource type="Texture2D" uid="uid://b02pgiecd677" path="res://art/items/bedroom/шахматный король из шкафа.png" id="2_0o4ep"]
+[ext_resource type="Texture2D" uid="uid://byp8nxd5ey62j" path="res://art/items/bedroom/вилка из шкафа.png" id="3_ey0f3"]
+[ext_resource type="Texture2D" uid="uid://can505e7gk2bl" path="res://art/items/bedroom/Палка из шкафа.png" id="4_70tn8"]
+[ext_resource type="Texture2D" uid="uid://ca7eaal03yph7" path="res://art/items/bedroom/Зажигалка из шкафа.png" id="5_6nlmq"]
+
+[node name="Wardrobe" type="Node2D" unique_id=1948056818]
+script = ExtResource("1_w0o28")
+
+[node name="ChessKing" type="Sprite2D" parent="." unique_id=663104977]
+position = Vector2(-200, 0)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_0o4ep")
+
+[node name="SuperWeapon" type="Sprite2D" parent="." unique_id=1935034192]
+position = Vector2(-75, 0)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("3_ey0f3")
+
+[node name="EvilBlaster" type="Sprite2D" parent="." unique_id=580236593]
+position = Vector2(75, 0)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("4_70tn8")
+
+[node name="Lighter" type="Sprite2D" parent="." unique_id=1629832644]
+position = Vector2(200, 0)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("5_6nlmq")
