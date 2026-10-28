@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ckitchen123456"]
 
 [ext_resource type="Script" path="res://scripts/core/kitchen.gd" id="1_kitchen"]
-[ext_resource type="Texture2D" path="res://art/rooms/kitchen/kitchen_bg.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://art/rooms/kutchen/kitchen_bg.png" id="2_bg"]
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="3_player"]
 [ext_resource type="Texture2D" path="res://art/characters/Michael_front.png" id="4_player_tex"]
 [ext_resource type="Script" path="res://scripts/interaction/scales.gd" id="5_scales"]
