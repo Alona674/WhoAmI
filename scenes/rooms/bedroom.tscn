@@ -1,48 +1,37 @@
 [gd_scene format=3 uid="uid://cdhvfv8s0fewa"]
 
 [ext_resource type="Script" uid="uid://bvnst66gtk202" path="res://scripts/core/bedroom.gd" id="1_thvn2"]
-[ext_resource type="Texture2D" uid="uid://oema56fwcf1y" path="res://art/characters/Michael_front.png" id="2_1vprx"]
-[ext_resource type="Texture2D" uid="uid://bilqve8uwhj5u" path="res://art/rooms/bedroom/bedroom.png" id="2_h7i25"]
-[ext_resource type="Script" uid="uid://bkfw255kjjliw" path="res://scripts/player/player.gd" id="2_whf2s"]
+[ext_resource type="Texture2D" uid="uid://d2x54llndnadc" path="res://art/rooms/bedroom/spalnya.png" id="2_63ydc"]
+[ext_resource type="PackedScene" uid="uid://bu8vxbbtt4e44" path="res://scenes/characters/player.tscn" id="3_thvn2"]
 [ext_resource type="Script" uid="uid://co4g6gokhb7x7" path="res://scripts/interaction/teddy.gd" id="4_khs6t"]
-[ext_resource type="Texture2D" uid="uid://g2wyjg1jcghb" path="res://art/items/bedroom/bear.png" id="6_a3fkj"]
 [ext_resource type="PackedScene" uid="uid://b1d7m4myvd8ma" path="res://scenes/ui/DialogueManager.tscn" id="6_u2o5o"]
 [ext_resource type="Script" uid="uid://ceu0h1yy7x0j0" path="res://scripts/dialogue/dialogue_manager.gd" id="7_v47ap"]
 [ext_resource type="Script" uid="uid://3c4xkneuemol" path="res://scripts/interaction/mama.gd" id="8_ohr7v"]
 [ext_resource type="Texture2D" uid="uid://cp708ub55hx7p" path="res://art/characters/mama.png" id="9_63ydc"]
 [ext_resource type="Script" uid="uid://cxfcvrgtdcxqb" path="res://scripts/interaction/svetik.gd" id="10_ispgn"]
-[ext_resource type="Texture2D" uid="uid://f6t0v3gk6k6h" path="res://art/characters/svetik.png" id="12_1wu2a"]
-[ext_resource type="Script" uid="uid://ckb33ft50lx1j" path="res://scripts/UI/wardrobe_loot_panel.gd" id="14_3hs4y"]
-[ext_resource type="Texture2D" uid="uid://c54qe3bq2omeb" path="res://art/items/bedroom/beg.png" id="14_g74td"]
+[ext_resource type="Texture2D" uid="uid://bqimxfevc2gy1" path="res://art/characters/Svetik.png" id="11_thvn2"]
+[ext_resource type="Script" uid="uid://qidiyv4ycdf3" path="res://scenes/rooms/teddy_2.gd" id="12_c3xs0"]
+[ext_resource type="Script" uid="uid://cs47lryboowoa" path="res://scripts/transitions/doors.gd" id="12_uq8jf"]
 [ext_resource type="PackedScene" uid="uid://hisq1d0ohn27" path="res://scenes/ui/PauseMenu.tscn" id="14_uq8jf"]
-[ext_resource type="Texture2D" uid="uid://cy0dc14aqkpn8" path="res://art/rooms/bedroom/Солнечный сад за окном.png" id="15_1wu2a"]
-[ext_resource type="Texture2D" uid="uid://qhkwp65p6hru" path="res://art/items/bedroom/book.png" id="15_3hs4y"]
-[ext_resource type="Texture2D" uid="uid://cd3ys7o6daln5" path="res://art/items/bedroom/flower.png" id="16_1c8ys"]
-[ext_resource type="Texture2D" uid="uid://dtbvh5uaokt80" path="res://art/items/bedroom/lamp.png" id="17_1wu2a"]
-[ext_resource type="Texture2D" uid="uid://ckuhsrn88jl4w" path="res://art/items/bedroom/map.png" id="18_ypovm"]
-[ext_resource type="Texture2D" uid="uid://y2cyxyfxu6qg" path="res://art/items/bedroom/open_closet.png" id="19_ug7ds"]
-[ext_resource type="Script" uid="uid://ddwufg8afeieq" path="res://scripts/interaction/wardrobe.gd" id="20_bjanb"]
-[ext_resource type="Texture2D" uid="uid://bvpfexcxojg20" path="res://art/rooms/bedroom/fon_door.png" id="21_g74td"]
-[ext_resource type="Texture2D" uid="uid://nwvhex7g6qgq" path="res://art/rooms/bedroom/dver (2).png" id="22_3hs4y"]
-[ext_resource type="Script" uid="uid://bshjoqphy5l4k" path="res://scripts/interaction/window_view.gd" id="25_ypovm"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_v47ap"]
-size = Vector2(373.74997, 1146.2501)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b2v72"]
-size = Vector2(106, 118.5)
+size = Vector2(89.5, 79)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ispgn"]
-size = Vector2(392.60144, 1230.2632)
+size = Vector2(341.2888, 1149.5215)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c3xs0"]
-size = Vector2(78, 87.5)
+size = Vector2(78, 85)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ah6rp"]
-size = Vector2(433, 671.5)
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ispgn"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ug7ds"]
-size = Vector2(194, 735.5)
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_thvn2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uq8jf"]
+size = Vector2(94, 108)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_thvn2"]
+size = Vector2(219, 726)
 
 [node name="Bedroom" type="Sprite2D" unique_id=576558266]
 position = Vector2(860, 455)
@@ -51,224 +40,84 @@ script = ExtResource("1_thvn2")
 [node name="Background" type="Sprite2D" parent="." unique_id=815008149]
 position = Vector2(157.9094, 198.08923)
 scale = Vector2(1.3417742, 1.4303147)
-texture = ExtResource("2_h7i25")
+texture = ExtResource("2_63ydc")
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=420324579]
-z_index = 1
+[node name="Player" parent="." unique_id=32208314 groups=["player"] instance=ExtResource("3_thvn2")]
 position = Vector2(0, 200)
-scale = Vector2(0.4, 0.4)
-script = ExtResource("2_whf2s")
-
-[node name="Sprite2D" type="Sprite2D" parent="Player" unique_id=243402793]
-z_index = 5
-position = Vector2(280, 542.50006)
-scale = Vector2(0.71728516, 0.7734375)
-texture = ExtResource("2_1vprx")
-
-[node name="InteractionArea" type="Area2D" parent="Player" unique_id=755434224]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/InteractionArea" unique_id=478359764]
-position = Vector2(292.5, 547.5)
-scale = Vector2(0.99999976, 0.99999976)
-shape = SubResource("RectangleShape2D_v47ap")
-
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=419243162]
-limit_left = -374
-limit_top = 117
-limit_right = 2418
-limit_bottom = 1204
 
 [node name="Teddy" type="Area2D" parent="." unique_id=2146307104]
-z_index = 1
 script = ExtResource("4_khs6t")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Teddy" unique_id=229909424]
-position = Vector2(187, 311)
+position = Vector2(20, 324)
 shape = SubResource("RectangleShape2D_b2v72")
-
-[node name="Sprite2D" type="Sprite2D" parent="Teddy" unique_id=1224593710]
-position = Vector2(193.00002, 306)
-scale = Vector2(0.102713235, 0.107824065)
-texture = ExtResource("6_a3fkj")
 
 [node name="DialogueManager" parent="." unique_id=1465301247 instance=ExtResource("6_u2o5o")]
 script = ExtResource("7_v47ap")
 
 [node name="Mama" type="Area2D" parent="." unique_id=1098316269]
-visible = false
 position = Vector2(-392, 157.00003)
 scale = Vector2(0.419, 0.418)
 script = ExtResource("8_ohr7v")
 
 [node name="Sprite2D" type="Sprite2D" parent="Mama" unique_id=140265819]
-z_index = 1
-position = Vector2(-1215.0955, 532.74884)
-scale = Vector2(0.83497256, 0.8058245)
+position = Vector2(-1248.2101, 574.1627)
+scale = Vector2(0.77029556, 0.7519002)
 texture = ExtResource("9_63ydc")
 flip_h = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Mama" unique_id=906429439]
-position = Vector2(-1239.2601, 526.61475)
+position = Vector2(-1264.9165, 566.9856)
 shape = SubResource("RectangleShape2D_ispgn")
 
 [node name="Svetik" type="Area2D" parent="." unique_id=194835532]
 script = ExtResource("10_ispgn")
 
 [node name="Sprite2D" type="Sprite2D" parent="Svetik" unique_id=1190584467]
-z_index = 1
 position = Vector2(264, 186.00003)
 scale = Vector2(0.079613596, 0.08811416)
-texture = ExtResource("12_1wu2a")
+texture = ExtResource("11_thvn2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Svetik" unique_id=1538211167]
-position = Vector2(266, 187.75)
+position = Vector2(266, 189)
 shape = SubResource("RectangleShape2D_c3xs0")
+
+[node name="DoorClosed" type="Sprite2D" parent="." unique_id=1186904402]
+position = Vector2(-1295, 302.00003)
+scale = Vector2(0.47005215, 0.86482245)
+texture = SubResource("CompressedTexture2D_ispgn")
+
+[node name="DoorOpen" type="Sprite2D" parent="." unique_id=1414831390]
+visible = false
+position = Vector2(-653.875, 103.50001)
+scale = Vector2(0.4191081, 0.9033204)
+texture = SubResource("CompressedTexture2D_thvn2")
+
+[node name="Teddy2" type="Area2D" parent="." unique_id=1340832972]
+script = ExtResource("12_c3xs0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Teddy2" unique_id=1176873310]
+position = Vector2(24, 334)
+shape = SubResource("RectangleShape2D_uq8jf")
+
+[node name="CorridorDoor" type="Area2D" parent="." unique_id=1990220822]
+script = ExtResource("12_uq8jf")
+target_scene = "uid://blpaawsoj6qqk"
+target_spawn_point = "CorridorEntryPoint"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CorridorDoor" unique_id=267968618]
+position = Vector2(-1091.5, 270)
+shape = SubResource("RectangleShape2D_thvn2")
+
+[node name="BedroomEntryPoint" type="Marker2D" parent="." unique_id=327456511]
+position = Vector2(-1041, 171)
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=1246127785]
 
 [node name="PauseMenu" parent="UILayer" unique_id=1871684007 instance=ExtResource("14_uq8jf")]
 visible = false
 
-[node name="WardrobeLootPanel" type="Control" parent="UILayer" unique_id=48278221]
-layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-script = ExtResource("14_3hs4y")
+[connection signal="body_entered" from="Teddy2" to="Teddy2" method="_on_body_entered"]
+[connection signal="body_exited" from="Teddy2" to="Teddy2" method="_on_body_exited"]
 
-[node name="Background" type="Panel" parent="UILayer/WardrobeLootPanel" unique_id=1684206650]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -370.0
-offset_top = -245.0
-offset_right = 330.0
-offset_bottom = 205.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Title" type="Label" parent="UILayer/WardrobeLootPanel/Background" unique_id=1617037344]
-layout_mode = 0
-offset_left = 25.0
-offset_top = 20.0
-offset_right = 675.0
-offset_bottom = 60.0
-text = "Содержимое шкафа"
-
-[node name="ItemsGrid" type="GridContainer" parent="UILayer/WardrobeLootPanel/Background" unique_id=907344885]
-layout_mode = 0
-offset_left = 25.0
-offset_top = 65.0
-offset_right = 645.0
-offset_bottom = 435.0
-columns = 4
-
-[node name="TakeAllButton" type="Button" parent="UILayer/WardrobeLootPanel/Background" unique_id=879073625]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -108.0
-offset_top = -44.0
-offset_right = 108.0
-grow_horizontal = 2
-grow_vertical = 0
-text = "Забрать всё"
-
-[node name="CloseButton" type="Button" parent="UILayer/WardrobeLootPanel/Background" unique_id=2031130475]
-layout_mode = 0
-offset_left = 671.0
-offset_right = 700.0
-offset_bottom = 31.0
-text = "×"
-
-[node name="WindowView" type="Control" parent="UILayer" unique_id=1673013187]
-visible = false
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ViewImage" type="TextureRect" parent="UILayer/WindowView" unique_id=57962911]
-layout_mode = 0
-offset_left = -9.0
-offset_top = -1.0
-offset_right = 1923.0
-offset_bottom = 1088.0
-texture = ExtResource("15_1wu2a")
-stretch_mode = 6
-
-[node name="beg" type="Sprite2D" parent="." unique_id=1237257507]
-position = Vector2(-954, 504.59378)
-scale = Vector2(0.121686295, 0.12699524)
-texture = ExtResource("14_g74td")
-
-[node name="book" type="Sprite2D" parent="." unique_id=1444996511]
-position = Vector2(393, 363)
-scale = Vector2(0.09131909, 0.09371479)
-texture = ExtResource("15_3hs4y")
-
-[node name="flower" type="Sprite2D" parent="." unique_id=846574127]
-position = Vector2(-373, 272)
-scale = Vector2(0.13262193, 0.123644695)
-texture = ExtResource("16_1c8ys")
-
-[node name="lamp" type="Sprite2D" parent="." unique_id=936456228]
-position = Vector2(622, 295)
-scale = Vector2(0.10919206, 0.09833063)
-texture = ExtResource("17_1wu2a")
-
-[node name="map" type="Sprite2D" parent="." unique_id=876811089]
-position = Vector2(136.00005, 137.00002)
-scale = Vector2(0.2968522, 0.2943093)
-texture = ExtResource("18_ypovm")
-
-[node name="WardrobeOpen" type="Sprite2D" parent="." unique_id=2006679098]
-visible = false
-position = Vector2(-555.5, 241.00002)
-scale = Vector2(0.5946154, 0.631405)
-texture = ExtResource("19_ug7ds")
-
-[node name="WardrobeArea" type="Area2D" parent="." unique_id=2127407219]
-script = ExtResource("20_bjanb")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WardrobeArea" unique_id=910733934]
-position = Vector2(-670.5, 233.75)
-shape = SubResource("RectangleShape2D_ah6rp")
-
-[node name="DoorOpen2" type="Sprite2D" parent="." unique_id=382431745]
-visible = false
-position = Vector2(-1157, 290)
-scale = Vector2(0.40256947, 0.4786377)
-texture = ExtResource("21_g74td")
-
-[node name="Dver(2)" type="Sprite2D" parent="." unique_id=1705809020]
-visible = false
-z_index = 2
-position = Vector2(-1170, 291.99997)
-scale = Vector2(0.3959961, 0.56250006)
-texture = ExtResource("22_3hs4y")
-
-[node name="WindowArea" type="Area2D" parent="." unique_id=1794130045]
-script = ExtResource("25_ypovm")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WindowArea" unique_id=1607787361]
-position = Vector2(1407, 275.25)
-shape = SubResource("RectangleShape2D_ug7ds")
+[editable path="Player"]

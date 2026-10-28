@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://bu8vxbbtt4e44"]
+
+[ext_resource type="Script" uid="uid://bkfw255kjjliw" path="res://scripts/player/player.gd" id="1_yewv4"]
+[ext_resource type="Texture2D" uid="uid://oema56fwcf1y" path="res://art/characters/Michael_front.png" id="2_76oj4"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_whf2s"]
+size = Vector2(370.00003, 1141.2501)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v47ap"]
+size = Vector2(373.74997, 1146.2501)
+
+[node name="Player" type="CharacterBody2D" unique_id=32208314]
+z_index = 1
+scale = Vector2(0.4, 0.4)
+script = ExtResource("1_yewv4")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=110808135]
+position = Vector2(280, 542.50006)
+scale = Vector2(0.71728516, 0.7734375)
+texture = ExtResource("2_76oj4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1510550749]
+position = Vector2(287.5, 549.99994)
+scale = Vector2(0.9999997, 0.9999997)
+shape = SubResource("RectangleShape2D_whf2s")
+
+[node name="InteractionArea" type="Area2D" parent="." unique_id=1163850667]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea" unique_id=206142140]
+position = Vector2(292.5, 547.5)
+scale = Vector2(0.99999976, 0.99999976)
+shape = SubResource("RectangleShape2D_v47ap")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=380615917]
+limit_left = -374
+limit_top = 117
+limit_right = 2418
+limit_bottom = 1204

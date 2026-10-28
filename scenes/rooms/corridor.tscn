@@ -1,0 +1,140 @@
+[gd_scene format=3 uid="uid://blpaawsoj6qqk"]
+
+[ext_resource type="Texture2D" uid="uid://bpw04vs8l7dub" path="res://art/rooms/corridor/lobby.png" id="1_l4eda"]
+[ext_resource type="Script" uid="uid://c1bt346yx8dph" path="res://scripts/core/corridor.gd" id="1_u6nsy"]
+[ext_resource type="PackedScene" uid="uid://bu8vxbbtt4e44" path="res://scenes/characters/player.tscn" id="2_u6nsy"]
+[ext_resource type="PackedScene" uid="uid://hisq1d0ohn27" path="res://scenes/ui/PauseMenu.tscn" id="4_a5ngl"]
+[ext_resource type="Script" uid="uid://cs47lryboowoa" path="res://scripts/transitions/doors.gd" id="4_jf14u"]
+[ext_resource type="PackedScene" uid="uid://b1d7m4myvd8ma" path="res://scenes/ui/DialogueManager.tscn" id="4_xm07l"]
+[ext_resource type="Script" uid="uid://ceu0h1yy7x0j0" path="res://scripts/dialogue/dialogue_manager.gd" id="5_bnshd"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a5ngl"]
+size = Vector2(2645, 955)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u6nsy"]
+size = Vector2(2898, 966)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xm07l"]
+size = Vector2(137, 530)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jf14u"]
+size = Vector2(361, 514)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bnshd"]
+size = Vector2(331, 497)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7eq0f"]
+size = Vector2(305, 490)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0bt2f"]
+size = Vector2(219, 609)
+
+[node name="corridor" type="Node2D" unique_id=2065673051]
+script = ExtResource("1_u6nsy")
+
+[node name="background" type="Sprite2D" parent="." unique_id=1464366112]
+position = Vector2(157.909, 198.089)
+scale = Vector2(1.342, 1.342)
+texture = ExtResource("1_l4eda")
+
+[node name="WalkableArea" type="Area2D" parent="." unique_id=359217868]
+
+[node name="WalkCollisionShape2D" type="CollisionShape2D" parent="WalkableArea" unique_id=1385679361]
+position = Vector2(75.5, 201.5)
+shape = SubResource("RectangleShape2D_a5ngl")
+disabled = true
+debug_color = Color(0, 0.6, 0.69803923, 0)
+
+[node name="CameraArea" type="Area2D" parent="." unique_id=80467692]
+
+[node name="CameraCollisionShape2D" type="CollisionShape2D" parent="CameraArea" unique_id=353278886]
+position = Vector2(159, 197)
+shape = SubResource("RectangleShape2D_u6nsy")
+debug_color = Color(0, 0.6, 0.69803923, 0)
+
+[node name="Player" parent="." unique_id=32208314 groups=["player"] instance=ExtResource("2_u6nsy")]
+position = Vector2(1281, 99)
+left_limit = -3000.0
+
+[node name="CollisionShape2D" parent="Player/InteractionArea" parent_id_path=PackedInt32Array(32208314, 1163850667) index="0" unique_id=206142140]
+position = Vector2(292.5, 582.5)
+
+[node name="Camera2D" parent="Player" index="3" unique_id=380615917]
+zoom = Vector2(1.2, 1.2)
+limit_left = -1416
+limit_top = -235
+limit_right = 1794
+limit_bottom = 637
+
+[node name="DialogueManager" parent="." unique_id=1465301247 instance=ExtResource("4_xm07l")]
+script = ExtResource("5_bnshd")
+
+[node name="BedroomDoor" type="Area2D" parent="." unique_id=556585023]
+script = ExtResource("4_jf14u")
+target_scene = "uid://cdhvfv8s0fewa"
+target_spawn_point = "BedroomEntryPoint"
+
+[node name="bedroomdoor_collision" type="CollisionShape2D" parent="BedroomDoor" unique_id=1081347064]
+position = Vector2(1540.5, 275)
+shape = SubResource("RectangleShape2D_xm07l")
+debug_color = Color(2.4065375e-07, 0.6440524, 0.29436648, 0.41960785)
+
+[node name="CorridorEntryPoint" type="Marker2D" parent="." unique_id=1421828375]
+position = Vector2(1541, 271)
+
+[node name="KitchenDoor" type="Area2D" parent="." unique_id=1411205589]
+script = ExtResource("4_jf14u")
+target_scene = "uid://7nwoaa0r2m0v"
+
+[node name="kitchendoor_collision" type="CollisionShape2D" parent="KitchenDoor" unique_id=1015289749]
+position = Vector2(1085.5, 252)
+shape = SubResource("RectangleShape2D_jf14u")
+debug_color = Color(0.6698354, 0.50982684, 3.85046e-07, 0.41960785)
+
+[node name="CorridorKitchEntryPoint" type="Marker2D" parent="." unique_id=179724774]
+position = Vector2(1100, 271)
+
+[node name="BathroomDoor" type="Area2D" parent="." unique_id=1631621531]
+script = ExtResource("4_jf14u")
+dialogue_text = "Заперто. Похоже, сюда пока не попасть."
+
+[node name="bathroomdoor_collision" type="CollisionShape2D" parent="BathroomDoor" unique_id=844787338]
+position = Vector2(389.5, 266.5)
+shape = SubResource("RectangleShape2D_bnshd")
+debug_color = Color(0.1480253, 0.51938385, 0.99999994, 0.41960785)
+
+[node name="CorridorBathEntryPoint" type="Marker2D" parent="." unique_id=1227584272]
+position = Vector2(400, 271)
+
+[node name="HallDoor" type="Area2D" parent="." unique_id=930822168]
+position = Vector2(-395, 257)
+script = ExtResource("4_jf14u")
+dialogue_text = "Пока заперто."
+
+[node name="halldoor_collision" type="CollisionShape2D" parent="HallDoor" unique_id=2088473966]
+position = Vector2(33.5, 2)
+shape = SubResource("RectangleShape2D_7eq0f")
+debug_color = Color(0.9319053, 0.13653532, 0.55656636, 0.41960785)
+
+[node name="CorridorHallEntryPoint" type="Marker2D" parent="." unique_id=1765757469]
+position = Vector2(-360, 271)
+
+[node name="Door" type="Area2D" parent="." unique_id=1711530445]
+position = Vector2(778, 355)
+script = ExtResource("4_jf14u")
+dialogue_text = "Мама и папа не любят когда я к ним захожу в комнату."
+
+[node name="door_collision" type="CollisionShape2D" parent="Door" unique_id=89497929]
+position = Vector2(-1943.5, -125.5)
+shape = SubResource("RectangleShape2D_0bt2f")
+debug_color = Color(0.9281145, 0.2626459, 0.14572746, 0.41960785)
+
+[node name="CorridordoorEntryPoint" type="Marker2D" parent="." unique_id=1444339798]
+position = Vector2(-1150, 271)
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=351881992]
+
+[node name="PauseMenu" parent="UILayer" unique_id=1871684007 instance=ExtResource("4_a5ngl")]
+visible = false
+
+[editable path="Player"]
