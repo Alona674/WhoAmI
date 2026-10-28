@@ -2,15 +2,17 @@
 extends CharacterBody2D
 
 @export var speed: float = 300.0
+var can_move: bool = true
+
+# Границы, в которых может ходить Михаил
 @export var left_limit: float = -330.0
 @export var right_limit: float = 2100.0
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var interaction_area: Area2D = $InteractionArea
-
-@onready var window_view: Control = get_tree().current_scene.get_node(
-	"UILayer/WindowView"
-)
+@onready var interaction_prompt: Label = get_tree().current_scene.find_child("InteractionPrompt", true, false) as Label
+var current_interactable: Area2D = null
+var highlighted_interactable: Area2D = null
 
 var front_texture = preload("res://art/characters/Michael_front.png")
 var back_texture = preload("res://art/characters/Michael_backside.png")
@@ -18,7 +20,28 @@ var left_texture = preload("res://art/characters/Michael_left.png")
 var right_texture = preload("res://art/characters/Michael_right.png")
 
 
+func _ready() -> void:
+	if not GameState.has_pending_player_position:
+		return
+
+	var current_scene = get_tree().current_scene
+
+	if current_scene == null:
+		return
+
+	if current_scene.scene_file_path != GameState.saved_scene:
+		return
+
+	global_position = GameState.saved_player_position
+	GameState.has_pending_player_position = false
+
+
 func _physics_process(_delta: float) -> void:
+	if not can_move:
+		velocity = Vector2.ZERO
+		move_and_slide()
+		return
+
 	var direction := Input.get_axis("move_left", "move_right")
 
 	velocity.x = direction * speed
@@ -26,53 +49,42 @@ func _physics_process(_delta: float) -> void:
 
 	move_and_slide()
 
+	# Не даём Михаилу выйти за границы комнаты
 	global_position.x = clamp(
 		global_position.x,
 		left_limit,
 		right_limit
 	)
 
+	# Меняем направление взгляда
 	if direction < 0:
 		sprite.texture = left_texture
 	elif direction > 0:
 		sprite.texture = right_texture
 	else:
 		sprite.texture = front_texture
+	
+	_update_interaction_target()
+
 
 
 func _input(event: InputEvent) -> void:
-	if not event.is_action_pressed("interact") or event.is_echo():
-		return
+	if event.is_action_pressed("interact") and not event.is_echo():
+		if current_interactable != null:
+			if current_interactable.has_method("interact"):
+				current_interactable.interact()
 
-	# Закрываем просмотр сада клавишей E.
-	if window_view.visible:
-		window_view.hide()
-		get_viewport().set_input_as_handled()
-		return
 
-	# Закрываем окно обыска клавишей E.
-	var wardrobe_panel = get_tree().current_scene.get_node_or_null(
-		"UILayer/WardrobeLootPanel"
-	)
-
-	if wardrobe_panel != null and wardrobe_panel.visible:
-		wardrobe_panel.close_panel()
-		get_viewport().set_input_as_handled()
-		return
-
-	# Ищем ближайший объект для взаимодействия.
+func _update_interaction_target() -> void:
 	var objects := interaction_area.get_overlapping_areas()
-
-	if objects.is_empty():
-		return
-
-	var nearest_object = objects[0]
-	var nearest_distance: float = global_position.distance_to(
-		nearest_object.global_position
-	)
+	var nearest_object: Area2D = null
+	var nearest_distance: float = INF
 
 	for object in objects:
-		var distance: float = global_position.distance_to(
+		if not object.has_method("interact"):
+			continue
+
+		var distance := global_position.distance_to(
 			object.global_position
 		)
 
@@ -80,6 +92,17 @@ func _input(event: InputEvent) -> void:
 			nearest_object = object
 			nearest_distance = distance
 
-	if nearest_object.has_method("interact"):
-		nearest_object.interact()
-		get_viewport().set_input_as_handled()
+	highlighted_interactable = nearest_object
+	current_interactable = nearest_object
+
+	if interaction_prompt == null:
+		return
+
+	if current_interactable != null:
+		var object_name: String = str(
+			current_interactable.get("interaction_name")
+		)
+		interaction_prompt.text = "E — Осмотреть " + object_name
+		interaction_prompt.show()
+	else:
+		interaction_prompt.hide()
