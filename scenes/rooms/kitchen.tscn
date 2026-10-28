@@ -1,0 +1,110 @@
+[gd_scene format=3 uid="uid://ckitchen123456"]
+
+[ext_resource type="Script" path="res://scripts/core/kitchen.gd" id="1_kitchen"]
+[ext_resource type="Texture2D" path="res://art/rooms/kitchen/kitchen_bg.png" id="2_bg"]
+[ext_resource type="Script" path="res://scripts/player/player.gd" id="3_player"]
+[ext_resource type="Texture2D" path="res://art/characters/Michael_front.png" id="4_player_tex"]
+[ext_resource type="Script" path="res://scripts/interaction/scales.gd" id="5_scales"]
+[ext_resource type="Texture2D" path="res://art/items/scales.png" id="6_scales_tex"]
+[ext_resource type="Script" path="res://scripts/interaction/chest.gd" id="7_chest"]
+[ext_resource type="Texture2D" path="res://art/items/chest.png" id="8_chest_tex"]
+[ext_resource type="Script" path="res://scripts/interaction/jug.gd" id="9_jug"]
+[ext_resource type="Texture2D" path="res://art/items/jug_flowers.png" id="10_jug_tex"]
+[ext_resource type="Script" path="res://scripts/interaction/pan.gd" id="11_pan"]
+[ext_resource type="Texture2D" path="res://art/items/pan.png" id="12_pan_tex"]
+[ext_resource type="PackedScene" path="res://scenes/ui/DialogueManager.tscn" id="13_dialogue"]
+[ext_resource type="PackedScene" path="res://scenes/ui/PauseMenu.tscn" id="14_pause"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
+size = Vector2(370.00003, 1141.2501)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_scale"]
+size = Vector2(120, 150)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_chest"]
+size = Vector2(150, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jug"]
+size = Vector2(100, 120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pan"]
+size = Vector2(100, 100)
+
+[node name="Kitchen" type="Sprite2D"]
+position = Vector2(860, 455)
+script = ExtResource("1_kitchen")
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(0, 0)
+scale = Vector2(1.0, 1.0)
+texture = ExtResource("2_bg")
+
+[node name="Player" type="CharacterBody2D" parent="."]
+z_index = 1
+position = Vector2(0, 300)
+scale = Vector2(0.4, 0.4)
+script = ExtResource("3_player")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+position = Vector2(280, 542.50006)
+scale = Vector2(0.71728516, 0.7734375)
+texture = ExtResource("4_player_tex")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2(287.5, 549.99994)
+shape = SubResource("RectangleShape2D_player")
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+limit_left = -374
+limit_top = 117
+limit_right = 2418
+limit_bottom = 1204
+
+[node name="Scales" type="Area2D" parent="."]
+position = Vector2(-400, 250)
+script = ExtResource("5_scales")
+
+[node name="Sprite2D" type="Sprite2D" parent="Scales"]
+texture = ExtResource("6_scales_tex")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Scales"]
+shape = SubResource("RectangleShape2D_scale")
+
+[node name="Chest" type="Area2D" parent="."]
+position = Vector2(500, 350)
+script = ExtResource("7_chest")
+
+[node name="Sprite2D" type="Sprite2D" parent="Chest"]
+texture = ExtResource("8_chest_tex")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Chest"]
+shape = SubResource("RectangleShape2D_chest")
+
+[node name="Jug" type="Area2D" parent="."]
+position = Vector2(800, 150)
+script = ExtResource("9_jug")
+
+[node name="Sprite2D" type="Sprite2D" parent="Jug"]
+texture = ExtResource("10_jug_tex")
+scale = Vector2(0.6, 0.6)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Jug"]
+shape = SubResource("RectangleShape2D_jug")
+
+[node name="Pan" type="Area2D" parent="."]
+position = Vector2(-100, 400)
+script = ExtResource("11_pan")
+
+[node name="Sprite2D" type="Sprite2D" parent="Pan"]
+texture = ExtResource("12_pan_tex")
+scale = Vector2(0.8, 0.8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pan"]
+shape = SubResource("RectangleShape2D_pan")
+
+[node name="DialogueManager" parent="." instance=ExtResource("13_dialogue")]
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+  
+[node name="PauseMenu" parent="UILayer" instance=ExtResource("14_pause")]
+visible = false
