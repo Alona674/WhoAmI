@@ -84,7 +84,7 @@ position = Vector2(1541, 271)
 
 [node name="KitchenDoor" type="Area2D" parent="." unique_id=1411205589]
 script = ExtResource("4_jf14u")
-target_scene = "uid://7nwoaa0r2m0v"
+dialogue_text = "неТ"
 
 [node name="kitchendoor_collision" type="CollisionShape2D" parent="KitchenDoor" unique_id=1015289749]
 position = Vector2(1085.5, 252)

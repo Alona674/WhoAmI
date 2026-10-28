@@ -45,6 +45,14 @@ texture = ExtResource("2_63ydc")
 [node name="Player" parent="." unique_id=32208314 groups=["player"] instance=ExtResource("3_thvn2")]
 position = Vector2(0, 200)
 
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=855424012]
+
+[node name="Label" type="Label" parent="CanvasLayer" unique_id=564520720]
+visible = false
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Е"
+
 [node name="Teddy" type="Area2D" parent="." unique_id=2146307104]
 script = ExtResource("4_khs6t")
 
