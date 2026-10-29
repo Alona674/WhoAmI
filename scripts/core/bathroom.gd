@@ -5,7 +5,7 @@ var busy: bool = false
 @onready var player = $Player
 @onready var dialogue_manager = $DialogueManager
 @onready var pause_menu = $UILayer/PauseMenu
-@onready var prompt: Label = $UILayer/InteractionPrompt
+@onready var prompt: InteractionPrompt = $UILayer/InteractionPrompt
 
 
 func _ready() -> void:
@@ -20,11 +20,9 @@ func _process(_delta: float) -> void:
 	if dialogue_manager.dialogue_box.visible or pause_menu.visible or $UILayer/ContainerPanel.visible:
 		prompt.hide()
 	elif $CorridorDoor.player_nearby:
-		prompt.text = "E — В коридор"
-		prompt.show()
+		player.show_interaction_prompt($CorridorDoor, "Коридор", "Войти")
 	elif player.current_interactable != null:
-		prompt.text = "E — " + player.current_interactable.interaction_name
-		prompt.show()
+		player.show_interaction_prompt(player.current_interactable)
 	else:
 		prompt.hide()
 

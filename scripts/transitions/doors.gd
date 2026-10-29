@@ -1,6 +1,8 @@
 
 extends Area2D
 
+@export var interaction_name: String = "дверь"
+@export var interaction_action: String = "Открыть"
 @export_group("Переход между комнатами")
 @export_file("*.tscn") var target_scene: String = ""
 @export var target_spawn_point: String = ""
@@ -38,6 +40,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	if event.is_action_pressed("interact") and not event.is_echo():
 		interact_with_door()
+
+
+func interact() -> void:
+	interact_with_door()
 
 
 func interact_with_door() -> void:

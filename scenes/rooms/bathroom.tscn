@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" path="res://scenes/characters/svetik.tscn" id="svetik"]
 
 [ext_resource type="Script" path="res://scripts/interaction/cabinet.gd" id="cabinet"]
+[ext_resource type="PackedScene" path="res://scenes/ui/interaction_prompt.tscn" id="interaction_prompt"]
 
 [sub_resource type="ShaderMaterial" id="blood_material"]
 resource_local_to_scene = true
@@ -71,38 +72,35 @@ shape = SubResource("door_shape")
 [node name="Sink" type="Area2D" parent="."]
 position = Vector2(1310, 590)
 script = ExtResource("8_item")
-interaction_name = "Умыться"
+interaction_name = "Раковина"
+interaction_action = "Умыться"
 item_id = "sink"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sink"]
 shape = SubResource("item_shape")
 
+[node name="InteractionPromptAnchor" type="Marker2D" parent="Sink"]
+position = Vector2(0, -190)
+
 [node name="Mirror" type="Area2D" parent="."]
 position = Vector2(1420, 590)
 script = ExtResource("8_item")
-interaction_name = "Посмотреть в зеркало"
+interaction_name = "Зеркало"
+interaction_action = "Посмотреть"
 item_id = "mirror"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Mirror"]
 shape = SubResource("item_shape")
+
+[node name="InteractionPromptAnchor" type="Marker2D" parent="Mirror"]
+position = Vector2(0, -370)
 
 [node name="DialogueManager" parent="." instance=ExtResource("4_dialogue")]
 script = ExtResource("5_dialogue")
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 
-[node name="InteractionPrompt" type="Label" parent="UILayer"]
-visible = false
-offset_left = 360.0
-offset_top = 962.0
-offset_right = 1560.0
-offset_bottom = 1010.0
-mouse_filter = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 26
-horizontal_alignment = 1
+[node name="InteractionPrompt" parent="UILayer" instance=ExtResource("interaction_prompt")]
 
 [node name="PauseMenu" parent="UILayer" instance=ExtResource("6_pause")]
 visible = false
@@ -112,11 +110,15 @@ visible = false
 [node name="Basket" type="Area2D" parent="."]
 position = Vector2(1590, 590)
 script = ExtResource("8_item")
-interaction_name = "Заглянуть в корзину"
+interaction_name = "Корзина с бельём"
+interaction_action = "Заглянуть"
 item_id = "basket"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Basket"]
 shape = SubResource("item_shape")
+
+[node name="InteractionPromptAnchor" type="Marker2D" parent="Basket"]
+position = Vector2(0, -120)
 
 [node name="Svetik" parent="." instance=ExtResource("svetik")]
 position = Vector2(1515, 330)
@@ -127,8 +129,12 @@ script = ExtResource("container")
 [node name="BathCabinet" type="Area2D" parent="."]
 position = Vector2(790, 590)
 script = ExtResource("cabinet")
-interaction_name = "Открыть тумбочку"
+interaction_name = "Тумбочка"
+interaction_action = "Открыть"
 cabinet_title = "Тумбочка рядом с ванной"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BathCabinet"]
 shape = SubResource("item_shape")
+
+[node name="InteractionPromptAnchor" type="Marker2D" parent="BathCabinet"]
+position = Vector2(0, -155)

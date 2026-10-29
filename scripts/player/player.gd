@@ -13,7 +13,7 @@ var can_move: bool = true
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var interaction_area: Area2D = $InteractionArea
-@onready var interaction_prompt: Label = get_tree().current_scene.find_child("InteractionPrompt", true, false) as Label
+var interaction_prompt: InteractionPrompt
 var current_interactable: Area2D = null
 var highlighted_interactable: Area2D = null
 
@@ -25,12 +25,21 @@ var right_texture = preload("res://art/characters/Michael_right.png")
 
 func _ready() -> void:
 	global_position.y = floor_y
+	var current_scene = get_parent()
+	interaction_prompt = current_scene.find_child("InteractionPrompt", true, false) as InteractionPrompt
+	if interaction_prompt == null:
+		interaction_prompt = preload("res://scenes/ui/interaction_prompt.tscn").instantiate() as InteractionPrompt
+		var ui_layer = current_scene.get_node_or_null("InteractionUI")
+		if ui_layer == null:
+			ui_layer = current_scene.get_node_or_null("UILayer")
+		if ui_layer == null:
+			ui_layer = CanvasLayer.new()
+			ui_layer.name = "InteractionUI"
+			current_scene.add_child.call_deferred(ui_layer)
+		ui_layer.add_child.call_deferred(interaction_prompt)
+	interaction_prompt.hide()
+
 	if not GameState.has_pending_player_position:
-		return
-
-	var current_scene = get_tree().current_scene
-
-	if current_scene == null:
 		return
 
 	if current_scene.scene_file_path != GameState.saved_scene:
@@ -44,6 +53,7 @@ func _ready() -> void:
 
 func _physics_process(_delta: float) -> void:
 	if not can_move:
+		interaction_prompt.hide()
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
@@ -96,6 +106,8 @@ func _update_interaction_target() -> void:
 	for object in objects:
 		if not object.is_visible_in_tree() or not object.has_method("interact"):
 			continue
+		if object.has_method("interact_with_door") and not object.player_nearby:
+			continue
 
 		var distance := global_position.distance_to(
 			object.global_position
@@ -111,14 +123,39 @@ func _update_interaction_target() -> void:
 	highlighted_interactable = nearest_object
 	current_interactable = nearest_object
 
-	if interaction_prompt == null or room_controls_prompt:
+	if room_controls_prompt:
 		return
 
-	if current_interactable != null:
-		var object_name: String = str(
-			current_interactable.get("interaction_name")
-		)
-		interaction_prompt.text = "E — Осмотреть " + object_name
-		interaction_prompt.show()
-	else:
-		interaction_prompt.hide()
+	show_interaction_prompt(current_interactable)
+
+
+func show_interaction_prompt(target: Area2D, object_name: String = "", action_name: String = "") -> void:
+	if not is_instance_valid(interaction_prompt) or not interaction_prompt.is_node_ready():
+		return
+	if not is_instance_valid(target):
+		interaction_prompt.hide_prompt()
+		return
+	if object_name.is_empty():
+		object_name = str(target.get("interaction_name"))
+	if action_name.is_empty():
+		action_name = str(target.get("interaction_action"))
+	interaction_prompt.show_prompt(object_name, action_name)
+	var camera := get_viewport().get_camera_2d()
+	if camera != null:
+		camera.force_update_scroll()
+	interaction_prompt.position_above(_get_prompt_position(target))
+
+
+func _get_prompt_position(target: Area2D) -> Vector2:
+	var anchor := target.get_node_or_null("InteractionPromptAnchor") as Node2D
+	if anchor != null:
+		return anchor.get_global_transform_with_canvas().origin
+	for child in target.get_children():
+		if child is Sprite2D and child.is_visible_in_tree() and child.texture != null:
+			var sprite_rect: Rect2 = child.get_rect()
+			return child.get_global_transform_with_canvas() * Vector2(sprite_rect.get_center().x, sprite_rect.position.y)
+	for child in target.get_children():
+		if child is CollisionShape2D and child.shape != null and not child.disabled:
+			var shape_rect: Rect2 = child.shape.get_rect()
+			return child.get_global_transform_with_canvas() * Vector2(shape_rect.get_center().x, shape_rect.position.y)
+	return target.get_global_transform_with_canvas().origin

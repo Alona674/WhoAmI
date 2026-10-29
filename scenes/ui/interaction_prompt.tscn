@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://bpngtabee34q0"]
+
+[ext_resource type="Script" uid="uid://dw1t2b87n54mv" path="res://scripts/interaction/interaction_prompt.gd" id="1_fhyea"]
+
+[node name="InteractionPrompt" type="VBoxContainer" unique_id=1940005212]
+visible = false
+offset_right = 160.0
+offset_bottom = 64.0
+mouse_filter = 2
+theme_override_constants/separation = 2
+script = ExtResource("1_fhyea")
+
+[node name="ObjectNameLabel" type="Label" parent="." unique_id=408471209]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+
+[node name="ActionLabel" type="Label" parent="." unique_id=379160518]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
