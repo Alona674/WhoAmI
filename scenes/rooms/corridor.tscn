@@ -8,6 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://b1d7m4myvd8ma" path="res://scenes/ui/DialogueManager.tscn" id="4_xm07l"]
 [ext_resource type="Script" uid="uid://ceu0h1yy7x0j0" path="res://scripts/dialogue/dialogue_manager.gd" id="5_bnshd"]
 
+[ext_resource type="PackedScene" path="res://scenes/characters/svetik.tscn" id="svetik_companion"]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_a5ngl"]
 size = Vector2(1982, 724)
 
@@ -56,6 +58,8 @@ position = Vector2(2070.00000, 630.00000)
 left_limit = 95.0
 right_limit = 2077.0
 floor_y = 630.0
+
+[node name="Svetik" parent="." instance=ExtResource("svetik_companion")]
 
 [node name="DialogueManager" parent="." unique_id=1465301247 instance=ExtResource("4_xm07l")]
 script = ExtResource("5_bnshd")

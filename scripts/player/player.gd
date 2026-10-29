@@ -78,6 +78,10 @@ func _input(event: InputEvent) -> void:
 	if not can_move:
 		return
 	if event.is_action_pressed("interact") and not event.is_echo():
+		# Leave E to the door handler when standing in a doorway.
+		for object in interaction_area.get_overlapping_areas():
+			if object.has_method("interact_with_door") and object.player_nearby:
+				return
 		if current_interactable != null:
 			if current_interactable.has_method("interact"):
 				current_interactable.interact()
@@ -87,6 +91,7 @@ func _update_interaction_target() -> void:
 	var objects := interaction_area.get_overlapping_areas()
 	var nearest_object: Area2D = null
 	var nearest_distance: float = INF
+	var nearest_priority: int = -2147483648
 
 	for object in objects:
 		if not object.is_visible_in_tree() or not object.has_method("interact"):
@@ -96,9 +101,12 @@ func _update_interaction_target() -> void:
 			object.global_position
 		)
 
-		if distance < nearest_distance:
+		var priority: int = object.interaction_priority if object is InteractableBase else 0
+		# A nearby companion must not take E away from room objects.
+		if priority > nearest_priority or (priority == nearest_priority and distance < nearest_distance):
 			nearest_object = object
 			nearest_distance = distance
+			nearest_priority = priority
 
 	highlighted_interactable = nearest_object
 	current_interactable = nearest_object

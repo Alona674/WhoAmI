@@ -70,6 +70,7 @@ func teddy_interacted() -> void:
 	await create_tween().tween_property(svetik,"modulate:a",1.0,0.6).finished
 	await say("Светик", "Доброе утро, Михаил.")
 	GameState.bedroom_intro_completed = true
+	svetik.start_following()
 	scene_stage = 3
 	busy = false
 	player.can_move = true

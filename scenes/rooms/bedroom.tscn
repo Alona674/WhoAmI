@@ -8,22 +8,19 @@
 [ext_resource type="Script" uid="uid://ceu0h1yy7x0j0" path="res://scripts/dialogue/dialogue_manager.gd" id="7_v47ap"]
 [ext_resource type="Script" uid="uid://3c4xkneuemol" path="res://scripts/interaction/mama.gd" id="8_ohr7v"]
 [ext_resource type="Texture2D" uid="uid://cp708ub55hx7p" path="res://art/characters/mama.png" id="9_63ydc"]
-[ext_resource type="Script" uid="uid://cxfcvrgtdcxqb" path="res://scripts/interaction/svetik.gd" id="10_ispgn"]
-[ext_resource type="Texture2D" path="res://art/characters/Svetik.png" id="11_thvn2"]
 [ext_resource type="Script" uid="uid://cs47lryboowoa" path="res://scripts/transitions/doors.gd" id="12_uq8jf"]
 [ext_resource type="PackedScene" uid="uid://hisq1d0ohn27" path="res://scenes/ui/PauseMenu.tscn" id="14_uq8jf"]
 
 [ext_resource type="PackedScene" path="res://scenes/rooms/objects/Wardrobe.tscn" id="cabinet"]
 [ext_resource type="Script" path="res://scripts/UI/container_panel.gd" id="container"]
 
+[ext_resource type="PackedScene" path="res://scenes/characters/svetik.tscn" id="svetik_companion"]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b2v72"]
 size = Vector2(89.5, 79)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ispgn"]
 size = Vector2(341.2888, 1149.5215)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_c3xs0"]
-size = Vector2(78, 85)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uq8jf"]
 size = Vector2(94, 108)
@@ -74,19 +71,8 @@ shape = SubResource("RectangleShape2D_ispgn")
 
 scale = Vector2(0.22, 0.22)
 
-[node name="Svetik" type="Area2D" parent="." unique_id=194835532]
-script = ExtResource("10_ispgn")
-position = Vector2(919.81299, 240.50654)
-scale = Vector2(0.74528, 0.69915)
-
-[node name="Sprite2D" type="Sprite2D" parent="Svetik" unique_id=1190584467]
-position = Vector2(264, 186.00003)
-scale = Vector2(0.079613596, 0.08811416)
-texture = ExtResource("11_thvn2")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Svetik" unique_id=1538211167]
-position = Vector2(266, 189)
-shape = SubResource("RectangleShape2D_c3xs0")
+[node name="Svetik" parent="." instance=ExtResource("svetik_companion")]
+position = Vector2(1117, 371)
 
 [node name="CorridorDoor" type="Area2D" parent="." unique_id=1990220822]
 script = ExtResource("12_uq8jf")

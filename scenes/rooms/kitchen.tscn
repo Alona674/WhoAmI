@@ -17,6 +17,8 @@
 [ext_resource type="PackedScene" uid="uid://hisq1d0ohn27" path="res://scenes/ui/PauseMenu.tscn" id="14_pause"]
 [ext_resource type="Script" uid="uid://cs47lryboowoa" path="res://scripts/transitions/doors.gd" id="15_avos5"]
 
+[ext_resource type="PackedScene" path="res://scenes/characters/svetik.tscn" id="svetik_companion"]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_scale"]
 size = Vector2(120, 150)
 
@@ -85,6 +87,8 @@ texture = ExtResource("12_pan_tex")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Pan" unique_id=1276094175]
 shape = SubResource("RectangleShape2D_pan")
+
+[node name="Svetik" parent="." instance=ExtResource("svetik_companion")]
 
 [node name="DialogueManager" parent="." unique_id=1471203884 instance=ExtResource("13_dialogue")]
 script = ExtResource("14_33dcn")

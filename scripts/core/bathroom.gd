@@ -73,13 +73,13 @@ func play_mirror_scene() -> void:
 	busy = true
 	await say("Михаил", "Ух ты, я как всегда выгляжу круто!")
 	$MirrorGlass/Reflection.material.set_shader_parameter("blood", true)
-	$Svetik.show()
+	$Svetik.begin_scripted_scene(Vector2(1515, 330))
 	await say("Светик", "А так?")
 	await say("Михаил", "Аааа, убери!!!")
 	await say("Светик", "А мне кажется тебе так больше идёт.")
 	$MirrorGlass/Reflection.material.set_shader_parameter("blood", false)
 	await say("Михаил", "Фух, вроде всё на месте, я опять красавчик.")
-	$Svetik.hide()
+	$Svetik.end_scripted_scene()
 	GameState.set_flag("bathroom_mirror_completed")
 	busy = false
 	player.can_move = true

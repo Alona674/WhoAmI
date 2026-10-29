@@ -13,7 +13,7 @@
 
 [ext_resource type="Script" path="res://scripts/UI/container_panel.gd" id="container"]
 [ext_resource type="Shader" path="res://scripts/effects/mirror_blood.gdshader" id="blood"]
-[ext_resource type="Texture2D" path="res://art/characters/Svetik.png" id="svetik"]
+[ext_resource type="PackedScene" path="res://scenes/characters/svetik.tscn" id="svetik"]
 
 [ext_resource type="Script" path="res://scripts/interaction/cabinet.gd" id="cabinet"]
 
@@ -54,6 +54,7 @@ antialiased = true
 [node name="Player" parent="." groups=["player"] instance=ExtResource("3_player")]
 script = ExtResource("10_player")
 position = Vector2(1080, 630)
+room_controls_prompt = true
 
 [node name="BathroomEntryPoint" type="Marker2D" parent="."]
 position = Vector2(1080, 630)
@@ -117,11 +118,8 @@ item_id = "basket"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Basket"]
 shape = SubResource("item_shape")
 
-[node name="Svetik" type="Sprite2D" parent="."]
-visible = false
+[node name="Svetik" parent="." instance=ExtResource("svetik")]
 position = Vector2(1515, 330)
-scale = Vector2(0.06, 0.06)
-texture = ExtResource("svetik")
 
 [node name="ContainerPanel" type="Control" parent="UILayer"]
 script = ExtResource("container")
