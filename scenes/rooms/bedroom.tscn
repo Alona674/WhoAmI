@@ -9,7 +9,7 @@
 [ext_resource type="Script" uid="uid://3c4xkneuemol" path="res://scripts/interaction/mama.gd" id="8_ohr7v"]
 [ext_resource type="Texture2D" uid="uid://cp708ub55hx7p" path="res://art/characters/mama.png" id="9_63ydc"]
 [ext_resource type="Script" uid="uid://cxfcvrgtdcxqb" path="res://scripts/interaction/svetik.gd" id="10_ispgn"]
-[ext_resource type="Texture2D" uid="uid://bqimxfevc2gy1" path="res://art/characters/Svetik.png" id="11_thvn2"]
+[ext_resource type="Texture2D" uid="uid://f6t0v3gk6k6h" path="res://art/characters/Svetik.png" id="11_thvn2"]
 [ext_resource type="Script" uid="uid://qidiyv4ycdf3" path="res://scenes/rooms/teddy_2.gd" id="12_c3xs0"]
 [ext_resource type="Script" uid="uid://cs47lryboowoa" path="res://scripts/transitions/doors.gd" id="12_uq8jf"]
 [ext_resource type="PackedScene" uid="uid://hisq1d0ohn27" path="res://scenes/ui/PauseMenu.tscn" id="14_uq8jf"]
@@ -47,7 +47,7 @@ position = Vector2(0, 200)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=855424012]
 
-[node name="Label" type="Label" parent="CanvasLayer" unique_id=564520720]
+[node name="InteractionPrompt" type="Label" parent="CanvasLayer" unique_id=564520720]
 visible = false
 offset_right = 40.0
 offset_bottom = 23.0
