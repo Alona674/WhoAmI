@@ -64,29 +64,34 @@ floor_y = 630.0
 [node name="DialogueManager" parent="." unique_id=1465301247 instance=ExtResource("4_xm07l")]
 script = ExtResource("5_bnshd")
 
+[node name="InteractionUI" type="CanvasLayer" parent="." unique_id=1506566674]
+
 [node name="BedroomDoor" type="Area2D" parent="." unique_id=556585023]
 script = ExtResource("4_jf14u")
+interaction_name = "Спальня"
 target_scene = "uid://cdhvfv8s0fewa"
 target_spawn_point = "BedroomEntryPoint"
-position = Vector2(968.33308, 214.39270)
+position = Vector2(2103.95692, 250.90554)
 scale = Vector2(0.74516, 0.74516)
 
 [node name="bedroomdoor_collision" type="CollisionShape2D" parent="BedroomDoor" unique_id=1081347064]
-position = Vector2(1540.5, 275)
+position = Vector2(7, 227)
 shape = SubResource("RectangleShape2D_xm07l")
 debug_color = Color(2.4065375e-07, 0.6440524, 0.29436648, 0.41960785)
 
 [node name="CorridorEntryPoint" type="Marker2D" parent="." unique_id=1421828375]
-position = Vector2(2070.00000, 630.00000)
+position = Vector2(2067.01936, 630.00000)
 
 [node name="KitchenDoor" type="Area2D" parent="." unique_id=1411205589]
 script = ExtResource("4_jf14u")
+interaction_name = "Кухня"
+interaction_action = "Войти"
 dialogue_text = "неТ"
-position = Vector2(968.33308, 214.39270)
+position = Vector2(1785.77360, 240.47330)
 scale = Vector2(0.74516, 0.74516)
 
 [node name="kitchendoor_collision" type="CollisionShape2D" parent="KitchenDoor" unique_id=1015289749]
-position = Vector2(1085.5, 252)
+position = Vector2(0, 211)
 shape = SubResource("RectangleShape2D_jf14u")
 debug_color = Color(0.6698354, 0.50982684, 3.85046e-07, 0.41960785)
 
@@ -95,27 +100,29 @@ position = Vector2(1777.00000, 630.00000)
 
 [node name="BathroomDoor" type="Area2D" parent="." unique_id=1631621531]
 script = ExtResource("4_jf14u")
+interaction_name = "Ванная"
 target_scene = "res://scenes/rooms/bathroom.tscn"
 target_spawn_point = "BathroomEntryPoint"
-position = Vector2(968.33308, 214.39270)
+position = Vector2(1257.45516, 255.37650)
 scale = Vector2(0.74516, 0.74516)
 
 [node name="bathroomdoor_collision" type="CollisionShape2D" parent="BathroomDoor" unique_id=844787338]
-position = Vector2(389.5, 266.5)
+position = Vector2(15, 200)
 shape = SubResource("RectangleShape2D_bnshd")
 debug_color = Color(0.1480253, 0.51938385, 0.99999994, 0.41960785)
 
 [node name="CorridorBathEntryPoint" type="Marker2D" parent="." unique_id=1227584272]
-position = Vector2(1259.00000, 630.00000)
+position = Vector2(1229.19360, 630.00000)
 
 [node name="HallDoor" type="Area2D" parent="." unique_id=930822168]
-position = Vector2(673.99627, 405.89791)
+position = Vector2(700.82203, 255.37559)
 script = ExtResource("4_jf14u")
+interaction_name = "Гостинная"
 dialogue_text = "Пока заперто."
 scale = Vector2(0.74516, 0.74516)
 
 [node name="halldoor_collision" type="CollisionShape2D" parent="HallDoor" unique_id=2088473966]
-position = Vector2(33.5, 2)
+position = Vector2(1, 214)
 shape = SubResource("RectangleShape2D_7eq0f")
 debug_color = Color(0.9319053, 0.13653532, 0.55656636, 0.41960785)
 
@@ -123,13 +130,14 @@ debug_color = Color(0.9319053, 0.13653532, 0.55656636, 0.41960785)
 position = Vector2(698.00000, 630.00000)
 
 [node name="Door" type="Area2D" parent="." unique_id=1711530445]
-position = Vector2(1548.06483, 478.92325)
+position = Vector2(79.35447, 173.40765)
 script = ExtResource("4_jf14u")
+interaction_name = "Спальня родитлей"
 dialogue_text = "Мама и папа не любят когда я к ним захожу в комнату."
 scale = Vector2(0.74516, 0.74516)
 
 [node name="door_collision" type="CollisionShape2D" parent="Door" unique_id=89497929]
-position = Vector2(-1943.5, -125.5)
+position = Vector2(32, 280)
 shape = SubResource("RectangleShape2D_0bt2f")
 debug_color = Color(0.9281145, 0.2626459, 0.14572746, 0.41960785)
 

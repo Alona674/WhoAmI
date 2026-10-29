@@ -19,6 +19,7 @@
 [ext_resource type="Script" path="res://scripts/interaction/window_view.gd" id="window_script"]
 [ext_resource type="Texture2D" path="res://art/rooms/bedroom/Солнечный сад за окном.png" id="garden"]
 [ext_resource type="Texture2D" path="res://art/rooms/bedroom/dver (2).png" id="open_door"]
+[ext_resource type="PackedScene" path="res://scenes/ui/interaction_prompt.tscn" id="interaction_prompt"]
 
 [sub_resource type="RectangleShape2D" id="window_shape"]
 size = Vector2(120, 300)
@@ -97,22 +98,7 @@ position = Vector2(130, 706)
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=1246127785]
 
-[node name="InteractionPrompt" type="Label" parent="UILayer"]
-visible = false
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -118.0
-offset_bottom = -70.0
-grow_horizontal = 2
-grow_vertical = 0
-mouse_filter = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 26
-horizontal_alignment = 1
+[node name="InteractionPrompt" parent="UILayer" instance=ExtResource("interaction_prompt")]
 
 [node name="PauseMenu" parent="UILayer" unique_id=1871684007 instance=ExtResource("14_uq8jf")]
 visible = false

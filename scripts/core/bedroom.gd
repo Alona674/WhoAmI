@@ -3,7 +3,7 @@ extends Node2D
 @onready var mama = $Mama
 @onready var svetik = $Svetik
 @onready var dialogue_manager = $DialogueManager
-@onready var prompt: Label = $UILayer/InteractionPrompt
+@onready var prompt: InteractionPrompt = $UILayer/InteractionPrompt
 var scene_stage: int = 0
 var busy: bool = false
 
@@ -22,23 +22,24 @@ func _process(_delta: float) -> void:
 		prompt.hide()
 		return
 	if $CorridorDoor.player_nearby:
-		prompt.text = "E — В коридор"
+		player.show_interaction_prompt($CorridorDoor, "Коридор", "Войти")
 	elif player.current_interactable != null:
 		match player.current_interactable.name:
 			"Wardrobe":
-				prompt.text = "E — Открыть шкаф"
+				player.show_interaction_prompt(player.current_interactable, "Шкаф", "Открыть")
 			"Teddy":
-				prompt.text = "E — Осмотреть Тедди"
+				player.show_interaction_prompt(player.current_interactable, "Тедди", "Осмотреть")
 			"Mama":
-				prompt.text = "E — Поговорить с мамой"
+				player.show_interaction_prompt(player.current_interactable, "Мама", "Поговорить")
 			"Svetik":
-				prompt.text = "E — Поговорить со Светиком"
+				player.show_interaction_prompt(player.current_interactable, "Светик", "Поговорить")
+			"WindowArea":
+				player.show_interaction_prompt(player.current_interactable, "Окно", "Посмотреть")
 			_:
-				prompt.text = "E — " + player.current_interactable.interaction_name
+				player.show_interaction_prompt(player.current_interactable)
 	else:
 		prompt.hide()
 		return
-	prompt.show()
 
 func say(speaker: String, words: String) -> void:
 	dialogue_manager.show_dialogue(speaker, words)
