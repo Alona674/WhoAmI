@@ -1,0 +1,98 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/core/bathroom.gd" id="1_room"]
+[ext_resource type="Texture2D" path="res://art/rooms/bathroom/bathroom.png" id="2_bg"]
+[ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/DialogueManager.tscn" id="4_dialogue"]
+[ext_resource type="Script" path="res://scripts/dialogue/dialogue_manager.gd" id="5_dialogue"]
+[ext_resource type="PackedScene" path="res://scenes/ui/PauseMenu.tscn" id="6_pause"]
+[ext_resource type="Script" path="res://scripts/transitions/doors.gd" id="7_door"]
+[ext_resource type="Script" path="res://scripts/interaction/bathroom_item.gd" id="8_item"]
+[ext_resource type="Script" path="res://scripts/interaction/bathroom_mirror.gd" id="9_mirror"]
+[ext_resource type="Script" path="res://scripts/player/bathroom_player.gd" id="10_player"]
+
+[sub_resource type="RectangleShape2D" id="item_shape"]
+size = Vector2(32, 80)
+
+[sub_resource type="RectangleShape2D" id="door_shape"]
+size = Vector2(130, 340)
+
+[node name="Bathroom" type="Node2D"]
+script = ExtResource("1_room")
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("2_bg")
+centered = false
+
+[node name="MirrorGlass" type="Polygon2D" parent="."]
+clip_children = 2
+color = Color(1, 1, 1, 1)
+vertex_colors = PackedColorArray(0.32, 0.39, 0.39, 1, 0.34, 0.41, 0.41, 1, 0.37, 0.44, 0.43, 1, 0.40, 0.46, 0.45, 1, 0.44, 0.49, 0.47, 1, 0.47, 0.52, 0.49, 1, 0.52, 0.55, 0.50, 1, 0.55, 0.57, 0.52, 1, 0.49, 0.52, 0.48, 1, 0.46, 0.50, 0.47, 1, 0.31, 0.39, 0.39, 1, 0.30, 0.38, 0.38, 1)
+antialiased = true
+polygon = PackedVector2Array(1353, 236, 1360, 226, 1380, 224, 1395, 217, 1410, 220, 1424, 226, 1450, 226, 1459, 236, 1459, 349, 1451, 358, 1361, 358, 1353, 349)
+script = ExtResource("9_mirror")
+
+[node name="Reflection" type="Sprite2D" parent="MirrorGlass"]
+modulate = Color(0.82, 0.88, 0.84, 0.88)
+
+[node name="Glint" type="Polygon2D" parent="MirrorGlass"]
+color = Color(0.94, 0.94, 0.87, 0.07)
+polygon = PackedVector2Array(1386, 217, 1400, 217, 1353, 305, 1353, 280)
+antialiased = true
+
+[node name="Player" parent="." groups=["player"] instance=ExtResource("3_player")]
+script = ExtResource("10_player")
+position = Vector2(1080, 630)
+
+[node name="BathroomEntryPoint" type="Marker2D" parent="."]
+position = Vector2(1080, 630)
+
+[node name="CorridorDoor" type="Area2D" parent="."]
+position = Vector2(1080, 420)
+script = ExtResource("7_door")
+target_scene = "res://scenes/rooms/corridor.tscn"
+target_spawn_point = "CorridorBathEntryPoint"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CorridorDoor"]
+shape = SubResource("door_shape")
+
+[node name="Sink" type="Area2D" parent="."]
+position = Vector2(1310, 590)
+script = ExtResource("8_item")
+interaction_name = "Умыться"
+item_id = "sink"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sink"]
+shape = SubResource("item_shape")
+
+[node name="Mirror" type="Area2D" parent="."]
+position = Vector2(1420, 590)
+script = ExtResource("8_item")
+interaction_name = "Посмотреть в зеркало"
+item_id = "mirror"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mirror"]
+shape = SubResource("item_shape")
+
+[node name="DialogueManager" parent="." instance=ExtResource("4_dialogue")]
+script = ExtResource("5_dialogue")
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+
+[node name="InteractionPrompt" type="Label" parent="UILayer"]
+visible = false
+offset_left = 360.0
+offset_top = 962.0
+offset_right = 1560.0
+offset_bottom = 1010.0
+mouse_filter = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+
+[node name="PauseMenu" parent="UILayer" instance=ExtResource("6_pause")]
+visible = false
+
+[editable path="Player"]
