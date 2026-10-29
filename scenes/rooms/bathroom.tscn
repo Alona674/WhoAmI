@@ -79,6 +79,9 @@ item_id = "sink"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sink"]
 shape = SubResource("item_shape")
 
+[node name="InteractionPromptAnchor" type="Marker2D" parent="Sink"]
+position = Vector2(0, -190)
+
 [node name="Mirror" type="Area2D" parent="."]
 position = Vector2(1420, 590)
 script = ExtResource("8_item")
@@ -88,6 +91,9 @@ item_id = "mirror"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Mirror"]
 shape = SubResource("item_shape")
+
+[node name="InteractionPromptAnchor" type="Marker2D" parent="Mirror"]
+position = Vector2(0, -370)
 
 [node name="DialogueManager" parent="." instance=ExtResource("4_dialogue")]
 script = ExtResource("5_dialogue")
@@ -111,6 +117,9 @@ item_id = "basket"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Basket"]
 shape = SubResource("item_shape")
 
+[node name="InteractionPromptAnchor" type="Marker2D" parent="Basket"]
+position = Vector2(0, -120)
+
 [node name="Svetik" parent="." instance=ExtResource("svetik")]
 position = Vector2(1515, 330)
 
@@ -126,3 +135,6 @@ cabinet_title = "Тумбочка рядом с ванной"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BathCabinet"]
 shape = SubResource("item_shape")
+
+[node name="InteractionPromptAnchor" type="Marker2D" parent="BathCabinet"]
+position = Vector2(0, -155)

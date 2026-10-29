@@ -122,6 +122,9 @@ script = ExtResource("window_script")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WindowArea"]
 shape = SubResource("window_shape")
 
+[node name="InteractionPromptAnchor" type="Marker2D" parent="WindowArea"]
+position = Vector2(0, -220)
+
 [node name="WindowView" type="Control" parent="UILayer"]
 visible = false
 anchors_preset = 15

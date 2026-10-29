@@ -140,5 +140,22 @@ func show_interaction_prompt(target: Area2D, object_name: String = "", action_na
 	if action_name.is_empty():
 		action_name = str(target.get("interaction_action"))
 	interaction_prompt.show_prompt(object_name, action_name)
-	var target_position: Vector2 = target.get_global_transform_with_canvas().origin
-	interaction_prompt.position = target_position + Vector2(-50, -100)
+	var camera := get_viewport().get_camera_2d()
+	if camera != null:
+		camera.force_update_scroll()
+	interaction_prompt.position_above(_get_prompt_position(target))
+
+
+func _get_prompt_position(target: Area2D) -> Vector2:
+	var anchor := target.get_node_or_null("InteractionPromptAnchor") as Node2D
+	if anchor != null:
+		return anchor.get_global_transform_with_canvas().origin
+	for child in target.get_children():
+		if child is Sprite2D and child.is_visible_in_tree() and child.texture != null:
+			var sprite_rect: Rect2 = child.get_rect()
+			return child.get_global_transform_with_canvas() * Vector2(sprite_rect.get_center().x, sprite_rect.position.y)
+	for child in target.get_children():
+		if child is CollisionShape2D and child.shape != null and not child.disabled:
+			var shape_rect: Rect2 = child.shape.get_rect()
+			return child.get_global_transform_with_canvas() * Vector2(shape_rect.get_center().x, shape_rect.position.y)
+	return target.get_global_transform_with_canvas().origin

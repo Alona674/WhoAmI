@@ -13,6 +13,9 @@ interaction_name = "Открыть шкаф"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("shape")
 
+[node name="InteractionPromptAnchor" type="Marker2D" parent="."]
+position = Vector2(0, -260)
+
 [node name="OpenSprite" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(-193, -499)
