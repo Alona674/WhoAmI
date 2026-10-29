@@ -1,6 +1,6 @@
 extends InteractableBase
 
-@export_enum("sink", "mirror") var item_id: String = "sink"
+@export_enum("sink", "mirror", "basket") var item_id: String = "sink"
 
 
 func interact() -> void:

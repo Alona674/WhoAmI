@@ -2,6 +2,8 @@ extends "res://scripts/player/player.gd"
 
 
 func _physics_process(delta: float) -> void:
+	if get_parent().busy:
+		can_move = false
 	super._physics_process(delta)
 	# Apply after the shared controller chooses its idle/walking texture.
 	# This also keeps the back view throughout the mirror dialogue.

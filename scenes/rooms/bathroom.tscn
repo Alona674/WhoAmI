@@ -11,6 +11,14 @@
 [ext_resource type="Script" path="res://scripts/interaction/bathroom_mirror.gd" id="9_mirror"]
 [ext_resource type="Script" path="res://scripts/player/bathroom_player.gd" id="10_player"]
 
+[ext_resource type="Script" path="res://scripts/UI/container_panel.gd" id="container"]
+[ext_resource type="Shader" path="res://scripts/effects/mirror_blood.gdshader" id="blood"]
+[ext_resource type="Texture2D" path="res://art/characters/Svetik.png" id="svetik"]
+
+[sub_resource type="ShaderMaterial" id="blood_material"]
+resource_local_to_scene = true
+shader = ExtResource("blood")
+
 [sub_resource type="RectangleShape2D" id="item_shape"]
 size = Vector2(32, 80)
 
@@ -33,6 +41,7 @@ polygon = PackedVector2Array(1353, 236, 1360, 226, 1380, 224, 1395, 217, 1410, 2
 script = ExtResource("9_mirror")
 
 [node name="Reflection" type="Sprite2D" parent="MirrorGlass"]
+material = SubResource("blood_material")
 modulate = Color(0.82, 0.88, 0.84, 0.88)
 
 [node name="Glint" type="Polygon2D" parent="MirrorGlass"]
@@ -96,3 +105,21 @@ horizontal_alignment = 1
 visible = false
 
 [editable path="Player"]
+
+[node name="Basket" type="Area2D" parent="."]
+position = Vector2(1590, 590)
+script = ExtResource("8_item")
+interaction_name = "Заглянуть в корзину"
+item_id = "basket"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Basket"]
+shape = SubResource("item_shape")
+
+[node name="Svetik" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(1515, 330)
+scale = Vector2(0.06, 0.06)
+texture = ExtResource("svetik")
+
+[node name="ContainerPanel" type="Control" parent="UILayer"]
+script = ExtResource("container")
