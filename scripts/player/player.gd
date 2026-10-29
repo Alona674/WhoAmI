@@ -5,8 +5,10 @@ extends CharacterBody2D
 var can_move: bool = true
 
 # Границы, в которых может ходить Михаил
-@export var left_limit: float = -330.0
-@export var right_limit: float = 2100.0
+@export var left_limit: float = 95.0
+@export var right_limit: float = 2075.0
+# Player.position is the feet position in every room.
+@export var floor_y: float = 630.0
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var interaction_area: Area2D = $InteractionArea
@@ -21,6 +23,7 @@ var right_texture = preload("res://art/characters/Michael_right.png")
 
 
 func _ready() -> void:
+	global_position.y = floor_y
 	if not GameState.has_pending_player_position:
 		return
 
@@ -33,6 +36,8 @@ func _ready() -> void:
 		return
 
 	global_position = GameState.saved_player_position
+	# Older saves used a sprite-origin position instead of the floor anchor.
+	global_position.y = floor_y
 	GameState.has_pending_player_position = false
 
 

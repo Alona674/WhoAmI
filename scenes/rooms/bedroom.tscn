@@ -34,16 +34,17 @@ size = Vector2(94, 108)
 size = Vector2(219, 726)
 
 [node name="Bedroom" type="Sprite2D" unique_id=576558266]
-position = Vector2(860, 455)
 script = ExtResource("1_thvn2")
 
 [node name="Background" type="Sprite2D" parent="." unique_id=815008149]
-position = Vector2(157.9094, 198.08923)
-scale = Vector2(1.3417742, 1.4303147)
 texture = ExtResource("2_63ydc")
+centered = false
 
 [node name="Player" parent="." unique_id=32208314 groups=["player"] instance=ExtResource("3_thvn2")]
-position = Vector2(0, 200)
+position = Vector2(1030.00000, 706.00000)
+left_limit = 80.0
+right_limit = 1995.0
+floor_y = 706.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=855424012]
 
@@ -55,6 +56,8 @@ text = "Е"
 
 [node name="Teddy" type="Area2D" parent="." unique_id=2146307104]
 script = ExtResource("4_khs6t")
+position = Vector2(919.81299, 240.50654)
+scale = Vector2(0.74528, 0.69915)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Teddy" unique_id=229909424]
 position = Vector2(20, 324)
@@ -64,8 +67,8 @@ shape = SubResource("RectangleShape2D_b2v72")
 script = ExtResource("7_v47ap")
 
 [node name="Mama" type="Area2D" parent="." unique_id=1098316269]
-position = Vector2(-392, 157.00003)
-scale = Vector2(0.419, 0.418)
+position = Vector2(627.66249, 350.27262)
+scale = Vector2(0.31227, 0.29224)
 script = ExtResource("8_ohr7v")
 
 [node name="Sprite2D" type="Sprite2D" parent="Mama" unique_id=140265819]
@@ -80,6 +83,8 @@ shape = SubResource("RectangleShape2D_ispgn")
 
 [node name="Svetik" type="Area2D" parent="." unique_id=194835532]
 script = ExtResource("10_ispgn")
+position = Vector2(919.81299, 240.50654)
+scale = Vector2(0.74528, 0.69915)
 
 [node name="Sprite2D" type="Sprite2D" parent="Svetik" unique_id=1190584467]
 position = Vector2(264, 186.00003)
@@ -91,18 +96,20 @@ position = Vector2(266, 189)
 shape = SubResource("RectangleShape2D_c3xs0")
 
 [node name="DoorClosed" type="Sprite2D" parent="." unique_id=1186904402]
-position = Vector2(-1295, 302.00003)
-scale = Vector2(0.47005215, 0.86482245)
+position = Vector2(-45.32705, 451.64891)
+scale = Vector2(0.35032, 0.60464)
 texture = SubResource("CompressedTexture2D_ispgn")
 
 [node name="DoorOpen" type="Sprite2D" parent="." unique_id=1414831390]
 visible = false
-position = Vector2(-653.875, 103.50001)
-scale = Vector2(0.4191081, 0.9033204)
+position = Vector2(432.49180, 312.86825)
+scale = Vector2(0.31235, 0.63155)
 texture = SubResource("CompressedTexture2D_thvn2")
 
 [node name="Teddy2" type="Area2D" parent="." unique_id=1340832972]
 script = ExtResource("12_c3xs0")
+position = Vector2(919.81299, 240.50654)
+scale = Vector2(0.74528, 0.69915)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Teddy2" unique_id=1176873310]
 position = Vector2(24, 334)
@@ -112,13 +119,15 @@ shape = SubResource("RectangleShape2D_uq8jf")
 script = ExtResource("12_uq8jf")
 target_scene = "uid://blpaawsoj6qqk"
 target_spawn_point = "CorridorEntryPoint"
+position = Vector2(919.81299, 240.50654)
+scale = Vector2(0.74528, 0.69915)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CorridorDoor" unique_id=267968618]
 position = Vector2(-1091.5, 270)
 shape = SubResource("RectangleShape2D_thvn2")
 
 [node name="BedroomEntryPoint" type="Marker2D" parent="." unique_id=327456511]
-position = Vector2(-1041, 171)
+position = Vector2(130, 706)
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=1246127785]
 
@@ -127,5 +136,9 @@ visible = false
 
 [connection signal="body_entered" from="Teddy2" to="Teddy2" method="_on_body_entered"]
 [connection signal="body_exited" from="Teddy2" to="Teddy2" method="_on_body_exited"]
+
+[node name="Camera2D" parent="Player" index="3"]
+limit_right = 2075
+limit_bottom = 758
 
 [editable path="Player"]
