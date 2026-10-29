@@ -15,6 +15,8 @@
 [ext_resource type="Shader" path="res://scripts/effects/mirror_blood.gdshader" id="blood"]
 [ext_resource type="Texture2D" path="res://art/characters/Svetik.png" id="svetik"]
 
+[ext_resource type="Script" path="res://scripts/interaction/cabinet.gd" id="cabinet"]
+
 [sub_resource type="ShaderMaterial" id="blood_material"]
 resource_local_to_scene = true
 shader = ExtResource("blood")
@@ -123,3 +125,12 @@ texture = ExtResource("svetik")
 
 [node name="ContainerPanel" type="Control" parent="UILayer"]
 script = ExtResource("container")
+
+[node name="BathCabinet" type="Area2D" parent="."]
+position = Vector2(790, 590)
+script = ExtResource("cabinet")
+interaction_name = "Открыть тумбочку"
+cabinet_title = "Тумбочка рядом с ванной"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BathCabinet"]
+shape = SubResource("item_shape")
