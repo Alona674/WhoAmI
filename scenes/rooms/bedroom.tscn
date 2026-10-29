@@ -9,10 +9,12 @@
 [ext_resource type="Script" uid="uid://3c4xkneuemol" path="res://scripts/interaction/mama.gd" id="8_ohr7v"]
 [ext_resource type="Texture2D" uid="uid://cp708ub55hx7p" path="res://art/characters/mama.png" id="9_63ydc"]
 [ext_resource type="Script" uid="uid://cxfcvrgtdcxqb" path="res://scripts/interaction/svetik.gd" id="10_ispgn"]
-[ext_resource type="Texture2D" uid="uid://bqimxfevc2gy1" path="res://art/characters/Svetik.png" id="11_thvn2"]
-[ext_resource type="Script" uid="uid://qidiyv4ycdf3" path="res://scenes/rooms/teddy_2.gd" id="12_c3xs0"]
+[ext_resource type="Texture2D" path="res://art/characters/Svetik.png" id="11_thvn2"]
 [ext_resource type="Script" uid="uid://cs47lryboowoa" path="res://scripts/transitions/doors.gd" id="12_uq8jf"]
 [ext_resource type="PackedScene" uid="uid://hisq1d0ohn27" path="res://scenes/ui/PauseMenu.tscn" id="14_uq8jf"]
+
+[ext_resource type="PackedScene" path="res://scenes/rooms/objects/Wardrobe.tscn" id="cabinet"]
+[ext_resource type="Script" path="res://scripts/UI/container_panel.gd" id="container"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b2v72"]
 size = Vector2(89.5, 79)
@@ -22,10 +24,6 @@ size = Vector2(341.2888, 1149.5215)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c3xs0"]
 size = Vector2(78, 85)
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ispgn"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_thvn2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uq8jf"]
 size = Vector2(94, 108)
@@ -67,19 +65,21 @@ shape = SubResource("RectangleShape2D_b2v72")
 script = ExtResource("7_v47ap")
 
 [node name="Mama" type="Area2D" parent="." unique_id=1098316269]
-position = Vector2(627.66249, 350.27262)
-scale = Vector2(0.31227, 0.29224)
+position = Vector2(750, 706)
+scale = Vector2(1, 1)
 script = ExtResource("8_ohr7v")
 
 [node name="Sprite2D" type="Sprite2D" parent="Mama" unique_id=140265819]
-position = Vector2(-1248.2101, 574.1627)
-scale = Vector2(0.77029556, 0.7519002)
+position = Vector2(0, -170)
+scale = Vector2(0.22, 0.22)
 texture = ExtResource("9_63ydc")
 flip_h = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Mama" unique_id=906429439]
-position = Vector2(-1264.9165, 566.9856)
+position = Vector2(0, -150)
 shape = SubResource("RectangleShape2D_ispgn")
+
+scale = Vector2(0.22, 0.22)
 
 [node name="Svetik" type="Area2D" parent="." unique_id=194835532]
 script = ExtResource("10_ispgn")
@@ -94,26 +94,6 @@ texture = ExtResource("11_thvn2")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Svetik" unique_id=1538211167]
 position = Vector2(266, 189)
 shape = SubResource("RectangleShape2D_c3xs0")
-
-[node name="DoorClosed" type="Sprite2D" parent="." unique_id=1186904402]
-position = Vector2(-45.32705, 451.64891)
-scale = Vector2(0.35032, 0.60464)
-texture = SubResource("CompressedTexture2D_ispgn")
-
-[node name="DoorOpen" type="Sprite2D" parent="." unique_id=1414831390]
-visible = false
-position = Vector2(432.49180, 312.86825)
-scale = Vector2(0.31235, 0.63155)
-texture = SubResource("CompressedTexture2D_thvn2")
-
-[node name="Teddy2" type="Area2D" parent="." unique_id=1340832972]
-script = ExtResource("12_c3xs0")
-position = Vector2(919.81299, 240.50654)
-scale = Vector2(0.74528, 0.69915)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Teddy2" unique_id=1176873310]
-position = Vector2(24, 334)
-shape = SubResource("RectangleShape2D_uq8jf")
 
 [node name="CorridorDoor" type="Area2D" parent="." unique_id=1990220822]
 script = ExtResource("12_uq8jf")
@@ -134,11 +114,14 @@ position = Vector2(130, 706)
 [node name="PauseMenu" parent="UILayer" unique_id=1871684007 instance=ExtResource("14_uq8jf")]
 visible = false
 
-[connection signal="body_entered" from="Teddy2" to="Teddy2" method="_on_body_entered"]
-[connection signal="body_exited" from="Teddy2" to="Teddy2" method="_on_body_exited"]
-
 [node name="Camera2D" parent="Player" index="3"]
 limit_right = 2075
 limit_bottom = 758
 
 [editable path="Player"]
+
+[node name="Wardrobe" parent="." instance=ExtResource("cabinet")]
+position = Vector2(420, 650)
+
+[node name="ContainerPanel" type="Control" parent="UILayer"]
+script = ExtResource("container")

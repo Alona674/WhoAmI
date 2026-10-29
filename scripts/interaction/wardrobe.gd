@@ -1,10 +1,7 @@
+extends InteractableBase
 
-extends Area2D
-
-@onready var bedroom = get_parent()
-@onready var wardrobe_open: Sprite2D = bedroom.get_node("WardrobeOpen")
-@onready var loot_panel = bedroom.get_node("UILayer/WardrobeLootPanel")
-
+@onready var wardrobe_open: Sprite2D = $OpenSprite
+@onready var loot_panel = get_parent().get_node("UILayer/ContainerPanel")
 var is_open: bool = false
 
 var wardrobe_items: Array[Dictionary] = [
@@ -33,17 +30,15 @@ var wardrobe_items: Array[Dictionary] = [
 
 func _ready() -> void:
 	wardrobe_open.hide()
-	loot_panel.item_taken.connect(_on_item_taken)
-
+	loot_panel.closed.connect(_close)
 
 func interact() -> void:
-	wardrobe_open.show()
-	loot_panel.open_container(wardrobe_items)
+	if is_open:
+		return
 	is_open = true
+	wardrobe_open.show()
+	loot_panel.open_container("Содержимое шкафа", wardrobe_items)
 
-
-func _on_item_taken(item_id: String) -> void:
-	for i in range(wardrobe_items.size()):
-		if wardrobe_items[i].get("id", "") == item_id:
-			wardrobe_items.remove_at(i)
-			break
+func _close() -> void:
+	is_open = false
+	wardrobe_open.hide()

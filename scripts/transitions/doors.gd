@@ -41,6 +41,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func interact_with_door() -> void:
+	var player = get_tree().get_first_node_in_group("player")
+	if player != null and not player.can_move:
+		return
 	# Если указана сцена, переходим в неё.
 	if target_scene != "":
 		GameState.next_spawn_point = target_spawn_point

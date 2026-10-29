@@ -17,7 +17,7 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if dialogue_manager.dialogue_box.visible or pause_menu.visible:
+	if dialogue_manager.dialogue_box.visible or pause_menu.visible or $UILayer/ContainerPanel.visible:
 		prompt.hide()
 	elif $CorridorDoor.player_nearby:
 		prompt.text = "E — В коридор"

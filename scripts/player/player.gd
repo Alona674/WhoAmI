@@ -74,6 +74,8 @@ func _physics_process(_delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if not can_move:
+		return
 	if event.is_action_pressed("interact") and not event.is_echo():
 		if current_interactable != null:
 			if current_interactable.has_method("interact"):
@@ -86,7 +88,7 @@ func _update_interaction_target() -> void:
 	var nearest_distance: float = INF
 
 	for object in objects:
-		if not object.has_method("interact"):
+		if not object.is_visible_in_tree() or not object.has_method("interact"):
 			continue
 
 		var distance := global_position.distance_to(
