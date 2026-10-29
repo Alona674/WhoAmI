@@ -1,28 +1,19 @@
+extends InteractableBase
 
-extends Area2D
-
-@onready var bedroom = get_parent()
-@onready var window_view: Control = bedroom.get_node("UILayer/WindowView")
-
-var is_viewing: bool = false
-
+@onready var window_view: Control = get_parent().get_node("UILayer/WindowView")
+@onready var player = get_parent().get_node("Player")
 
 func _ready() -> void:
+	interaction_name = "Посмотреть в окно"
 	window_view.hide()
-
 
 func interact() -> void:
-	if is_viewing:
-		close_view()
-	else:
-		open_view()
-
-
-func open_view() -> void:
-	is_viewing = true
 	window_view.show()
+	player.can_move = false
+	get_viewport().set_input_as_handled()
 
-
-func close_view() -> void:
-	is_viewing = false
-	window_view.hide()
+func _input(event: InputEvent) -> void:
+	if window_view.visible and not event.is_echo() and (event.is_action_pressed("interact") or event.is_action_pressed("ui_cancel")):
+		window_view.hide()
+		player.can_move = true
+		get_viewport().set_input_as_handled()

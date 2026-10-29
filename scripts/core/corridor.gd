@@ -13,6 +13,12 @@ extends Node2D
 
 
 func _ready() -> void:
+	if GameState.next_spawn_point != "":
+		var spawn_point = get_node_or_null(GameState.next_spawn_point)
+		if spawn_point != null:
+			player.global_position = spawn_point.global_position
+		GameState.next_spawn_point = ""
+
 	var rect = walk_shape.shape as RectangleShape2D
 
 	if rect == null:

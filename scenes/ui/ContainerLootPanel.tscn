@@ -1,0 +1,72 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/UI/wardrobe_loot_panel.gd" id="1"]
+
+[node name="WardrobeLootPanel" type="Control" unique_id=48278221]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1")
+
+[node name="Background" type="Panel" parent="." unique_id=1684206650]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -370.0
+offset_top = -245.0
+offset_right = 330.0
+offset_bottom = 205.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="Background" unique_id=1617037344]
+layout_mode = 0
+offset_left = 25.0
+offset_top = 20.0
+offset_right = 675.0
+offset_bottom = 60.0
+text = "Содержимое шкафа"
+
+[node name="ItemsGrid" type="GridContainer" parent="Background" unique_id=907344885]
+layout_mode = 0
+offset_left = 25.0
+offset_top = 65.0
+offset_right = 645.0
+offset_bottom = 435.0
+columns = 4
+
+[node name="TakeAllButton" type="Button" parent="Background" unique_id=879073625]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -108.0
+offset_top = -44.0
+offset_right = 108.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Забрать всё"
+
+[node name="CloseButton" type="Button" parent="Background" unique_id=2031130475]
+layout_mode = 0
+offset_left = 671.0
+offset_right = 700.0
+offset_bottom = 31.0
+text = "×"
+

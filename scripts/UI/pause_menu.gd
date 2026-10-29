@@ -1,4 +1,13 @@
 extends Control
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if visible and event.is_action_pressed("ui_cancel") and not event.is_echo():
+		get_tree().paused = false
+		hide()
+		get_viewport().set_input_as_handled()
+
+
 func _on_continue_button_pressed() -> void:
 	get_tree().paused = false
 	hide()

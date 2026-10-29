@@ -1,186 +1,100 @@
-
 extends Node2D
-
 @onready var player = $Player
 @onready var mama = $Mama
 @onready var svetik = $Svetik
 @onready var dialogue_manager = $DialogueManager
-
+@onready var prompt: Label = $UILayer/InteractionPrompt
 var scene_stage: int = 0
-
+var busy: bool = false
 
 func _ready() -> void:
 	mama.hide()
-	svetik.hide()
-
-	# Восстанавливаем состояние спальни,
-	# если вступительные диалоги уже завершены
-	if GameState.bedroom_intro_completed:
-		scene_stage = 3
-		svetik.show()
-		$DoorClosed.hide()
-		$DoorOpen.show()
-
-	# Перемещаем Михаила к нужной точке появления
+	svetik.visible = GameState.bedroom_intro_completed
+	scene_stage = 3 if GameState.bedroom_intro_completed else 0
 	if GameState.next_spawn_point != "":
-		var spawn_point = get_node_or_null(GameState.next_spawn_point)
-
-		if spawn_point != null:
-			player.global_position = spawn_point.global_position
-		else:
-			push_warning(
-				"Не найдена точка появления: "
-				+ GameState.next_spawn_point
-			)
-
+		var spawn = get_node_or_null(GameState.next_spawn_point)
+		if spawn != null:
+			player.global_position = spawn.global_position
 		GameState.next_spawn_point = ""
 
-	dialogue_manager.dialogue_closed.connect(_on_dialogue_closed)
+func _process(_delta: float) -> void:
+	if busy or not player.can_move or $UILayer/ContainerPanel.visible or $UILayer/PauseMenu.visible or $UILayer/WindowView.visible:
+		prompt.hide()
+		return
+	if $CorridorDoor.player_nearby:
+		prompt.text = "E — В коридор"
+	elif player.current_interactable != null:
+		match player.current_interactable.name:
+			"Wardrobe":
+				prompt.text = "E — Открыть шкаф"
+			"Teddy":
+				prompt.text = "E — Осмотреть Тедди"
+			"Mama":
+				prompt.text = "E — Поговорить с мамой"
+			"Svetik":
+				prompt.text = "E — Поговорить со Светиком"
+			_:
+				prompt.text = "E — " + player.current_interactable.interaction_name
+	else:
+		prompt.hide()
+		return
+	prompt.show()
 
+func say(speaker: String, words: String) -> void:
+	dialogue_manager.show_dialogue(speaker, words)
+	await dialogue_manager.dialogue_closed
 
 func teddy_interacted() -> void:
-	if scene_stage != 0:
+	if busy:
 		return
-
-	scene_stage = 1
-
-	dialogue_manager.show_dialogue(
-		"Михаил",
-		"Это мой старый Тедди."
-	)
-
-
-func _on_dialogue_closed() -> void:
-	if scene_stage == 1:
-		start_mama_scene()
-		return
-
-	if scene_stage == 2:
-		start_svetik_scene()
-		return
-
+	busy = true
+	await say("Михаил", "Это Тедди. Это мой друг, с ним весело играть в шахматы. Я всегда побеждаю!")
 	if scene_stage == 3:
-		GameState.bedroom_intro_completed = true
+		await say("Светик", "Ха, какая рухлядь. Миша, тебе стоит завести новых друзей.")
+		await say("Михаил", "Но ведь мы с ним с самого детства.")
+		GameState.add_item("teddy")
+	busy = false
+	player.can_move = true
 
-
-func start_mama_scene() -> void:
+func wardrobe_closed() -> void:
+	if busy or scene_stage >= 2:
+		return
+	busy = true
 	scene_stage = 2
-
-	var target_position: Vector2 = mama.position
-
-	mama.position = target_position + Vector2(-500, 0)
-
-	$DoorClosed.show()
-	$DoorOpen.hide()
-
-	mama.show()
-
-	await get_tree().create_timer(0.5).timeout
-
-	$DoorClosed.hide()
+	player.can_move = false
 	$DoorOpen.show()
-
-	var tween := create_tween()
-	tween.set_trans(Tween.TRANS_SINE)
-	tween.set_ease(Tween.EASE_IN_OUT)
-
-	tween.tween_property(
-		mama,
-		"position",
-		target_position,
-		1.5
-	)
-
-	await tween.finished
-
+	mama.position = Vector2(100, 706)
+	mama.show()
+	mama.get_node("Sprite2D").flip_h = false
+	var arrival = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	await arrival.tween_property(mama, "position", Vector2(750, 706), 1.5).finished
 	await get_tree().create_timer(0.4).timeout
-
-	dialogue_manager.show_dialogue(
-		"Мама",
-		"Михаил, просыпайся. Завтрак уже готов."
-	)
-
-
-func start_svetik_scene() -> void:
-	scene_stage = 3
-
-	var mama_sprite: Sprite2D = mama.get_node("Sprite2D")
-
-	mama_sprite.scale.x = -mama_sprite.scale.x
-
-	var mama_exit_position: Vector2 = mama.position + Vector2(-500, 0)
-
-	var mama_tween := create_tween()
-	mama_tween.set_trans(Tween.TRANS_SINE)
-	mama_tween.set_ease(Tween.EASE_IN_OUT)
-
-	mama_tween.tween_property(
-		mama,
-		"position",
-		mama_exit_position,
-		1.5
-	)
-
-	await mama_tween.finished
-
+	await say("Мама", "Михаил, просыпайся. Завтрак уже готов.")
+	player.can_move = false
+	mama.get_node("Sprite2D").flip_h = true
+	var departure = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	await departure.tween_property(mama, "position", Vector2(100, 706), 1.5).finished
 	mama.hide()
-
-	start_svetik_appearance()
-
-
-func start_svetik_appearance() -> void:
+	$DoorOpen.hide()
 	var target_position: Vector2 = svetik.position
-
 	svetik.position = target_position + Vector2(0, -40)
 	svetik.modulate.a = 0.0
-
 	svetik.show()
-
-	var tween := create_tween()
-	tween.set_trans(Tween.TRANS_SINE)
-	tween.set_ease(Tween.EASE_OUT)
-
-	tween.parallel().tween_property(
-		svetik,
-		"modulate:a",
-		1.0,
-		1.2
-	)
-
-	tween.parallel().tween_property(
-		svetik,
-		"position",
-		target_position,
-		1.2
-	)
-
-	await tween.finished
-
+	var appearance = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	appearance.parallel().tween_property(svetik, "modulate:a", 1.0, 1.2)
+	appearance.parallel().tween_property(svetik, "position", target_position, 1.2)
+	await appearance.finished
 	await get_tree().create_timer(0.3).timeout
-
-	dialogue_manager.show_dialogue(
-		"Светик",
-		"Доброе утро, Михаил."
-	)
-
+	await say("Светик", "Доброе утро, Михаил.")
+	GameState.bedroom_intro_completed = true
+	svetik.start_following()
+	scene_stage = 3
+	busy = false
+	player.can_move = true
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and not event.is_echo():
-		var pause_menu = get_node_or_null("UILayer/PauseMenu")
-
-		if pause_menu == null:
-			return
-
-		pause_menu.visible = not pause_menu.visible
-		get_tree().paused = pause_menu.visible
-
+		prompt.hide()
+		$UILayer/PauseMenu.show()
+		get_tree().paused = true
 		get_viewport().set_input_as_handled()
-
-
-func _on_continuebutton_pressed() -> void:
-	get_tree().paused = false
-
-	var pause_menu = get_node_or_null("UILayer/PauseMenu")
-
-	if pause_menu != null:
-		pause_menu.visible = false

@@ -1,30 +1,21 @@
 [gd_scene format=3 uid="uid://b1b43a1qe8u1t"]
 
-[ext_resource type="Script" uid="uid://ddwufg8afeieq" path="res://scripts/interaction/wardrobe.gd" id="1_w0o28"]
-[ext_resource type="Texture2D" uid="uid://b02pgiecd677" path="res://art/items/bedroom/шахматный король из шкафа.png" id="2_0o4ep"]
-[ext_resource type="Texture2D" uid="uid://byp8nxd5ey62j" path="res://art/items/bedroom/вилка из шкафа.png" id="3_ey0f3"]
-[ext_resource type="Texture2D" uid="uid://can505e7gk2bl" path="res://art/items/bedroom/Палка из шкафа.png" id="4_70tn8"]
-[ext_resource type="Texture2D" uid="uid://ca7eaal03yph7" path="res://art/items/bedroom/Зажигалка из шкафа.png" id="5_6nlmq"]
+[ext_resource type="Script" path="res://scripts/interaction/wardrobe.gd" id="1"]
+[ext_resource type="Texture2D" path="res://art/items/bedroom/open_closet.png" id="2"]
 
-[node name="Wardrobe" type="Node2D" unique_id=1948056818]
-script = ExtResource("1_w0o28")
+[sub_resource type="RectangleShape2D" id="shape"]
+size = Vector2(90, 80)
 
-[node name="ChessKing" type="Sprite2D" parent="." unique_id=663104977]
-position = Vector2(-200, 0)
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("2_0o4ep")
+[node name="Wardrobe" type="Area2D"]
+script = ExtResource("1")
+interaction_name = "Открыть шкаф"
 
-[node name="SuperWeapon" type="Sprite2D" parent="." unique_id=1935034192]
-position = Vector2(-75, 0)
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("3_ey0f3")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("shape")
 
-[node name="EvilBlaster" type="Sprite2D" parent="." unique_id=580236593]
-position = Vector2(75, 0)
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("4_70tn8")
-
-[node name="Lighter" type="Sprite2D" parent="." unique_id=1629832644]
-position = Vector2(200, 0)
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("5_6nlmq")
+[node name="OpenSprite" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-193, -499)
+scale = Vector2(0.41, 0.41)
+texture = ExtResource("2")
+centered = false
