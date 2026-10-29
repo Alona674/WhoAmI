@@ -1,259 +1,100 @@
-
 extends Node2D
-
+@onready var player = $Player
 @onready var mama = $Mama
 @onready var svetik = $Svetik
 @onready var dialogue_manager = $DialogueManager
-@onready var wardrobe_loot_panel = $UILayer/WardrobeLootPanel
-@onready var mama_interactable = $Mama
-@onready var svetik_interactable = $Svetik
-
+@onready var prompt: Label = $UILayer/InteractionPrompt
 var scene_stage: int = 0
-
-var teddy_dialogue_active: bool = false
-var teddy_dialogue_step: int = 0
-var svetik_greeting_active: bool = false
-
+var busy: bool = false
 
 func _ready() -> void:
 	mama.hide()
-	svetik.hide()
+	svetik.visible = GameState.bedroom_intro_completed
+	scene_stage = 3 if GameState.bedroom_intro_completed else 0
+	if GameState.next_spawn_point != "":
+		var spawn = get_node_or_null(GameState.next_spawn_point)
+		if spawn != null:
+			player.global_position = spawn.global_position
+		GameState.next_spawn_point = ""
 
-	mama_interactable.can_interact = false
-	svetik_interactable.can_interact = false
+func _process(_delta: float) -> void:
+	if busy or not player.can_move or $UILayer/ContainerPanel.visible or $UILayer/PauseMenu.visible or $UILayer/WindowView.visible:
+		prompt.hide()
+		return
+	if $CorridorDoor.player_nearby:
+		prompt.text = "E — В коридор"
+	elif player.current_interactable != null:
+		match player.current_interactable.name:
+			"Wardrobe":
+				prompt.text = "E — Открыть шкаф"
+			"Teddy":
+				prompt.text = "E — Осмотреть Тедди"
+			"Mama":
+				prompt.text = "E — Поговорить с мамой"
+			"Svetik":
+				prompt.text = "E — Поговорить со Светиком"
+			_:
+				prompt.text = "E — " + player.current_interactable.interaction_name
+	else:
+		prompt.hide()
+		return
+	prompt.show()
 
-	if not dialogue_manager.dialogue_closed.is_connected(_on_dialogue_closed):
-		dialogue_manager.dialogue_closed.connect(_on_dialogue_closed)
-
-	if not wardrobe_loot_panel.panel_closed.is_connected(_on_wardrobe_panel_closed):
-		wardrobe_loot_panel.panel_closed.connect(_on_wardrobe_panel_closed)
-
-
-# --------------------------------------------------
-# ВЗАИМОДЕЙСТВИЕ С ТЕДДИ
-# --------------------------------------------------
+func say(speaker: String, words: String) -> void:
+	dialogue_manager.show_dialogue(speaker, words)
+	await dialogue_manager.dialogue_closed
 
 func teddy_interacted() -> void:
-	if dialogue_manager.is_open:
+	if busy:
 		return
+	busy = true
+	await say("Михаил", "Это Тедди. Это мой друг, с ним весело играть в шахматы. Я всегда побеждаю!")
+	if scene_stage == 3:
+		await say("Светик", "Ха, какая рухлядь. Миша, тебе стоит завести новых друзей.")
+		await say("Михаил", "Но ведь мы с ним с самого детства.")
+		GameState.add_item("teddy")
+	busy = false
+	player.can_move = true
 
-	if teddy_dialogue_active:
+func wardrobe_closed() -> void:
+	if busy or scene_stage >= 2:
 		return
-
-	# До появления Светика — только реплика Михаила.
-	# После появления Светика — полноценный диалог из трёх реплик.
-	if scene_stage != 0 and scene_stage != 3:
-		return
-
-	teddy_dialogue_active = true
-	teddy_dialogue_step = 0
-
-	dialogue_manager.show_dialogue(
-		"Михаил",
-		"Это Тедди. Это мой друг, с ним весело играть в шахматы. Я всегда побеждаю!"
-	)
-
-
-# --------------------------------------------------
-# ЗАВЕРШЕНИЕ ДИАЛОГОВ
-# --------------------------------------------------
-
-func _on_dialogue_closed() -> void:
-	
-	print("ДИАЛОГ ЗАКРЫТ")
-	print("Этап: ", scene_stage)
-	print("Диалог Тедди активен: ", teddy_dialogue_active)
-	print("Шаг диалога: ", teddy_dialogue_step)
-
-	# Диалог о Тедди после появления Светика.
-	if teddy_dialogue_active:
-		if scene_stage == 3:
-			if teddy_dialogue_step == 0:
-				print("ЗАПУСКАЕМ РЕПЛИКУ СВЕТИКА")
-				teddy_dialogue_step = 1
-
-				dialogue_manager.show_dialogue(
-					"Светик",
-					"Ха, какая рухлядь. Миша, тебе стоит завести новых друзей."
-				)
-				return
-
-			if teddy_dialogue_step == 1:
-				teddy_dialogue_step = 2
-
-				dialogue_manager.show_dialogue(
-					"Михаил",
-					"Но ведь мы с ним с самого детства."
-				)
-				return
-
-		teddy_dialogue_active = false
-		teddy_dialogue_step = 0
-		return
-
-	# Приветствие Светика завершилось.
-	if svetik_greeting_active:
-		svetik_greeting_active = false
-		return
-
-	# Первая реплика Тедди завершилась до появления Светика.
-	if scene_stage == 1:
-		return
-
-	# Диалог мамы завершился — запускаем появление Светика.
-	if scene_stage == 2:
-		start_svetik_scene()
-
-
-# --------------------------------------------------
-# ЗАКРЫТИЕ ШКАФА
-# --------------------------------------------------
-
-func _on_wardrobe_panel_closed() -> void:
-	print("Шкаф закрыт. Этап сюжета: ", scene_stage)
-
-	if scene_stage >= 2:
-		return
-
-	start_mama_scene()
-
-
-# --------------------------------------------------
-# ПОЯВЛЕНИЕ МАМЫ
-# --------------------------------------------------
-
-func start_mama_scene() -> void:
+	busy = true
 	scene_stage = 2
-
-	var target_position: Vector2 = mama.position
-	mama.position = target_position + Vector2(-500, 0)
-
-	$DoorOpen2.show()
-	$"Dver(2)".show()
-
+	player.can_move = false
+	$DoorOpen.show()
+	mama.position = Vector2(100, 706)
 	mama.show()
-	mama_interactable.can_interact = true
-
-	var tween := create_tween()
-	tween.set_trans(Tween.TRANS_SINE)
-	tween.set_ease(Tween.EASE_IN_OUT)
-
-	tween.tween_property(
-		mama,
-		"position",
-		target_position,
-		1.5
-	)
-
-	await tween.finished
+	mama.get_node("Sprite2D").flip_h = false
+	var arrival = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	await arrival.tween_property(mama, "position", Vector2(750, 706), 1.5).finished
 	await get_tree().create_timer(0.4).timeout
-
-	dialogue_manager.show_dialogue(
-		"Мама",
-		"Михаил, просыпайся. Завтрак уже готов."
-	)
-
-
-# --------------------------------------------------
-# УХОД МАМЫ
-# --------------------------------------------------
-
-func start_svetik_scene() -> void:
-	if scene_stage != 2:
-		return
-
-	scene_stage = 3
-
-	mama_interactable.can_interact = false
-
-	var mama_sprite: Sprite2D = mama.get_node("Sprite2D")
-	mama_sprite.scale.x = -mama_sprite.scale.x
-
-	var mama_exit_position: Vector2 = mama.position + Vector2(-500, 0)
-
-	var mama_tween := create_tween()
-	mama_tween.set_trans(Tween.TRANS_SINE)
-	mama_tween.set_ease(Tween.EASE_IN_OUT)
-
-	mama_tween.tween_property(
-		mama,
-		"position",
-		mama_exit_position,
-		1.5
-	)
-
-	await mama_tween.finished
-
+	await say("Мама", "Михаил, просыпайся. Завтрак уже готов.")
+	player.can_move = false
+	mama.get_node("Sprite2D").flip_h = true
+	var departure = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	await departure.tween_property(mama, "position", Vector2(100, 706), 1.5).finished
 	mama.hide()
-
-	start_svetik_appearance()
-
-
-# --------------------------------------------------
-# ПОЯВЛЕНИЕ СВЕТИКА
-# --------------------------------------------------
-
-func start_svetik_appearance() -> void:
+	$DoorOpen.hide()
 	var target_position: Vector2 = svetik.position
-
 	svetik.position = target_position + Vector2(0, -40)
 	svetik.modulate.a = 0.0
 	svetik.show()
-
-	var tween := create_tween()
-	tween.set_trans(Tween.TRANS_SINE)
-	tween.set_ease(Tween.EASE_OUT)
-
-	tween.parallel().tween_property(
-		svetik,
-		"modulate:a",
-		1.0,
-		1.2
-	)
-
-	tween.parallel().tween_property(
-		svetik,
-		"position",
-		target_position,
-		1.2
-	)
-
-	await tween.finished
-
-	svetik_interactable.can_interact = true
-	svetik.start_follow($Player)
-
+	var appearance = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	appearance.parallel().tween_property(svetik, "modulate:a", 1.0, 1.2)
+	appearance.parallel().tween_property(svetik, "position", target_position, 1.2)
+	await appearance.finished
 	await get_tree().create_timer(0.3).timeout
-
-	svetik_greeting_active = true
-
-	dialogue_manager.show_dialogue(
-		"Светик",
-		"Доброе утро, Михаил."
-	)
-
-
-# --------------------------------------------------
-# ПАУЗА
-# --------------------------------------------------
+	await say("Светик", "Доброе утро, Михаил.")
+	GameState.bedroom_intro_completed = true
+	svetik.start_following()
+	scene_stage = 3
+	busy = false
+	player.can_move = true
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and not event.is_echo():
-		var pause_menu = get_node_or_null("UILayer/PauseMenu")
-
-		if pause_menu == null:
-			return
-
-		pause_menu.visible = not pause_menu.visible
-		get_tree().paused = pause_menu.visible
-
+		prompt.hide()
+		$UILayer/PauseMenu.show()
+		get_tree().paused = true
 		get_viewport().set_input_as_handled()
-
-
-func _on_continuebutton_pressed() -> void:
-	get_tree().paused = false
-
-	var pause_menu = get_node_or_null("UILayer/PauseMenu")
-
-	if pause_menu != null:
-		pause_menu.visible = false

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cisvhunw4ihwk"]
 
-[ext_resource type="Script" uid="uid://yhfpsitc7gfe" path="res://scripts/ui/loot_item.gd" id="1_fefu5"]
+[ext_resource type="Script" uid="uid://yhfpsitc7gfe" path="res://scripts/UI/loot_item.gd" id="1_fefu5"]
 
 [node name="LootItem" type="Panel" unique_id=526844391]
 custom_minimum_size = Vector2(145, 180)
@@ -14,6 +14,7 @@ offset_left = 12.0
 offset_top = 8.0
 offset_right = 132.0
 offset_bottom = 128.0
+mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
@@ -23,6 +24,7 @@ offset_left = 4.0
 offset_top = 132.0
 offset_right = 141.0
 offset_bottom = 176.0
+mouse_filter = 2
 text = "Предмет"
 horizontal_alignment = 1
 autowrap_mode = 2
