@@ -6,6 +6,7 @@ extends Node2D
 @onready var camera: Camera2D = $Player/Camera2D
 @onready var camera_shape: CollisionShape2D = $CameraArea/CameraCollisionShape2D
 @onready var pause_menu = $UILayer/PauseMenu
+@onready var dialogue_manager = $DialogueManager
 
 @export var player_left_offset: float = 0.0
 @export var player_right_offset: float = 0.0
@@ -61,3 +62,19 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_tree().paused = true
 
 		get_viewport().set_input_as_handled()
+
+
+
+func interact_item(item_id: String) -> void:
+	match item_id:
+		"chair":
+			dialogue_manager.show_dialogue("Михаил", "Можно немного передохнуть.")
+
+		"picture":
+			dialogue_manager.show_dialogue("Михаил", "Интересно, что это за место.")
+
+		"flowers":
+			dialogue_manager.show_dialogue("Михаил", "Какие красивые цветы.")
+
+		"globe":
+			dialogue_manager.show_dialogue("Михаил", "Мы живём на этом шаре?")

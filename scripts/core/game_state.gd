@@ -5,7 +5,7 @@ const SAVE_PATH: String = "user://savegame.json"
 
 var flags: Dictionary = {}
 var inventory: Array[String] = []
-
+var interaction_hints_enabled: bool = true
 # Состояние вступления в спальне
 var bedroom_intro_completed: bool = false
 

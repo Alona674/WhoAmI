@@ -4,7 +4,74 @@
 
 [sub_resource type="FontVariation" id="FontVariation_vb6pq"]
 
-[sub_resource type="FontVariation" id="FontVariation_7ida2"]
+[sub_resource type="FontFile" id="FontFile_vb6pq"]
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/17/0/ascent = 0.0
+cache/0/17/0/descent = 0.0
+cache/0/17/0/underline_position = 0.0
+cache/0/17/0/underline_thickness = 0.0
+cache/0/17/0/scale = 1.0
+cache/0/18/0/ascent = 0.0
+cache/0/18/0/descent = 0.0
+cache/0/18/0/underline_position = 0.0
+cache/0/18/0/underline_thickness = 0.0
+cache/0/18/0/scale = 1.0
+cache/0/19/0/ascent = 0.0
+cache/0/19/0/descent = 0.0
+cache/0/19/0/underline_position = 0.0
+cache/0/19/0/underline_thickness = 0.0
+cache/0/19/0/scale = 1.0
+cache/0/20/0/ascent = 0.0
+cache/0/20/0/descent = 0.0
+cache/0/20/0/underline_position = 0.0
+cache/0/20/0/underline_thickness = 0.0
+cache/0/20/0/scale = 1.0
+cache/0/21/0/ascent = 0.0
+cache/0/21/0/descent = 0.0
+cache/0/21/0/underline_position = 0.0
+cache/0/21/0/underline_thickness = 0.0
+cache/0/21/0/scale = 1.0
+cache/0/22/0/ascent = 0.0
+cache/0/22/0/descent = 0.0
+cache/0/22/0/underline_position = 0.0
+cache/0/22/0/underline_thickness = 0.0
+cache/0/22/0/scale = 1.0
+cache/0/23/0/ascent = 0.0
+cache/0/23/0/descent = 0.0
+cache/0/23/0/underline_position = 0.0
+cache/0/23/0/underline_thickness = 0.0
+cache/0/23/0/scale = 1.0
+cache/0/24/0/ascent = 0.0
+cache/0/24/0/descent = 0.0
+cache/0/24/0/underline_position = 0.0
+cache/0/24/0/underline_thickness = 0.0
+cache/0/24/0/scale = 1.0
+cache/0/25/0/ascent = 0.0
+cache/0/25/0/descent = 0.0
+cache/0/25/0/underline_position = 0.0
+cache/0/25/0/underline_thickness = 0.0
+cache/0/25/0/scale = 1.0
+cache/0/26/0/ascent = 0.0
+cache/0/26/0/descent = 0.0
+cache/0/26/0/underline_position = 0.0
+cache/0/26/0/underline_thickness = 0.0
+cache/0/26/0/scale = 1.0
 
 [node name="PauseMenu" type="Control" unique_id=1871684007]
 process_mode = 3
@@ -48,9 +115,14 @@ text = "Продолжить"
 
 [node name="SaveButton" type="Button" parent="VBoxContainer" unique_id=822214662]
 layout_mode = 2
-theme_override_fonts/font = SubResource("FontVariation_7ida2")
 theme_override_font_sizes/font_size = 23
 text = "Сохранить игру"
+
+[node name="Settings" type="Button" parent="VBoxContainer" unique_id=273048654]
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontFile_vb6pq")
+theme_override_font_sizes/font_size = 23
+text = "Настройки"
 
 [node name="LoadButton" type="Button" parent="VBoxContainer" unique_id=1570768626]
 layout_mode = 2
@@ -69,6 +141,7 @@ text = "Выход из игры"
 
 [connection signal="pressed" from="VBoxContainer/ContinueButton" to="." method="_on_continue_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="VBoxContainer/LoadButton" to="." method="_on_load_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]

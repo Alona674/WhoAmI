@@ -1,140 +1,139 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bp70bp8c6owfi"]
 
-[ext_resource type="Script" path="res://scripts/core/bathroom.gd" id="1_room"]
-[ext_resource type="Texture2D" path="res://art/rooms/bathroom/bathroom.png" id="2_bg"]
-[ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="3_player"]
-[ext_resource type="PackedScene" path="res://scenes/ui/DialogueManager.tscn" id="4_dialogue"]
-[ext_resource type="Script" path="res://scripts/dialogue/dialogue_manager.gd" id="5_dialogue"]
-[ext_resource type="PackedScene" path="res://scenes/ui/PauseMenu.tscn" id="6_pause"]
-[ext_resource type="Script" path="res://scripts/transitions/doors.gd" id="7_door"]
-[ext_resource type="Script" path="res://scripts/interaction/bathroom_item.gd" id="8_item"]
-[ext_resource type="Script" path="res://scripts/interaction/bathroom_mirror.gd" id="9_mirror"]
-[ext_resource type="Script" path="res://scripts/player/bathroom_player.gd" id="10_player"]
-
-[ext_resource type="Script" path="res://scripts/UI/container_panel.gd" id="container"]
-[ext_resource type="Shader" path="res://scripts/effects/mirror_blood.gdshader" id="blood"]
+[ext_resource type="Script" uid="uid://0jthas5v584n" path="res://scripts/core/bathroom.gd" id="1_room"]
+[ext_resource type="Texture2D" uid="uid://c68isjtt0fwyb" path="res://art/rooms/bathroom/bathroom.png" id="2_bg"]
+[ext_resource type="PackedScene" uid="uid://bu8vxbbtt4e44" path="res://scenes/characters/player.tscn" id="3_player"]
+[ext_resource type="PackedScene" uid="uid://b1d7m4myvd8ma" path="res://scenes/ui/DialogueManager.tscn" id="4_dialogue"]
+[ext_resource type="Script" uid="uid://ceu0h1yy7x0j0" path="res://scripts/dialogue/dialogue_manager.gd" id="5_dialogue"]
+[ext_resource type="PackedScene" uid="uid://hisq1d0ohn27" path="res://scenes/ui/PauseMenu.tscn" id="6_pause"]
+[ext_resource type="Script" uid="uid://cs47lryboowoa" path="res://scripts/transitions/doors.gd" id="7_door"]
+[ext_resource type="Script" uid="uid://cl60y6ik7qf02" path="res://scripts/interaction/bathroom_item.gd" id="8_item"]
+[ext_resource type="Script" uid="uid://brukema3215em" path="res://scripts/interaction/bathroom_mirror.gd" id="9_mirror"]
+[ext_resource type="Script" uid="uid://cq5n3p3fpew13" path="res://scripts/player/bathroom_player.gd" id="10_player"]
+[ext_resource type="Shader" uid="uid://dgiiuc6i8reih" path="res://scripts/effects/mirror_blood.gdshader" id="blood"]
+[ext_resource type="Script" uid="uid://dmooqdafx4ejb" path="res://scripts/interaction/cabinet.gd" id="cabinet"]
+[ext_resource type="Script" uid="uid://byku8vb135aw5" path="res://scripts/UI/container_panel.gd" id="container"]
+[ext_resource type="PackedScene" uid="uid://bpngtabee34q0" path="res://scenes/ui/interaction_prompt.tscn" id="interaction_prompt"]
 [ext_resource type="PackedScene" path="res://scenes/characters/svetik.tscn" id="svetik"]
-
-[ext_resource type="Script" path="res://scripts/interaction/cabinet.gd" id="cabinet"]
-[ext_resource type="PackedScene" path="res://scenes/ui/interaction_prompt.tscn" id="interaction_prompt"]
 
 [sub_resource type="ShaderMaterial" id="blood_material"]
 resource_local_to_scene = true
 shader = ExtResource("blood")
-
-[sub_resource type="RectangleShape2D" id="item_shape"]
-size = Vector2(32, 80)
+shader_parameter/blood = false
 
 [sub_resource type="RectangleShape2D" id="door_shape"]
 size = Vector2(130, 340)
 
-[node name="Bathroom" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="item_shape"]
+size = Vector2(32, 80)
+
+[node name="Bathroom" type="Node2D" unique_id=1041114891]
 script = ExtResource("1_room")
 
-[node name="Background" type="Sprite2D" parent="."]
+[node name="Background" type="Sprite2D" parent="." unique_id=1142485759]
 texture = ExtResource("2_bg")
 centered = false
 
-[node name="MirrorGlass" type="Polygon2D" parent="."]
+[node name="MirrorGlass" type="Polygon2D" parent="." unique_id=553749775]
 clip_children = 2
-color = Color(1, 1, 1, 1)
-vertex_colors = PackedColorArray(0.32, 0.39, 0.39, 1, 0.34, 0.41, 0.41, 1, 0.37, 0.44, 0.43, 1, 0.40, 0.46, 0.45, 1, 0.44, 0.49, 0.47, 1, 0.47, 0.52, 0.49, 1, 0.52, 0.55, 0.50, 1, 0.55, 0.57, 0.52, 1, 0.49, 0.52, 0.48, 1, 0.46, 0.50, 0.47, 1, 0.31, 0.39, 0.39, 1, 0.30, 0.38, 0.38, 1)
 antialiased = true
 polygon = PackedVector2Array(1353, 236, 1360, 226, 1380, 224, 1395, 217, 1410, 220, 1424, 226, 1450, 226, 1459, 236, 1459, 349, 1451, 358, 1361, 358, 1353, 349)
+vertex_colors = PackedColorArray(0.32, 0.39, 0.39, 1, 0.34, 0.41, 0.41, 1, 0.37, 0.44, 0.43, 1, 0.4, 0.46, 0.45, 1, 0.44, 0.49, 0.47, 1, 0.47, 0.52, 0.49, 1, 0.52, 0.55, 0.5, 1, 0.55, 0.57, 0.52, 1, 0.49, 0.52, 0.48, 1, 0.46, 0.5, 0.47, 1, 0.31, 0.39, 0.39, 1, 0.3, 0.38, 0.38, 1)
 script = ExtResource("9_mirror")
 
-[node name="Reflection" type="Sprite2D" parent="MirrorGlass"]
-material = SubResource("blood_material")
+[node name="Reflection" type="Sprite2D" parent="MirrorGlass" unique_id=1276522541]
 modulate = Color(0.82, 0.88, 0.84, 0.88)
+material = SubResource("blood_material")
 
-[node name="Glint" type="Polygon2D" parent="MirrorGlass"]
+[node name="Glint" type="Polygon2D" parent="MirrorGlass" unique_id=1962659058]
 color = Color(0.94, 0.94, 0.87, 0.07)
-polygon = PackedVector2Array(1386, 217, 1400, 217, 1353, 305, 1353, 280)
 antialiased = true
+polygon = PackedVector2Array(1386, 217, 1400, 217, 1353, 305, 1353, 280)
 
-[node name="Player" parent="." groups=["player"] instance=ExtResource("3_player")]
-script = ExtResource("10_player")
+[node name="Player" parent="." unique_id=401445112 groups=["player"] instance=ExtResource("3_player")]
 position = Vector2(1080, 630)
+script = ExtResource("10_player")
 room_controls_prompt = true
 
-[node name="BathroomEntryPoint" type="Marker2D" parent="."]
+[node name="BathroomEntryPoint" type="Marker2D" parent="." unique_id=1065003386]
 position = Vector2(1080, 630)
 
-[node name="CorridorDoor" type="Area2D" parent="."]
+[node name="CorridorDoor" type="Area2D" parent="." unique_id=1150884386]
 position = Vector2(1080, 420)
 script = ExtResource("7_door")
 target_scene = "res://scenes/rooms/corridor.tscn"
 target_spawn_point = "CorridorBathEntryPoint"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CorridorDoor"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CorridorDoor" unique_id=1036602941]
 shape = SubResource("door_shape")
 
-[node name="Sink" type="Area2D" parent="."]
+[node name="Sink" type="Area2D" parent="." unique_id=1498450272]
 position = Vector2(1310, 590)
 script = ExtResource("8_item")
 interaction_name = "Раковина"
 interaction_action = "Умыться"
-item_id = "sink"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Sink"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sink" unique_id=1231339227]
 shape = SubResource("item_shape")
 
-[node name="InteractionPromptAnchor" type="Marker2D" parent="Sink"]
+[node name="InteractionPromptAnchor" type="Marker2D" parent="Sink" unique_id=764582822]
 position = Vector2(0, -190)
 
-[node name="Mirror" type="Area2D" parent="."]
+[node name="Mirror" type="Area2D" parent="." unique_id=230662090]
 position = Vector2(1420, 590)
 script = ExtResource("8_item")
+item_id = "mirror"
 interaction_name = "Зеркало"
 interaction_action = "Посмотреть"
-item_id = "mirror"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Mirror"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mirror" unique_id=1976992575]
 shape = SubResource("item_shape")
 
-[node name="InteractionPromptAnchor" type="Marker2D" parent="Mirror"]
+[node name="InteractionPromptAnchor" type="Marker2D" parent="Mirror" unique_id=1670092285]
 position = Vector2(0, -370)
 
-[node name="DialogueManager" parent="." instance=ExtResource("4_dialogue")]
+[node name="DialogueManager" parent="." unique_id=1747518405 instance=ExtResource("4_dialogue")]
 script = ExtResource("5_dialogue")
 
-[node name="UILayer" type="CanvasLayer" parent="."]
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=228477554]
 
-[node name="InteractionPrompt" parent="UILayer" instance=ExtResource("interaction_prompt")]
+[node name="InteractionPrompt" parent="UILayer" unique_id=1539755730 instance=ExtResource("interaction_prompt")]
 
-[node name="PauseMenu" parent="UILayer" instance=ExtResource("6_pause")]
+[node name="PauseMenu" parent="UILayer" unique_id=1226161308 instance=ExtResource("6_pause")]
 visible = false
 
-[editable path="Player"]
-
-[node name="Basket" type="Area2D" parent="."]
-position = Vector2(1590, 590)
-script = ExtResource("8_item")
-interaction_name = "Корзина с бельём"
-interaction_action = "Заглянуть"
-item_id = "basket"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Basket"]
-shape = SubResource("item_shape")
-
-[node name="InteractionPromptAnchor" type="Marker2D" parent="Basket"]
-position = Vector2(0, -120)
-
-[node name="Svetik" parent="." instance=ExtResource("svetik")]
-position = Vector2(1515, 330)
-
-[node name="ContainerPanel" type="Control" parent="UILayer"]
+[node name="ContainerPanel" type="Control" parent="UILayer" unique_id=1561633352]
+layout_mode = 3
+anchors_preset = 0
 script = ExtResource("container")
 
-[node name="BathCabinet" type="Area2D" parent="."]
-position = Vector2(790, 590)
-script = ExtResource("cabinet")
-interaction_name = "Тумбочка"
-interaction_action = "Открыть"
-cabinet_title = "Тумбочка рядом с ванной"
+[node name="Basket" type="Area2D" parent="." unique_id=740611096]
+position = Vector2(1590, 590)
+script = ExtResource("8_item")
+item_id = "basket"
+interaction_name = "Корзина с бельём"
+interaction_action = "Заглянуть"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BathCabinet"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Basket" unique_id=1486043082]
 shape = SubResource("item_shape")
 
-[node name="InteractionPromptAnchor" type="Marker2D" parent="BathCabinet"]
+[node name="InteractionPromptAnchor" type="Marker2D" parent="Basket" unique_id=593869110]
+position = Vector2(0, -120)
+
+[node name="Svetik" parent="." unique_id=1068596790 instance=ExtResource("svetik")]
+position = Vector2(1515, 330)
+
+[node name="BathCabinet" type="Area2D" parent="." unique_id=609650322]
+position = Vector2(790, 590)
+script = ExtResource("cabinet")
+cabinet_title = "Тумбочка рядом с ванной"
+interaction_name = "Тумбочка"
+interaction_action = "Открыть"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BathCabinet" unique_id=123807402]
+shape = SubResource("item_shape")
+
+[node name="InteractionPromptAnchor" type="Marker2D" parent="BathCabinet" unique_id=132343542]
 position = Vector2(0, -155)
+
+[editable path="Player"]

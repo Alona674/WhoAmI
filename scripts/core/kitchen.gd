@@ -1,7 +1,7 @@
 extends Node2D
 
 @onready var dialogue_manager = $DialogueManager
-
+@onready var player = $Player
 # Переменная для отслеживания прогресса на кухне
 var scene_stage: int = 0
 
@@ -9,6 +9,12 @@ var scene_stage: int = 0
 var chest_opened: bool = false
 
 func _ready() -> void:
+	if GameState.next_spawn_point != "":
+		var spawn_point = get_node_or_null(GameState.next_spawn_point)
+		if spawn_point != null:
+			player.global_position = spawn_point.global_position
+		GameState.next_spawn_point = ""
+
 	dialogue_manager.dialogue_closed.connect(_on_dialogue_closed)
 
 

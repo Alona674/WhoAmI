@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dmh7ur7wg22qg" path="res://art/background/backset.png" id="1_o2bc3"]
 
 [node name="Settings" type="Control" unique_id=1627857673]
+process_mode = 3
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,11 +23,33 @@ grow_vertical = 2
 texture = ExtResource("1_o2bc3")
 stretch_mode = 4
 
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=208024061]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -137.5
+offset_right = 137.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1370345024]
+layout_mode = 2
+alignment = 1
+
+[node name="InteractionHintsButton" type="CheckButton" parent="CenterContainer/VBoxContainer" unique_id=644490576]
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
+theme_override_colors/button_checked_color = Color(0.036414765, 0.40227595, 0.3422989, 1)
+theme_override_colors/button_unchecked_color = Color(0.8976829, 0, 0.105022065, 1)
+text = "Подсказки взаимодействия"
+
 [node name="back_button" type="Button" parent="." unique_id=967942028]
 layout_mode = 0
 offset_right = 8.0
 offset_bottom = 8.0
 text = "Назад"
 
-[connection signal="pressed" from="back_button" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="back_button" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="back_button" to="." method="_on_back_pressed"]

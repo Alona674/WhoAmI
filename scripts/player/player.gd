@@ -132,19 +132,24 @@ func _update_interaction_target() -> void:
 func show_interaction_prompt(target: Area2D, object_name: String = "", action_name: String = "") -> void:
 	if not is_instance_valid(interaction_prompt) or not interaction_prompt.is_node_ready():
 		return
+
 	if not is_instance_valid(target):
 		interaction_prompt.hide_prompt()
 		return
+
 	if object_name.is_empty():
 		object_name = str(target.get("interaction_name"))
 	if action_name.is_empty():
 		action_name = str(target.get("interaction_action"))
+
 	interaction_prompt.show_prompt(object_name, action_name)
+	interaction_prompt.set_action_visible(GameState.interaction_hints_enabled)
+
 	var camera := get_viewport().get_camera_2d()
 	if camera != null:
 		camera.force_update_scroll()
-	interaction_prompt.position_above(_get_prompt_position(target))
 
+	interaction_prompt.position_above(_get_prompt_position(target))
 
 func _get_prompt_position(target: Area2D) -> Vector2:
 	var anchor := target.get_node_or_null("InteractionPromptAnchor") as Node2D
