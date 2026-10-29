@@ -43,14 +43,7 @@ position = Vector2(1030.00000, 706.00000)
 left_limit = 80.0
 right_limit = 1995.0
 floor_y = 706.0
-
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=855424012]
-
-[node name="Label" type="Label" parent="CanvasLayer" unique_id=564520720]
-visible = false
-offset_right = 40.0
-offset_bottom = 23.0
-text = "Е"
+room_controls_prompt = true
 
 [node name="Teddy" type="Area2D" parent="." unique_id=2146307104]
 script = ExtResource("4_khs6t")
@@ -110,6 +103,23 @@ shape = SubResource("RectangleShape2D_thvn2")
 position = Vector2(130, 706)
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=1246127785]
+
+[node name="InteractionPrompt" type="Label" parent="UILayer"]
+visible = false
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -118.0
+offset_bottom = -70.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
 
 [node name="PauseMenu" parent="UILayer" unique_id=1871684007 instance=ExtResource("14_uq8jf")]
 visible = false

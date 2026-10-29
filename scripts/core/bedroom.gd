@@ -3,6 +3,7 @@ extends Node2D
 @onready var mama = $Mama
 @onready var svetik = $Svetik
 @onready var dialogue_manager = $DialogueManager
+@onready var prompt: Label = $UILayer/InteractionPrompt
 var scene_stage: int = 0
 var busy: bool = false
 
@@ -15,6 +16,29 @@ func _ready() -> void:
 		if spawn != null:
 			player.global_position = spawn.global_position
 		GameState.next_spawn_point = ""
+
+func _process(_delta: float) -> void:
+	if busy or not player.can_move or $UILayer/ContainerPanel.visible or $UILayer/PauseMenu.visible:
+		prompt.hide()
+		return
+	if $CorridorDoor.player_nearby:
+		prompt.text = "E — В коридор"
+	elif player.current_interactable != null:
+		match player.current_interactable.name:
+			"Wardrobe":
+				prompt.text = "E — Открыть шкаф"
+			"Teddy":
+				prompt.text = "E — Осмотреть Тедди"
+			"Mama":
+				prompt.text = "E — Поговорить с мамой"
+			"Svetik":
+				prompt.text = "E — Поговорить со Светиком"
+			_:
+				prompt.text = "E — " + player.current_interactable.interaction_name
+	else:
+		prompt.hide()
+		return
+	prompt.show()
 
 func say(speaker: String, words: String) -> void:
 	dialogue_manager.show_dialogue(speaker, words)
@@ -52,6 +76,7 @@ func teddy_interacted() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and not event.is_echo():
+		prompt.hide()
 		$UILayer/PauseMenu.show()
 		get_tree().paused = true
 		get_viewport().set_input_as_handled()

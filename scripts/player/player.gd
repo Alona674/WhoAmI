@@ -2,6 +2,7 @@
 extends CharacterBody2D
 
 @export var speed: float = 300.0
+@export var room_controls_prompt: bool = false
 var can_move: bool = true
 
 # Границы, в которых может ходить Михаил
@@ -102,7 +103,7 @@ func _update_interaction_target() -> void:
 	highlighted_interactable = nearest_object
 	current_interactable = nearest_object
 
-	if interaction_prompt == null:
+	if interaction_prompt == null or room_controls_prompt:
 		return
 
 	if current_interactable != null:
