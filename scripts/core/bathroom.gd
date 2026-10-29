@@ -91,7 +91,11 @@ func inspect_basket() -> void:
 		await say("Михаил", "Только грязное бельё. Носок я уже забрал.")
 	else:
 		await say("Михаил", "Фу, зачем я туда заглянул.")
-		$UILayer/ContainerPanel.open_container("Корзина с грязным бельём", [{"id": "dirty_sock", "name": "Грязный носок"}])
+		$UILayer/ContainerPanel.open_container("Корзина с грязным бельём", [{
+			"id": "dirty_sock",
+			"name": "Грязный носок",
+			"texture": preload("res://art/items/bathroom/dirty_sock.png")
+		}])
 		await $UILayer/ContainerPanel.closed
 		if GameState.has_item("dirty_sock"):
 			GameState.set_flag("bathroom_sock_taken")
