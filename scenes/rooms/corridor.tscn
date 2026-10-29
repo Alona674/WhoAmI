@@ -80,7 +80,7 @@ shape = SubResource("RectangleShape2D_xm07l")
 debug_color = Color(2.4065375e-07, 0.6440524, 0.29436648, 0.41960785)
 
 [node name="CorridorEntryPoint" type="Marker2D" parent="." unique_id=1421828375]
-position = Vector2(1541, 271)
+position = Vector2(2070.00000, 630.00000)
 
 [node name="KitchenDoor" type="Area2D" parent="." unique_id=1411205589]
 script = ExtResource("4_jf14u")
@@ -104,12 +104,13 @@ shape = SubResource("RectangleShape2D_bnshd")
 debug_color = Color(0.1480253, 0.51938385, 0.99999994, 0.41960785)
 
 [node name="CorridorBathEntryPoint" type="Marker2D" parent="." unique_id=1227584272]
-position = Vector2(400, 271)
+position = Vector2(1259.00000, 630.00000)
 
 [node name="HallDoor" type="Area2D" parent="." unique_id=930822168]
-position = Vector2(-395, 257)
+position = Vector2(673.99627, 405.89791)
 script = ExtResource("4_jf14u")
 dialogue_text = "Пока заперто."
+scale = Vector2(0.74516, 0.74516)
 
 [node name="halldoor_collision" type="CollisionShape2D" parent="HallDoor" unique_id=2088473966]
 position = Vector2(33.5, 2)
