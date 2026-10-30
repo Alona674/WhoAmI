@@ -1,10 +1,13 @@
 
 extends Node
 
+signal inventory_updated
+
 const SAVE_PATH: String = "user://savegame.json"
 
 var flags: Dictionary = {}
 var inventory: Array[String] = []
+var inventory_details: Dictionary = {}
 var interaction_hints_enabled: bool = true
 # Состояние вступления в спальне
 var bedroom_intro_completed: bool = false
@@ -29,6 +32,7 @@ func get_flag(flag_name: String) -> bool:
 func add_item(item_id: String) -> void:
 	if not inventory.has(item_id):
 		inventory.append(item_id)
+		inventory_updated.emit()
 
 
 func has_item(item_id: String) -> bool:
@@ -36,7 +40,9 @@ func has_item(item_id: String) -> bool:
 
 
 func remove_item(item_id: String) -> void:
-	inventory.erase(item_id)
+	if inventory.has(item_id):
+		inventory.erase(item_id)
+		inventory_updated.emit()
 
 
 func save_game() -> bool:
@@ -58,6 +64,7 @@ func save_game() -> bool:
 		"player_position_y": player.global_position.y,
 		"flags": flags,
 		"inventory": inventory,
+		"inventory_details": inventory_details,
 		"bedroom_intro_completed": bedroom_intro_completed
 	}
 
@@ -112,6 +119,9 @@ func load_game() -> bool:
 	inventory.clear()
 	for item in save_data.get("inventory", []):
 		inventory.append(str(item))
+	var saved_details = save_data.get("inventory_details", {})
+	inventory_details = saved_details if saved_details is Dictionary else {}
+	inventory_updated.emit()
 
 	bedroom_intro_completed = save_data.get(
 		"bedroom_intro_completed", false
