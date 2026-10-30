@@ -63,16 +63,27 @@ func clear_items() -> void:
 
 
 func _on_item_double_clicked(item_id: String) -> void:
+	# Ищем предмет в нашем массиве содержимого, чтобы забрать его полные данные
 	for i in range(contents.size()):
 		if contents[i].get("id", "") == item_id:
+			var item_data = contents[i] # Сохраняем весь словарь предмета из шкафа
 			contents.remove_at(i)
-			GameState.add_item(item_id)
+			
+			# Извлекаем иконку и описание, которые мы прописали в шкафу
+			var description = item_data.get("description", "Описание отсутствует.")
+			var icon_path = item_data.get("icon_path", "")
+			var item_name = item_data.get("name", item_id)
+			
+			# Передаем ВСЕ данные в InventoryManager
+			InventoryManager.add_item(item_id, item_name, description, icon_path)
+			
 			GameState.set_flag("collected_" + item_id)
 			item_taken.emit(item_id)
 			break
 
+	# Удаляем визуальную карточку из сетки интерфейса шкафа
 	for card in items_grid.get_children():
-		if card.item_id == item_id:
+		if "item_id" in card and card.item_id == item_id:
 			items_grid.remove_child(card)
 			card.queue_free()
 			break
@@ -89,9 +100,16 @@ func _update_empty_state() -> void:
 
 
 func _on_take_all_pressed() -> void:
+	# Забираем абсолютно все предметы, сохраняя их иконки и описания
 	for item in contents:
 		var item_id: String = item.get("id", "")
-		GameState.add_item(item_id)
+		var item_name: String = item.get("name", item_id)
+		var description: String = item.get("description", "Описание отсутствует.")
+		var icon_path: String = item.get("icon_path", "")
+		
+		# Передаем полные данные для каждого предмета в инвентарь
+		InventoryManager.add_item(item_id, item_name, description, icon_path)
+		
 		GameState.set_flag("collected_" + item_id)
 		item_taken.emit(item_id)
 

@@ -38,3 +38,7 @@ auto_height = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 autowrap_mode = 2
+
+[node name="DropButton" type="Button" parent="PanelContainer/MainLayout" unique_id=21559982]
+layout_mode = 2
+text = "Выбросить"
