@@ -53,7 +53,8 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed("ui_cancel") and not event.is_echo():
+		player.interaction_prompt.hide_prompt()
 		if pause_menu.visible:
 			pause_menu.hide()
 			get_tree().paused = false

@@ -53,7 +53,7 @@ polygon = PackedVector2Array(1386, 217, 1400, 217, 1353, 305, 1353, 280)
 [node name="Player" parent="." unique_id=401445112 groups=["player"] instance=ExtResource("3_player")]
 position = Vector2(1080, 630)
 script = ExtResource("10_player")
-room_controls_prompt = true
+unified_interactions = true
 
 [node name="BathroomEntryPoint" type="Marker2D" parent="." unique_id=1065003386]
 position = Vector2(1080, 630)
@@ -61,6 +61,8 @@ position = Vector2(1080, 630)
 [node name="CorridorDoor" type="Area2D" parent="." unique_id=1150884386]
 position = Vector2(1080, 420)
 script = ExtResource("7_door")
+interaction_name = "Коридор"
+interaction_action = "Войти"
 target_scene = "res://scenes/rooms/corridor.tscn"
 target_spawn_point = "CorridorBathEntryPoint"
 
@@ -122,6 +124,7 @@ position = Vector2(0, -120)
 
 [node name="Svetik" parent="." unique_id=1068596790 instance=ExtResource("svetik")]
 position = Vector2(1515, 330)
+interaction_action = "Поговорить"
 
 [node name="BathCabinet" type="Area2D" parent="." unique_id=609650322]
 position = Vector2(790, 590)
