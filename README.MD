@@ -55,14 +55,26 @@ godot --path .
 
 ## Диалог с ИИ-компаньоном
 
-Для ответов Светика запустите Python-сервер из соседней папки
+Код игры и Python-сервер Светика лежат в этом репозитории: сервер — в папке
 `svetik-server`. Используется локальная модель Ollama `qwen2.5:7b`.
 
-Из корня папки `svetik-server` запустите сервер:
+В PowerShell из корня проекта выполните эти команды один раз, чтобы создать
+окружение и установить зависимости:
 
 ```powershell
-.\env\Scripts\python.exe -m uvicorn server:app --host 127.0.0.1 --port 8000
+cd .\svetik-server
+py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
+
+Для запуска сервера:
+
+```powershell
+cd .\svetik-server
+.\.venv\Scripts\python.exe -m uvicorn server:app --host 127.0.0.1 --port 8000
+```
+
+Команды запуска предполагают новое окно PowerShell, открытое в корне проекта.
 
 Затем запустите игру в Godot. Нажмите `Tab`, чтобы начать разговор со Светиком.
 Когда Светик отвечает, можно закончить разговор или написать ему сообщение.
@@ -95,8 +107,12 @@ WhoAmI/
 │   ├── UI/               # Скрипты интерфейса
 │   └── effects/          # Шейдеры и визуальные эффекты
 ├── art/                  # Фоны, персонажи и предметы
+├── svetik-server/        # FastAPI-сервер и интеграция с Ollama
 └── loot_item.tscn         # Карточка предмета в контейнере
 ```
+
+Python-код Светика находится в `svetik-server/`; виртуальное окружение и
+локальное состояние сервера в Git не добавляются.
 
 Главная сцена — `scenes/ui/MainMenu.tscn`. Автозагрузка `GameState`
 находится в `scripts/core/game_state.gd` и хранит состояние между комнатами.
