@@ -9,6 +9,7 @@ var busy: bool = false
 
 
 func _ready() -> void:
+	SvetikWorld.restore_room(self)
 	if GameState.next_spawn_point != "":
 		var spawn_point = get_node_or_null(GameState.next_spawn_point)
 		if spawn_point != null:
@@ -63,7 +64,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func say(speaker: String, words: String) -> void:
-	dialogue_manager.show_dialogue(speaker, words)
+	dialogue_manager.show_dialogue(speaker, words, speaker == "Светик")
 	await dialogue_manager.dialogue_closed
 
 

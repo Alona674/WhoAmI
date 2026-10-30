@@ -1,10 +1,13 @@
 
 extends Node
 
+signal inventory_updated
+
 const SAVE_PATH: String = "user://savegame.json"
 
 var flags: Dictionary = {}
 var inventory: Array[String] = []
+var inventory_details: Dictionary = {}
 var interaction_hints_enabled: bool = true
 # Состояние вступления в спальне
 var bedroom_intro_completed: bool = false
@@ -16,6 +19,13 @@ var next_spawn_point: String = ""
 var saved_scene: String = ""
 var saved_player_position: Vector2 = Vector2.ZERO
 var has_pending_player_position: bool = false
+
+# Изменения мира, сделанные Светиком, сохраняются при переходе между комнатами.
+var world_object_positions: Dictionary = {}
+var broken_world_objects: Array[String] = []
+var stolen_world_objects: Array[String] = []
+var svetik_brightness: float = 1.0
+var svetik_screen_rotation_degrees: float = 0.0
 
 
 func set_flag(flag_name: String, value: bool = true) -> void:
@@ -29,6 +39,7 @@ func get_flag(flag_name: String) -> bool:
 func add_item(item_id: String) -> void:
 	if not inventory.has(item_id):
 		inventory.append(item_id)
+		inventory_updated.emit()
 
 
 func has_item(item_id: String) -> bool:
@@ -36,7 +47,9 @@ func has_item(item_id: String) -> bool:
 
 
 func remove_item(item_id: String) -> void:
-	inventory.erase(item_id)
+	if inventory.has(item_id):
+		inventory.erase(item_id)
+		inventory_updated.emit()
 
 
 func save_game() -> bool:
@@ -58,7 +71,13 @@ func save_game() -> bool:
 		"player_position_y": player.global_position.y,
 		"flags": flags,
 		"inventory": inventory,
-		"bedroom_intro_completed": bedroom_intro_completed
+		"inventory_details": inventory_details,
+		"bedroom_intro_completed": bedroom_intro_completed,
+		"world_object_positions": world_object_positions,
+		"broken_world_objects": broken_world_objects,
+		"stolen_world_objects": stolen_world_objects,
+		"svetik_brightness": svetik_brightness,
+		"svetik_screen_rotation_degrees": svetik_screen_rotation_degrees,
 	}
 
 	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
@@ -112,10 +131,22 @@ func load_game() -> bool:
 	inventory.clear()
 	for item in save_data.get("inventory", []):
 		inventory.append(str(item))
+	var loaded_inventory_details = save_data.get("inventory_details", {})
+	inventory_details = loaded_inventory_details if loaded_inventory_details is Dictionary else {}
+	inventory_updated.emit()
 
 	bedroom_intro_completed = save_data.get(
 		"bedroom_intro_completed", false
 	)
+	world_object_positions = save_data.get("world_object_positions", {})
+	broken_world_objects.clear()
+	for object_key in save_data.get("broken_world_objects", []):
+		broken_world_objects.append(str(object_key))
+	stolen_world_objects.clear()
+	for object_key in save_data.get("stolen_world_objects", []):
+		stolen_world_objects.append(str(object_key))
+	svetik_brightness = float(save_data.get("svetik_brightness", 1.0))
+	svetik_screen_rotation_degrees = float(save_data.get("svetik_screen_rotation_degrees", 0.0))
 
 	# Запоминаем комнату и позицию игрока
 	saved_scene = scene_path

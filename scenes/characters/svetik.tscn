@@ -10,7 +10,6 @@ radius = 34.0
 visible = false
 z_index = 2
 script = ExtResource("1")
-interaction_priority = -1
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.06, 0.06)
