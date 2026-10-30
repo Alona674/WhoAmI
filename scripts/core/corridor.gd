@@ -14,6 +14,7 @@ extends Node2D
 
 
 func _ready() -> void:
+	SvetikWorld.restore_room(self)
 	if GameState.next_spawn_point != "":
 		var spawn_point = get_node_or_null(GameState.next_spawn_point)
 		if spawn_point != null:

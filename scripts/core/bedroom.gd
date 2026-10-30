@@ -8,6 +8,7 @@ var scene_stage: int = 0
 var busy: bool = false
 
 func _ready() -> void:
+	SvetikWorld.restore_room(self)
 	mama.hide()
 	svetik.visible = GameState.bedroom_intro_completed
 	scene_stage = 3 if GameState.bedroom_intro_completed else 0
@@ -42,7 +43,7 @@ func _process(_delta: float) -> void:
 		return
 
 func say(speaker: String, words: String) -> void:
-	dialogue_manager.show_dialogue(speaker, words)
+	dialogue_manager.show_dialogue(speaker, words, speaker == "Светик")
 	await dialogue_manager.dialogue_closed
 
 func teddy_interacted() -> void:
@@ -64,18 +65,25 @@ func wardrobe_closed() -> void:
 	scene_stage = 2
 	player.can_move = false
 	$DoorOpen.show()
-	mama.position = Vector2(100, 706)
+	var entrance_x := -250.0
+	var floor_y: float = player.floor_y
+	mama.position = Vector2(entrance_x, floor_y)
+	mama.modulate.a = 0.0
+	var mama_sprite: Sprite2D = mama.get_node("Sprite2D")
+	mama_sprite.flip_h = false
 	mama.show()
-	mama.get_node("Sprite2D").flip_h = false
 	var arrival = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	await arrival.tween_property(mama, "position", Vector2(750, 706), 1.5).finished
+	arrival.parallel().tween_property(mama, "modulate:a", 1.0, 0.45).set_delay(0.15)
+	await arrival.tween_property(mama, "position", Vector2(750, floor_y), 2.0).finished
 	await get_tree().create_timer(0.4).timeout
 	await say("Мама", "Михаил, просыпайся. Завтрак уже готов.")
 	player.can_move = false
-	mama.get_node("Sprite2D").flip_h = true
+	mama_sprite.flip_h = true
 	var departure = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	await departure.tween_property(mama, "position", Vector2(100, 706), 1.5).finished
+	departure.parallel().tween_property(mama, "modulate:a", 0.0, 0.45).set_delay(0.25)
+	await departure.tween_property(mama, "position", Vector2(entrance_x, floor_y), 0.85).finished
 	mama.hide()
+	mama.modulate.a = 1.0
 	$DoorOpen.hide()
 	var target_position: Vector2 = svetik.position
 	svetik.position = target_position + Vector2(0, -40)

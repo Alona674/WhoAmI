@@ -9,6 +9,7 @@ var scene_stage: int = 0
 var chest_opened: bool = false
 
 func _ready() -> void:
+	SvetikWorld.restore_room(self)
 	scene_stage = 1 if GameState.get_flag("kitchen_scales_inspected") else 0
 	chest_opened = GameState.get_flag("kitchen_chest_opened")
 	if GameState.next_spawn_point != "":

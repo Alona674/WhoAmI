@@ -20,6 +20,13 @@ var saved_scene: String = ""
 var saved_player_position: Vector2 = Vector2.ZERO
 var has_pending_player_position: bool = false
 
+# Изменения мира, сделанные Светиком, сохраняются при переходе между комнатами.
+var world_object_positions: Dictionary = {}
+var broken_world_objects: Array[String] = []
+var stolen_world_objects: Array[String] = []
+var svetik_brightness: float = 1.0
+var svetik_screen_rotation_degrees: float = 0.0
+
 
 func set_flag(flag_name: String, value: bool = true) -> void:
 	flags[flag_name] = value
@@ -65,7 +72,12 @@ func save_game() -> bool:
 		"flags": flags,
 		"inventory": inventory,
 		"inventory_details": inventory_details,
-		"bedroom_intro_completed": bedroom_intro_completed
+		"bedroom_intro_completed": bedroom_intro_completed,
+		"world_object_positions": world_object_positions,
+		"broken_world_objects": broken_world_objects,
+		"stolen_world_objects": stolen_world_objects,
+		"svetik_brightness": svetik_brightness,
+		"svetik_screen_rotation_degrees": svetik_screen_rotation_degrees,
 	}
 
 	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
@@ -126,6 +138,15 @@ func load_game() -> bool:
 	bedroom_intro_completed = save_data.get(
 		"bedroom_intro_completed", false
 	)
+	world_object_positions = save_data.get("world_object_positions", {})
+	broken_world_objects.clear()
+	for object_key in save_data.get("broken_world_objects", []):
+		broken_world_objects.append(str(object_key))
+	stolen_world_objects.clear()
+	for object_key in save_data.get("stolen_world_objects", []):
+		stolen_world_objects.append(str(object_key))
+	svetik_brightness = float(save_data.get("svetik_brightness", 1.0))
+	svetik_screen_rotation_degrees = float(save_data.get("svetik_screen_rotation_degrees", 0.0))
 
 	# Запоминаем комнату и позицию игрока
 	saved_scene = scene_path

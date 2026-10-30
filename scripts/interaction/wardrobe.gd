@@ -8,24 +8,33 @@ var wardrobe_items: Array[Dictionary] = [
 	{
 		"id": "chess_king",
 		"name": "Шахматный король",
-		"texture": preload("res://art/items/bedroom/шахматный король из шкафа.png")
+		"description": "Шахматная фигура из шкафа.",
+		"texture": preload("res://art/items/bedroom/шахматный король из шкафа.png"),
+		"icon_path": "res://art/items/bedroom/шахматный король из шкафа.png"
 	},
 	{
 		"id": "super_weapon",
 		"name": "Супероружие",
-		"texture": preload("res://art/items/bedroom/вилка из шкафа.png")
+		"description": "Сокровище из шкафа.",
+		"texture": preload("res://art/items/bedroom/вилка из шкафа.png"),
+		"icon_path": "res://art/items/bedroom/вилка из шкафа.png"
 	},
 	{
 		"id": "evil_blaster",
 		"name": "Супер-пупер бластер",
-		"texture": preload("res://art/items/bedroom/Палка из шкафа.png")
+		"description": "Сокровище из шкафа.",
+		"texture": preload("res://art/items/bedroom/Палка из шкафа.png"),
+		"icon_path": "res://art/items/bedroom/Палка из шкафа.png"
 	},
 	{
 		"id": "lighter",
 		"name": "Зажигалка",
-		"texture": preload("res://art/items/bedroom/Зажигалка из шкафа.png")
+		"description": "Зажигалка из шкафа.",
+		"texture": preload("res://art/items/bedroom/Зажигалка из шкафа.png"),
+		"icon_path": "res://art/items/bedroom/Зажигалка из шкафа.png"
 	}
 ]
+
 
 
 func _ready() -> void:

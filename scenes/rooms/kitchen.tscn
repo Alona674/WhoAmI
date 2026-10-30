@@ -131,7 +131,6 @@ shape = SubResource("RectangleShape2D_pan")
 position = Vector2(0, -45)
 
 [node name="Svetik" parent="." unique_id=1956267928 instance=ExtResource("svetik_companion")]
-interaction_action = "Поговорить"
 
 [node name="DialogueManager" parent="." unique_id=1471203884 instance=ExtResource("13_dialogue")]
 script = ExtResource("14_33dcn")

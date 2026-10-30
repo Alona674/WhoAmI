@@ -1,4 +1,4 @@
-extends InteractableBase
+extends Area2D
 
 @export var follow_distance: float = 100.0
 @export var flight_height: float = 310.0
@@ -6,7 +6,6 @@ extends InteractableBase
 @export var hover_amplitude: float = 12.0
 @export var hover_speed: float = 2.5
 
-@onready var dialogue_manager = get_node("../DialogueManager")
 @onready var player = get_parent().get_node("Player")
 
 var following: bool = false
@@ -16,7 +15,6 @@ var travel_direction: float = 1.0
 var hover_phase: float = 0.0
 
 func _ready() -> void:
-	interaction_name = "Светик"
 	# Let the room apply its entry marker before placing the companion.
 	call_deferred("_restore_following")
 
@@ -63,10 +61,3 @@ func begin_scripted_scene(target: Vector2) -> void:
 func end_scripted_scene() -> void:
 	scripted = false
 	visible = following
-
-
-func interact() -> void:
-	dialogue_manager.show_dialogue(
-		"Светик",
-		"Доброе утро, Михаил."
-	)

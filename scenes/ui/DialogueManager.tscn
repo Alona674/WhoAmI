@@ -3,13 +3,13 @@
 [node name="DialogueManager" type="CanvasLayer" unique_id=1465301247]
 
 [node name="DialogueBox" type="Panel" parent="." unique_id=1197078297]
-custom_minimum_size = Vector2(0, 200)
+custom_minimum_size = Vector2(0, 360)
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 43.0
-offset_top = -276.0
+offset_top = -436.0
 offset_right = -37.0
 offset_bottom = -76.0
 grow_horizontal = 2
@@ -20,7 +20,7 @@ layout_mode = 0
 offset_left = 30.0
 offset_top = 70.0
 offset_right = 1810.0
-offset_bottom = 170.0
+offset_bottom = 165.0
 text = "Это тестовый диалог."
 
 [node name="Speaker" type="Label" parent="DialogueBox" unique_id=1457850218]
@@ -33,9 +33,41 @@ text = "Тедди"
 
 [node name="ContinueHint" type="Label" parent="DialogueBox" unique_id=762490207]
 layout_mode = 0
-offset_left = 1523.0
-offset_top = 169.0
+offset_left = 1500.0
+offset_top = 330.0
 offset_right = 1814.0
-offset_bottom = 192.0
+offset_bottom = 354.0
 text = "Нажмите E, чтобы продолжить"
 horizontal_alignment = 2
+
+[node name="EndButton" type="Button" parent="DialogueBox"]
+offset_left = 1530.0
+offset_top = 180.0
+offset_right = 1820.0
+offset_bottom = 225.0
+text = "Закончить диалог"
+visible = false
+
+[node name="WriteButton" type="Button" parent="DialogueBox"]
+offset_left = 1530.0
+offset_top = 235.0
+offset_right = 1820.0
+offset_bottom = 280.0
+text = "Написать сообщение"
+visible = false
+
+[node name="MessageInput" type="LineEdit" parent="DialogueBox"]
+offset_left = 30.0
+offset_top = 290.0
+offset_right = 1560.0
+offset_bottom = 340.0
+placeholder_text = "Напиши Светику..."
+visible = false
+
+[node name="SendButton" type="Button" parent="DialogueBox"]
+offset_left = 1580.0
+offset_top = 290.0
+offset_right = 1820.0
+offset_bottom = 340.0
+text = "Отправить"
+visible = false
