@@ -9,23 +9,23 @@ var scene_stage: int = 0
 var chest_opened: bool = false
 
 func _ready() -> void:
+	scene_stage = 1 if GameState.get_flag("kitchen_scales_inspected") else 0
+	chest_opened = GameState.get_flag("kitchen_chest_opened")
 	if GameState.next_spawn_point != "":
 		var spawn_point = get_node_or_null(GameState.next_spawn_point)
 		if spawn_point != null:
 			player.global_position = spawn_point.global_position
 		GameState.next_spawn_point = ""
 
-	dialogue_manager.dialogue_closed.connect(_on_dialogue_closed)
-
-
 # --- Логика взаимодействия с предметами ---
 
 # Вызывается из scales.gd при нажатии E
 func scales_interacted() -> void:
-	if scene_stage > 0: 
-		return # Если уже взаимодействовали, больше не показываем
+	if not _can_interact():
+		return
 		
 	scene_stage = 1
+	GameState.set_flag("kitchen_scales_inspected")
 	dialogue_manager.show_dialogue(
 		"Михаил",
 		"Старые весы. Стрелка застыла на странном числе..."
@@ -33,11 +33,14 @@ func scales_interacted() -> void:
 
 # Вызывается из chest.gd при нажатии E
 func chest_interacted() -> void:
+	if not _can_interact():
+		return
 	if chest_opened:
-		dialogue_manager.show_dialogue("Михаил", "Хлебница пуст.")
+		dialogue_manager.show_dialogue("Михаил", "Хлебница пуста.")
 		return
 		
 	chest_opened = true
+	GameState.set_flag("kitchen_chest_opened")
 	dialogue_manager.show_dialogue(
 		"Михаил",
 		"В хлебнице лежит старый ключ. Интересно, от чего он?"
@@ -45,6 +48,8 @@ func chest_interacted() -> void:
 
 # Вызывается из jug.gd при нажатии E
 func jug_interacted() -> void:
+	if not _can_interact():
+		return
 	dialogue_manager.show_dialogue(
 		"Михаил",
 		"В кувшине стоят свежие ромашки. Они пахнут домом."
@@ -52,23 +57,16 @@ func jug_interacted() -> void:
 
 # Вызывается из pan.gd при нажатии E
 func pan_interacted() -> void:
+	if not _can_interact():
+		return
 	dialogue_manager.show_dialogue(
 		"Михаил",
 		"Тяжелая чугунная сковорода. На ней явно готовили что-то вкусное."
 	)
 
 
-#  Логика после закрытия диалогов 
-
-func _on_dialogue_closed() -> void:
-	# Здесь можно добавить развитие сюжета после определенных диалогов.
-	# Например, если игрок осмотрел весы (scene_stage == 1), 
-	# можно запустить какое-то событие.
-	
-	if scene_stage == 1:
-		# Пример: после осмотра весов что-то происходит на кухне
-		# start_kitchen_event()
-		pass 
+func _can_interact() -> bool:
+	return player.can_move and not get_tree().paused and not dialogue_manager.is_open and not dialogue_manager.closing
 
 
 #  Логика паузы  
@@ -80,6 +78,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			return
 
 		pause_menu.visible = not pause_menu.visible
+		player.interaction_prompt.hide_prompt()
 		get_tree().paused = pause_menu.visible
 
 		get_viewport().set_input_as_handled()

@@ -2,7 +2,7 @@ extends InteractableBase
 
 
 func _ready() -> void:
-	interaction_name = "кувшин"
+	interaction_name = "Кувшин"
 
 
 func interact() -> void:
