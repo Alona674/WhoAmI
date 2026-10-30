@@ -3,6 +3,8 @@ extends CharacterBody2D
 
 @export var speed: float = 300.0
 @export var room_controls_prompt: bool = false
+# Opt in per room; rooms with their own interaction flow keep the legacy path.
+@export var unified_interactions: bool = false
 var can_move: bool = true
 
 # Границы, в которых может ходить Михаил
@@ -85,6 +87,8 @@ func _physics_process(_delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if unified_interactions:
+		return
 	if not can_move:
 		return
 	if event.is_action_pressed("interact") and not event.is_echo():
@@ -95,6 +99,16 @@ func _input(event: InputEvent) -> void:
 		if current_interactable != null:
 			if current_interactable.has_method("interact"):
 				current_interactable.interact()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not unified_interactions or not can_move or get_tree().paused:
+		return
+	if event.is_action_pressed("interact") and not event.is_echo():
+		_update_interaction_target()
+		if is_instance_valid(current_interactable):
+			get_viewport().set_input_as_handled()
+			current_interactable.interact()
 
 
 func _update_interaction_target() -> void:
@@ -112,6 +126,10 @@ func _update_interaction_target() -> void:
 		var distance := global_position.distance_to(
 			object.global_position
 		)
+		if unified_interactions:
+			# In these rooms the player moves along the floor, while objects
+			# sit at different heights and may have an offset collision shape.
+			distance = absf(global_position.x - _get_interaction_position(object).x)
 
 		var priority: int = object.interaction_priority if object is InteractableBase else 0
 		# A nearby companion must not take E away from room objects.
@@ -127,6 +145,13 @@ func _update_interaction_target() -> void:
 		return
 
 	show_interaction_prompt(current_interactable)
+
+
+func _get_interaction_position(target: Area2D) -> Vector2:
+	for child in target.get_children():
+		if child is CollisionShape2D and child.shape != null and not child.disabled:
+			return child.global_transform * child.shape.get_rect().get_center()
+	return target.global_position
 
 
 func show_interaction_prompt(target: Area2D, object_name: String = "", action_name: String = "") -> void:
