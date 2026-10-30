@@ -131,8 +131,8 @@ func load_game() -> bool:
 	inventory.clear()
 	for item in save_data.get("inventory", []):
 		inventory.append(str(item))
-	var loaded_inventory_details = save_data.get("inventory_details", {})
-	inventory_details = loaded_inventory_details if loaded_inventory_details is Dictionary else {}
+	var saved_details = save_data.get("inventory_details", {})
+	inventory_details = saved_details if saved_details is Dictionary else {}
 	inventory_updated.emit()
 
 	bedroom_intro_completed = save_data.get(
