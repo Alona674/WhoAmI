@@ -80,8 +80,8 @@ func wardrobe_closed() -> void:
 	player.can_move = false
 	mama_sprite.flip_h = true
 	var departure = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	departure.parallel().tween_property(mama, "modulate:a", 0.0, 0.45).set_delay(1.55)
-	await departure.tween_property(mama, "position", Vector2(entrance_x, floor_y), 2.0).finished
+	departure.parallel().tween_property(mama, "modulate:a", 0.0, 0.45).set_delay(0.25)
+	await departure.tween_property(mama, "position", Vector2(entrance_x, floor_y), 0.85).finished
 	mama.hide()
 	mama.modulate.a = 1.0
 	$DoorOpen.hide()
