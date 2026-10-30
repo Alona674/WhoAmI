@@ -66,7 +66,7 @@ func wardrobe_closed() -> void:
 	player.can_move = false
 	$DoorOpen.show()
 	var entrance_x := -250.0
-	var floor_y := player.floor_y
+	var floor_y: float = player.floor_y
 	mama.position = Vector2(entrance_x, floor_y)
 	mama.modulate.a = 0.0
 	var mama_sprite: Sprite2D = mama.get_node("Sprite2D")
