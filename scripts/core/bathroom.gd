@@ -17,17 +17,6 @@ func _ready() -> void:
 		GameState.next_spawn_point = ""
 
 
-func _process(_delta: float) -> void:
-	if dialogue_manager.dialogue_box.visible or pause_menu.visible or $UILayer/ContainerPanel.visible:
-		prompt.hide()
-	elif $CorridorDoor.player_nearby:
-		player.show_interaction_prompt($CorridorDoor, "Коридор", "Войти")
-	elif player.current_interactable != null:
-		player.show_interaction_prompt(player.current_interactable)
-	else:
-		prompt.hide()
-
-
 func interact_item(item_id: String) -> void:
 	# E also advances dialogue; don't restart it or act during its fade-out.
 	if busy or dialogue_manager.dialogue_box.visible:
@@ -59,6 +48,7 @@ func interact_item(item_id: String) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and not event.is_echo():
 		pause_menu.visible = not pause_menu.visible
+		prompt.hide_prompt()
 		get_tree().paused = pause_menu.visible
 		get_viewport().set_input_as_handled()
 

@@ -32,6 +32,9 @@ func _on_body_exited(body: Node2D) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	var player = get_tree().get_first_node_in_group("player")
+	if player != null and player.unified_interactions:
+		return
 	if not player_nearby:
 		return
 
@@ -47,13 +50,21 @@ func interact() -> void:
 
 
 func interact_with_door() -> void:
+	if interaction_in_progress:
+		return
 	var player = get_tree().get_first_node_in_group("player")
 	if player != null and not player.can_move:
 		return
 	# Если указана сцена, переходим в неё.
 	if target_scene != "":
+		interaction_in_progress = true
+		var previous_spawn_point: String = GameState.next_spawn_point
 		GameState.next_spawn_point = target_spawn_point
-		get_tree().change_scene_to_file(target_scene)
+		var error := get_tree().change_scene_to_file(target_scene)
+		if error != OK:
+			GameState.next_spawn_point = previous_spawn_point
+			interaction_in_progress = false
+			push_warning("Не удалось открыть сцену: " + target_scene)
 		return
 
 	# Если сцены нет, пробуем показать диалог.

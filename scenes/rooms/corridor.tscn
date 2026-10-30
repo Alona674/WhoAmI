@@ -67,6 +67,7 @@ debug_color = Color(0, 0.6, 0.69803923, 0)
 
 [node name="Player" parent="." unique_id=32208314 groups=["player"] instance=ExtResource("2_u6nsy")]
 position = Vector2(2070, 630)
+unified_interactions = true
 right_limit = 2077.0
 
 [node name="Svetik" parent="." unique_id=1889357327 instance=ExtResource("svetik_companion")]
@@ -81,6 +82,7 @@ position = Vector2(2103.957, 250.90553)
 scale = Vector2(0.74516, 0.74516)
 script = ExtResource("4_jf14u")
 interaction_name = "Спальня"
+interaction_action = "Войти"
 target_scene = "uid://cdhvfv8s0fewa"
 target_spawn_point = "BedroomEntryPoint"
 
@@ -114,6 +116,7 @@ position = Vector2(1257.4552, 255.3765)
 scale = Vector2(0.74516, 0.74516)
 script = ExtResource("4_jf14u")
 interaction_name = "Ванная"
+interaction_action = "Войти"
 target_scene = "res://scenes/rooms/bathroom.tscn"
 target_spawn_point = "BathroomEntryPoint"
 

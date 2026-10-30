@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://7nwoaa0r2m0v"]
 
 [ext_resource type="Script" uid="uid://c8rrokge5yrwg" path="res://scripts/core/kitchen.gd" id="1_kitchen"]
-[ext_resource type="Texture2D" uid="uid://cu46lqjsrgju2" path="res://art/rooms/kutchen/kitchen_bg.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://art/rooms/kutchen/kitchen_bg_interactions.png" id="2_bg"]
 [ext_resource type="PackedScene" uid="uid://bu8vxbbtt4e44" path="res://scenes/characters/player.tscn" id="3_player"]
 [ext_resource type="Script" uid="uid://c001o6sh8j3j6" path="res://scripts/interaction/scales.gd" id="5_scales"]
 [ext_resource type="Texture2D" uid="uid://cahvwpuhj4t4t" path="res://art/items/scales.png" id="6_scales_tex"]
@@ -18,73 +18,117 @@
 [ext_resource type="PackedScene" path="res://scenes/characters/svetik.tscn" id="svetik_companion"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_scale"]
-size = Vector2(120, 150)
+size = Vector2(72, 76)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_chest"]
-size = Vector2(150, 100)
+size = Vector2(84, 48)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jug"]
-size = Vector2(100, 120)
+size = Vector2(100, 68)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pan"]
-size = Vector2(100, 100)
+size = Vector2(72, 92)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_33dcn"]
 size = Vector2(301.25, 707)
+
+[sub_resource type="Gradient" id="contact_shadow_gradient"]
+colors = PackedColorArray(0.12, 0.06, 0.02, 0.38, 0.12, 0.06, 0.02, 0)
+
+[sub_resource type="GradientTexture2D" id="contact_shadow"]
+gradient = SubResource("contact_shadow_gradient")
+width = 128
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
 
 [node name="Kitchen" type="Sprite2D" unique_id=120705359]
 script = ExtResource("1_kitchen")
 
 [node name="Background" type="Sprite2D" parent="." unique_id=1393386321]
+scale = Vector2(1.0004606, 1)
 texture = ExtResource("2_bg")
 centered = false
 
 [node name="Player" parent="." unique_id=952887662 groups=["player"] instance=ExtResource("3_player")]
 position = Vector2(1086, 630)
+unified_interactions = true
 
 [node name="Scales" type="Area2D" parent="." unique_id=590361436]
-position = Vector2(585, 420)
+position = Vector2(790, 389)
 script = ExtResource("5_scales")
 
+[node name="ContactShadow" type="Sprite2D" parent="Scales"]
+position = Vector2(0, 35)
+scale = Vector2(0.35, 0.14)
+texture = SubResource("contact_shadow")
+
 [node name="Sprite2D" type="Sprite2D" parent="Scales" unique_id=1015049076]
-scale = Vector2(0.075, 0.075)
+modulate = Color(0.91, 0.89, 0.85, 1)
+scale = Vector2(0.055, 0.055)
 texture = ExtResource("6_scales_tex")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Scales" unique_id=35170810]
 shape = SubResource("RectangleShape2D_scale")
 
+[node name="InteractionPromptAnchor" type="Marker2D" parent="Scales"]
+position = Vector2(0, -35)
+
 [node name="Chest" type="Area2D" parent="." unique_id=805968481]
-position = Vector2(1290, 405)
+position = Vector2(1410, 412)
 script = ExtResource("7_chest")
 
+[node name="ContactShadow" type="Sprite2D" parent="Chest"]
+position = Vector2(0, 22)
+scale = Vector2(0.6, 0.16)
+texture = SubResource("contact_shadow")
+
 [node name="Sprite2D" type="Sprite2D" parent="Chest" unique_id=2121787468]
-scale = Vector2(0.078, 0.078)
+modulate = Color(0.91, 0.88, 0.84, 1)
+scale = Vector2(0.047, 0.047)
 texture = ExtResource("8_chest_tex")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Chest" unique_id=1700780433]
 shape = SubResource("RectangleShape2D_chest")
 
+[node name="InteractionPromptAnchor" type="Marker2D" parent="Chest"]
+position = Vector2(0, -22)
+
 [node name="Jug" type="Area2D" parent="." unique_id=1959084477]
-position = Vector2(1775, 395)
+position = Vector2(1810, 392)
 script = ExtResource("9_jug")
 
+[node name="ContactShadow" type="Sprite2D" parent="Jug"]
+position = Vector2(3, 32)
+scale = Vector2(0.32, 0.16)
+texture = SubResource("contact_shadow")
+
 [node name="Sprite2D" type="Sprite2D" parent="Jug" unique_id=504355102]
-scale = Vector2(0.09, 0.09)
+modulate = Color(0.92, 0.90, 0.85, 1)
+scale = Vector2(0.064, 0.064)
 texture = ExtResource("10_jug_tex")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Jug" unique_id=731092936]
 shape = SubResource("RectangleShape2D_jug")
 
+[node name="InteractionPromptAnchor" type="Marker2D" parent="Jug"]
+position = Vector2(0, -33)
+
 [node name="Pan" type="Area2D" parent="." unique_id=824708977]
-position = Vector2(1705, 325)
+position = Vector2(1650, 389)
 script = ExtResource("11_pan")
 
 [node name="Sprite2D" type="Sprite2D" parent="Pan" unique_id=797017784]
-scale = Vector2(0.07, 0.07)
+modulate = Color(0.90, 0.88, 0.84, 1)
+scale = Vector2(0.065, 0.065)
 texture = ExtResource("12_pan_tex")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Pan" unique_id=1276094175]
 shape = SubResource("RectangleShape2D_pan")
+
+[node name="InteractionPromptAnchor" type="Marker2D" parent="Pan"]
+position = Vector2(0, -45)
 
 [node name="Svetik" parent="." unique_id=1956267928 instance=ExtResource("svetik_companion")]
 
@@ -97,13 +141,18 @@ script = ExtResource("14_33dcn")
 visible = false
 
 [node name="CorridorDoor" type="Area2D" parent="." unique_id=157019782]
+position = Vector2(2020, 420)
 script = ExtResource("15_avos5")
+interaction_name = "Коридор"
+interaction_action = "Войти"
 target_scene = "uid://blpaawsoj6qqk"
 target_spawn_point = "CorridorKitchEntryPoint"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CorridorDoor" unique_id=926800541]
-position = Vector2(2020, 420)
 shape = SubResource("RectangleShape2D_33dcn")
+
+[node name="InteractionPromptAnchor" type="Marker2D" parent="CorridorDoor"]
+position = Vector2(0, -270)
 
 [node name="KitchEntryPoint" type="Marker2D" parent="." unique_id=503898601]
 position = Vector2(2042, 630)
