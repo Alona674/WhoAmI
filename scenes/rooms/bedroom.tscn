@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cdhvfv8s0fewa"]
 
 [ext_resource type="Script" uid="uid://bvnst66gtk202" path="res://scripts/core/bedroom.gd" id="1_thvn2"]
-[ext_resource type="Texture2D" uid="uid://d31432jw2abqy" path="res://art/rooms/bedroom/spalnya.png" id="2_63ydc"]
+[ext_resource type="Texture2D" path="res://art/rooms/bedroom/bedroom.png" id="2_63ydc"]
 [ext_resource type="PackedScene" uid="uid://bu8vxbbtt4e44" path="res://scenes/characters/player.tscn" id="3_thvn2"]
 [ext_resource type="Script" uid="uid://co4g6gokhb7x7" path="res://scripts/interaction/teddy.gd" id="4_khs6t"]
 [ext_resource type="PackedScene" uid="uid://b1d7m4myvd8ma" path="res://scenes/ui/DialogueManager.tscn" id="6_u2o5o"]
@@ -17,6 +17,12 @@
 [ext_resource type="Texture2D" uid="uid://nwvhex7g6qgq" path="res://art/rooms/bedroom/dver (2).png" id="open_door"]
 [ext_resource type="PackedScene" path="res://scenes/characters/svetik.tscn" id="svetik_companion"]
 [ext_resource type="Script" uid="uid://bshjoqphy5l4k" path="res://scripts/interaction/window_view.gd" id="window_script"]
+[ext_resource type="Texture2D" path="res://art/items/bedroom/bear.png" id="teddy_texture"]
+[ext_resource type="Texture2D" path="res://art/items/bedroom/beg.png" id="bag_texture"]
+[ext_resource type="Texture2D" path="res://art/items/bedroom/book.png" id="book_texture"]
+[ext_resource type="Texture2D" path="res://art/items/bedroom/flower.png" id="flower_texture"]
+[ext_resource type="Texture2D" path="res://art/items/bedroom/lamp.png" id="lamp_texture"]
+[ext_resource type="Texture2D" path="res://art/items/bedroom/map.png" id="map_texture"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b2v72"]
 size = Vector2(89.5, 98.14264)
@@ -57,6 +63,11 @@ script = ExtResource("4_khs6t")
 position = Vector2(41.84607, 332.97803)
 scale = Vector2(1, 0.99999994)
 shape = SubResource("RectangleShape2D_b2v72")
+
+[node name="Sprite2D" type="Sprite2D" parent="Teddy" unique_id=1224593710]
+position = Vector2(41.84607, 332.97803)
+scale = Vector2(0.075, 0.08)
+texture = ExtResource("teddy_texture")
 
 [node name="DialogueManager" parent="." unique_id=1465301247 instance=ExtResource("6_u2o5o")]
 script = ExtResource("7_v47ap")
@@ -163,5 +174,30 @@ position = Vector2(-118, 136)
 scale = Vector2(0.32, 0.39388022)
 texture = ExtResource("open_door")
 centered = false
+
+[node name="beg" type="Sprite2D" parent="." unique_id=1237257507]
+position = Vector2(208.81407, 593.29169)
+scale = Vector2(0.09069059, 0.08878832)
+texture = ExtResource("bag_texture")
+
+[node name="book" type="Sprite2D" parent="." unique_id=1444996511]
+position = Vector2(1212.70876, 494.29684)
+scale = Vector2(0.06805846, 0.0655204)
+texture = ExtResource("book_texture")
+
+[node name="flower" type="Sprite2D" parent="." unique_id=846574127]
+position = Vector2(641.82284, 430.67448)
+scale = Vector2(0.09884072, 0.0864458)
+texture = ExtResource("flower_texture")
+
+[node name="lamp" type="Sprite2D" parent="." unique_id=936456228]
+position = Vector2(1383.37832, 446.75486)
+scale = Vector2(0.08137886, 0.06874755)
+texture = ExtResource("lamp_texture")
+
+[node name="map" type="Sprite2D" parent="." unique_id=876811089]
+position = Vector2(1021.17136, 336.28967)
+scale = Vector2(0.22123857, 0.20576542)
+texture = ExtResource("map_texture")
 
 [editable path="Player"]
