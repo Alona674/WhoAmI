@@ -7,6 +7,10 @@ import torch
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 from typing import Optional
+import gc
+import time
+from rembg import remove
+
 
 # Подключаем библиотеки генерации картинок
 from diffusers import AutoPipelineForText2Image
@@ -27,16 +31,49 @@ state.load()
 # Блокировка для синхронизации доступа к state
 _state_lock = asyncio.Lock()
 
-# ── ИНИЦИАЛИЗАЦИЯ STABLE DIFFUSION (Генератор картинок на Metal GPU Mac) ──
-print("=== [СВЕТИК]: Загрузка локальной модели генерации картинок SDXL Turbo... ===")
-pipe = AutoPipelineForText2Image.from_pretrained(
-    "stabilityai/sdxl-turbo", 
-    torch_dtype=torch.float16, 
-    variant="fp16"
-)
-# Передаем расчеты на мощные графические ядра вашего чипа M5 Pro
-pipe.to("mps") 
-print("=== [СВЕТИК]: 'Мозг' генератора картинок успешно запущен на M5 Pro! ===")
+
+# Изначально модель пустая и не занимает оперативную память
+pipe = None                  
+last_usage_time = 0.0        
+is_timer_running = False     
+
+async def unload_model_timer():
+    """Фоновый таймер: выгружает модель через 5 минут бездействия."""
+    global pipe, last_usage_time, is_timer_running
+    is_timer_running = True
+    
+    while True:
+        await asyncio.sleep(10) # Проверяем статус каждые 10 секунд
+        current_time = time.time()
+        
+        # Если модель в памяти и прошло больше 5 минут (300 секунд)
+        if pipe is not None and (current_time - last_usage_time) >= 300.0:
+            print("=== [ПАМЯТЬ]: Stable Diffusion не использовалась 5 минут. Выгрузка из ОЗУ... ===")
+            pipe = None
+            gc.collect()
+            torch.mps.empty_cache() # Полностью чистим Metal GPU кэш Mac
+            print("=== [ПАМЯТЬ]: Память Mac успешно освобождена! ===")
+            is_timer_running = False
+            break
+
+def load_model_if_needed():
+    """Загрузка модели на ходу при первой необходимости."""
+    global pipe, last_usage_time, is_timer_running
+    last_usage_time = time.time()
+    
+    if pipe is None:
+        print("=== [ПАМЯТЬ]: Требуется генерация. Загрузка Stable Diffusion на M5 Pro... ===")
+        pipe = AutoPipelineForText2Image.from_pretrained(
+            "stabilityai/sdxl-turbo", 
+            torch_dtype=torch.float16, 
+            variant="fp16"
+        )
+        pipe.to("mps")
+        print("=== [ПАМЯТЬ]: Модель успешно загружена в память! ===")
+        
+        if not is_timer_running:
+            asyncio.create_task(unload_model_timer())
+
 
 
 # ── Схемы запросов/ответов ──
@@ -173,37 +210,44 @@ def action_reaction(actions: list[dict]) -> str:
 from pathlib import Path
 
 def generate_ai_image(prompt_text: str):
-    """Локальная генерация хоррор-картинок на видеокарте Apple Silicon с авто-очисткой."""
+    """Локальная генерация хоррор-картинок на видеокарте Apple Silicon с авто-очисткой и удалением фона."""
+    global pipe
     try:
-                # Переставили запрос в начало, а стили хоррора — в конец
-        full_prompt = f"{prompt_text}, isolated object asset, centered, pure black background, 2d indie horror game style, eerie dark atmosphere"
-
+        # Принудительно проверяем и загружаем Stable Diffusion, если она спит
+        load_model_if_needed()
+        
+        full_prompt = f"{prompt_text}, isolated object asset, centered, pure black background, 2d indie horror game style, eerie dark atmosphere, cinematic lighting, spooky"
         print(f"[ИИ-КАРТИНКА]: Генерация по промпту: {full_prompt}")
         
-        # Генерируем изображение
-        image = pipe(prompt=full_prompt, num_inference_steps=1, guidance_scale=0.0).images[0]
+        # 1. Генерируем сырое изображение со Stable Diffusion (оно будет на чёрном фоне)
+        raw_image = pipe(prompt=full_prompt, num_inference_steps=1, guidance_scale=0.0).images[0]
         
-        # Находим папку art проекта игры
+        # 2. НЕЙРОСЕТЕВОЕ УДАЛЕНИЕ ФОНА (rembg)
+        print("[ИИ-КАРТИНКА]: Вырезаю фон и делаю его прозрачным...")
+        clean_image = remove(raw_image) # rembg автоматически находит границы предмета и стирает черный цвет
+        
+        # 3. Находим папку art проекта игры
         server_script_dir = Path(__file__).resolve().parent
         game_art_dir = server_script_dir.parent / "art"
         game_art_dir.mkdir(parents=True, exist_ok=True)
         
         final_path = game_art_dir / "dynamic_generated.png"
         
-        # БРОНЕБОЙНОЕ РЕШЕНИЕ: Если старый файл существует, принудительно удаляем его перед записью!
+        # Стираем старый заблокированный файл перед записью
         if final_path.exists():
             try:
                 final_path.unlink()
-                print("[ИИ-КАРТИНКА]: Старая заблокированная картинка успешно стёрта с диска.")
+                print("[ИИ-КАРТИНКА]: Старая картинка успешно стёрта с диска.")
             except Exception as e:
-                print(f"[ИИ-КАРТИНКА ПРЕДУПРЕЖДЕНИЕ]: Не удалось удалить файл напрямую (возможно, заблокирован Godot): {e}")
+                print(f"[ИИ-КАРТИНКА ПРЕДУПРЕЖДЕНИЕ]: Не удалось удалить файл напрямую: {e}")
         
-        # Сохраняем новую картинку
-        image.save(str(final_path))
-        print(f"[ИИ-КАРТИНКА АВТОПУТЬ]: Новая картинка успешно записана: {final_path}")
+        # 4. Сохраняем новую картинку с поддержкой прозрачности (в формате PNG)
+        clean_image.save(str(final_path), "PNG")
+        print(f"[ИИ-КАРТИНКА АВТОПУТЬ]: Чистый спрайт без фона успешно записан: {final_path}")
         
     except Exception as e:
-        print(f"[ИИ-КАРТИНКА ОШИБКА]: Не удалось сгенерировать изображение: {e}")
+        print(f"[ИИ-КАРТИНКА ОШИБКА]: Не удалось сгенерировать изображение или удалить фон: {e}")
+
 
 
 # ── Эндпоинты ──
@@ -268,20 +312,31 @@ async def handle_chat(req: ChatRequest) -> EventResponse:
 
         system_prompt = build_system_prompt(state)
         
-        # Строгая и лаконичная инструкция для ИИ
+        
+        # КРИТИЧЕСКИЙ ЯЗЫКОВОЙ ЯКОРЬ ДЛЯ КИТАЙСКИХ МОДЕЛЕЙ (QWEN)
         system_prompt += (
-            "\n[ИНСТРУКЦИЯ ИИ-РЕЖИССЕРА]:\n"
+            "\n[КРИТИЧЕСКОЕ ПРАВИЛО ДЛЯ ЯЗЫКА]:\n"
+            "Ты ОБЯЗАН общаться с игроком ИСКЛЮЧИТЕЛЬНО на РУССКОМ ЯЗЫКЕ. Ни в коем случае не пиши на китайском или английском языке.\n\n"
+            "[ИНСТРУКЦИЯ ИИ-РЕЖИССЕРА]:\n"
             "Ты управляешь хоррор-игрой. Отвечай СТРОГО в формате JSON с ключами 'text' и 'actions'.\n"
             "Правила для массива 'actions':\n"
             "Если игрок просит предмет, добавь две команды:\n"
             "1. {'type': 'spawn_object', 'id': 'uniqu_id', 'name': 'Имя предмета на РУССКОМ'}\n"
             "2. {'type': 'generate_image', 'prompt': 'SHORT_ENGLISH_DESCRIPTION'}\n\n"
-            "KРИТИЧЕСКОЕ ПРАВИЛО ДЛЯ 'prompt':\n"
-            "Промпт должен быть СТРОГО НА АНГЛИЙСКОМ ЯЗЫКЕ и очень коротким (максимум 5-8 слов).\n"
+            "КРИТИЧЕСКОЕ ПРАВИЛО ДЛЯ 'prompt' ВНУТРИ ACTIONS:\n"
+            "Только поле 'prompt' должно быть на АНГЛИЙСКОМ ЯЗЫКЕ и очень коротким (максимум 5-8 слов).\n"
             "Описывай только сам предмет. Никакого фона, никаких стен.\n"
-            "Пример правильного промпта: 'ancient glowing wizard staff, blue energy pulse'\n"
-            "Пример неправильного промпта: 'Магический посох в темной комнате на полу'"
+            "Пример правильного ответа:\n"
+            "{\n"
+            '  "text": "Твоя реплика на русском языке.",\n'
+            '  "actions": [\n'
+            '    {"type": "spawn_object", "id": "ancient_staff", "name": "Магический посох"},\n'
+            '    {"type": "generate_image", "prompt": "ancient glowing wizard staff, blue pulse"}\n'
+            '  ]\n'
+            "}\n"
+            "Не пиши никаких рассуждений, тегов или текста до и после JSON. Выведи только структуру."
         )
+
 
         user_prompt = req.message
         
@@ -294,29 +349,42 @@ async def handle_chat(req: ChatRequest) -> EventResponse:
         raw_reply = ""
 
         try:
-            # УБРАЛИ await перед функцией, чтобы избежать сбоев
             raw_reply = ask_ollama(system_prompt, user_prompt)
+            
             if not raw_reply or not raw_reply.strip():
                 raise ValueError("Оллама вернула пустой ответ")
                 
             clean_reply = raw_reply.strip()
             
-            # Извлекаем JSON из фигурных скобок, даже если ИИ написал лишний текст
-            start_idx = clean_reply.find("{")
-            end_idx = clean_reply.rfind("}")
-            if start_idx != -1 and end_idx != -1:
-                clean_reply = clean_reply[start_idx:end_idx + 1]
-            
-            parsed = json.loads(clean_reply)
-            ai_text = parsed.get("text", ai_text)
-            raw_actions = parsed.get("actions", [])
-            is_json_valid = True
-            print(f"[РЕЖИССЕР]: Успешно распарсен JSON. Ответ ИИ: {ai_text}")
+            # Проверяем: если в ответе ВООБЩЕ нет фигурных скобок, значит это точно обычный текст
+            if "{" not in clean_reply or "}" not in clean_reply:
+                ai_text = clean_reply
+                raw_actions = []
+                is_json_valid = True
+                print(f"[РЕЖИССЕР]: Получен чистый текстовый ответ от ИИ: {ai_text}")
+            else:
+                # Если скобки есть, вырезаем ТОЛЬКО первый валидный блок JSON
+                # Это решает проблему "Extra data", когда ИИ пишет текст после скобки }
+                start_idx = clean_reply.find("{")
+                
+                # Ищем закрывающую скобку, которая идет после открывающей
+                end_idx = clean_reply.find("}", start_idx)
+                
+                if start_idx != -1 and end_idx != -1:
+                    # Обрезаем строку строго от первой { до первой }
+                    clean_reply = clean_reply[start_idx:end_idx + 1]
+                
+                parsed = json.loads(clean_reply)
+                ai_text = parsed.get("text", ai_text)
+                raw_actions = parsed.get("actions", [])
+                is_json_valid = True
+                print(f"[РЕЖИССЕР]: Успешно распарсен JSON-пакет действий. Ответ ИИ: {ai_text}")
+                
         except Exception as e:
-            print(f"[СВЕТИК СЕРВЕР ОШИБКА]: Ошибка парсинга Ollama JSON: {e}. Переходим на аварийный режим.")
-            # Если ИИ прислал обычный текст вместо JSON, используем его как реплику Светика
-            if raw_reply and len(raw_reply.strip()) > 5 and not "{" in raw_reply:
+            print(f"[СВЕТИК СЕРВЕР ПРЕДУПРЕЖДЕНИЕ]: Нестандартный формат ответа: {e}. Применяем фолбек.")
+            if raw_reply and len(raw_reply.strip()) > 5:
                 ai_text = raw_reply.strip()
+
             
             # УМНЫЙ АВАРИЙНЫЙ РЕЖИМ С ПРИОРИТЕТОМ НА АНГЛИЙСКОМ
             user_lower = user_prompt.lower()

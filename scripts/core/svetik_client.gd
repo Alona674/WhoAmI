@@ -73,22 +73,74 @@ func _on_request_completed(result: int, response_code: int, _headers: PackedStri
 	
 # Текст диалога выведется в любом случае!
 				# ОЧИСТКА МУСОРА: Удаляем технические слова, кавычки и скобки, если они пролезли в текст
+				# МОЩНАЯ ОЧИСТКА ХУДОЖЕСТВЕННОГО ТЕКСТА ОТ ТЕХНИЧЕСКОГО МУСОРА
+				# МОЩНАЯ ОЧИСТКА ХУДОЖЕСТВЕННОГО ТЕКСТА ОТ ТЕХНИЧЕСКОГО МУСОРА
+				# ЖЕЛЕЗОБЕТОННАЯ ОЧИСТКА ХУДОЖЕСТВЕННОГО ТЕКСТА
 		var final_clean_text: String = text_reply
 		
-		# Если текст начинается со слова text:, вырезаем его
-		final_clean_text = final_clean_text.replace("text:", "")
-		final_clean_text = final_clean_text.replace("actions:", "")
+		# 1. Если ИИ выдал технический блок в любом формате, отрезаем всё, что после реплики
+		if final_clean_text.contains("actions"):
+			var parts = final_clean_text.split("actions")
+			final_clean_text = parts[0] # Берём только то, что до слова actions
+			
+		if final_clean_text.contains("type:"):
+			var parts = final_clean_text.split("type:")
+			final_clean_text = parts[0] # Подстраховка: отрезаем, если пролезло type
 		
-		# Очищаем кавычки, фигурные и квадратные скобки
+		# 2. Удаляем техническое слово text: в начале строки, если оно есть
+				# Находим, где именно стоит слово text
+		var text_keyword_idx = final_clean_text.find("text")
+		if text_keyword_idx != -1:
+			# Ищем двоеточие, которое идет сразу после слова text
+			var colon_idx = final_clean_text.find(":", text_keyword_idx)
+			if colon_idx != -1:
+				# Отрезаем всё, что было до двоеточия включительно
+				final_clean_text = final_clean_text.substr(colon_idx + 1)
+
+		
+		# 3. Полностью зачищаем кавычки, двоеточия, любые фигурные и квадратные скобки
 		final_clean_text = final_clean_text.replace('"', "")
 		final_clean_text = final_clean_text.replace("{", "").replace("}", "")
 		final_clean_text = final_clean_text.replace("[", "").replace("]", "")
 		
-		# Убираем лишние пробелы по краям
+		# Убираем возможные двоеточия и переносы строк, оставшиеся на границе текста
 		final_clean_text = final_clean_text.strip_edges()
+		if final_clean_text.ends_with(":"):
+			final_clean_text = final_clean_text.left(final_clean_text.length() - 1)
 		
-		# Отправляем в интерфейс диалога СТРОГО чистую речь персонажа!
+		final_clean_text = final_clean_text.strip_edges()
+
+		
+		# 4. Если Светик добавил нашу фразу про материализацию, аккуратно склеиваем их в конце
+				# Находим имя создаваемого предмета, если оно есть
+		var spawned_item_name = "загадочный предмет"
+		for act in actions:
+			if act.get("type", "") == "spawn_object":
+				spawned_item_name = act.get("name", spawned_item_name)
+		
+		# ИСПРАВЛЕНИЕ: Дописываем фразу про материализацию ТОЛЬКО если ИИ реально создал предмет (should_spawn == true)
+		if should_spawn:
+			var already_has_phrase = false
+			var lower_item_name = spawned_item_name.to_lower()
+			
+			for w in ["пол", "взгляни", "соткалось", "материализовался", lower_item_name]:
+				if final_clean_text.to_lower().contains(w):
+					already_has_phrase = true
+					break
+					
+			if not already_has_phrase:
+				final_clean_text += " Смотри... Из осколков твоих мыслей на полу материализовался " + spawned_item_name + ". Возьми его, если осмелишься."
+				
+			# Сам физический спавн на пол
+			_spawn_generated_item_on_floor(spawn_id, spawn_name)
+		else:
+			print("[GODOT]: Получен текстовый ответ без необходимости спавна.")
+		
+		# Отправляем в интерфейс полностью очищенную речь!
 		chat_reply.emit(final_clean_text, actions)
+
+
+
 
 
 	else:

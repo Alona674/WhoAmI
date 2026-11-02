@@ -1,0 +1,3 @@
+cd ~/Documents/GitHub/WhoAmI/svetik-server
+source .venv/bin/activate 
+uvicorn server:app --host 127.0.0.1 --port 8000
