@@ -2,9 +2,14 @@ import asyncio
 import json
 import math
 import re
+import os
+import torch
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 from typing import Optional
+
+# Подключаем библиотеки генерации картинок
+from diffusers import AutoPipelineForText2Image
 
 from state import SvetikState
 from rules import should_speak
@@ -13,7 +18,7 @@ from svetik_prompt import build_system_prompt
 from filter import is_safe, fallback_line
 
 
-app = FastAPI(title="Svetik Runtime")
+app = FastAPI(title="Svetik Runtime с ИИ-Режиссером")
 state = SvetikState()
 
 # Загружаем сохранённое состояние при старте
@@ -21,6 +26,17 @@ state.load()
 
 # Блокировка для синхронизации доступа к state
 _state_lock = asyncio.Lock()
+
+# ── ИНИЦИАЛИЗАЦИЯ STABLE DIFFUSION (Генератор картинок на Metal GPU Mac) ──
+print("=== [СВЕТИК]: Загрузка локальной модели генерации картинок SDXL Turbo... ===")
+pipe = AutoPipelineForText2Image.from_pretrained(
+    "stabilityai/sdxl-turbo", 
+    torch_dtype=torch.float16, 
+    variant="fp16"
+)
+# Передаем расчеты на мощные графические ядра вашего чипа M5 Pro
+pipe.to("mps") 
+print("=== [СВЕТИК]: 'Мозг' генератора картинок успешно запущен на M5 Pro! ===")
 
 
 # ── Схемы запросов/ответов ──
@@ -51,34 +67,9 @@ WORLD_OBJECTS = {
 }
 ROOMS = {"Bedroom", "corridor", "Kitchen", "Bathroom"}
 
-ACTION_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "text": {"type": "string"},
-        "actions": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "type": {"type": "string", "enum": ["set_brightness", "move_object", "break_object", "steal_object", "rotate_screen"]},
-                    "room": {"type": "string"},
-                    "object": {"type": "string"},
-                    "to_room": {"type": "string"},
-                    "x": {"type": "number"},
-                    "y": {"type": "number"},
-                    "value": {"type": "number"},
-                    "degrees": {"type": "number"},
-                },
-                "required": ["type"],
-            },
-        },
-    },
-    "required": ["text", "actions"],
-}
-
 
 def validate_actions(actions: list, context: Optional[dict]) -> list[dict]:
-    """Keep only known, bounded world commands returned by the model."""
+    """Валидация команд от ИИ, созданная автором + наша новая погода 'set_weather'."""
     safe_actions: list[dict] = []
     if not isinstance(actions, list):
         return safe_actions
@@ -88,13 +79,20 @@ def validate_actions(actions: list, context: Optional[dict]) -> list[dict]:
         for item in (context or {}).get("objects", [])
         if isinstance(item, dict)
     }
-    for raw in actions[:5]:
+    for raw in actions[:6]: # Увеличили лимит до 6, чтобы влезла погода
         if not isinstance(raw, dict):
             continue
         kind = raw.get("type")
         if not isinstance(kind, str):
             continue
-        if kind == "set_brightness":
+            
+        # Новая команда ИИ-Режиссера: изменение погоды (дождь, туман)
+        if kind == "set_weather":
+            weather_val = raw.get("value", "normal")
+            if weather_val in ["normal", "rain", "fog"]:
+                safe_actions.append({"type": kind, "value": weather_val})
+                
+        elif kind == "set_brightness":
             value = raw.get("value")
             if isinstance(value, (int, float)) and math.isfinite(value):
                 safe_actions.append({"type": kind, "value": max(0.2, min(1.8, float(value)))})
@@ -145,11 +143,15 @@ ROOM_WORDS = {
 
 
 def action_reaction(actions: list[dict]) -> str:
-    """Add a short in-character acknowledgement for every world command."""
+    """Генерация текстового ответа на основе сработавших команд."""
     reactions: list[str] = []
     for action in actions:
         kind = action.get("type")
-        if kind == "set_brightness":
+        if kind == "set_weather":
+            w = action.get("value")
+            if w == "rain": reactions.append("за окном пошел холодный дождь")
+            elif w == "fog": reactions.append("комнату застилает густой туман")
+        elif kind == "set_brightness":
             value = float(action.get("value", 1.0))
             reactions.append("теперь здесь светлее" if value > 1.0 else "теперь здесь темнее")
         elif kind == "rotate_screen":
@@ -168,194 +170,232 @@ def action_reaction(actions: list[dict]) -> str:
     return (" Ха, " + "; ".join(reactions) + "!") if reactions else ""
 
 
-def explicit_steal_actions(message: str, context: Optional[dict]) -> list[dict]:
-    """Recognize direct Russian theft commands even if the LLM omits JSON actions."""
-    if not re.search(r"\b(укради|украсть|украл[аи]?|стащи|стянуть|воруй)\b", message.lower()):
-        return []
-    aliases = {
-        "Scales": r"вес(?:ы|ов|ами)?",
-        "Chest": r"сундук(?:а|ом)?",
-        "Jug": r"(?:кувшин\w*|вазу|ваза|вазы|графин\w*)",
-        "Pan": r"сковород\w*",
-    }
-    objects = (context or {}).get("objects", [])
-    lower_message = message.lower()
-    for item in objects if isinstance(objects, list) else []:
-        if not isinstance(item, dict):
-            continue
-        room, name = item.get("room"), item.get("object")
-        alias = aliases.get(name)
-        if (isinstance(room, str) and isinstance(name, str) and alias
-                and re.search(rf"\b{alias}\b", lower_message)):
-            return [{"type": "steal_object", "room": room, "object": name}]
-    return []
+from pathlib import Path
+
+def generate_ai_image(prompt_text: str):
+    """Локальная генерация хоррор-картинок на видеокарте Apple Silicon с авто-очисткой."""
+    try:
+                # Переставили запрос в начало, а стили хоррора — в конец
+        full_prompt = f"{prompt_text}, isolated object asset, centered, pure black background, 2d indie horror game style, eerie dark atmosphere"
+
+        print(f"[ИИ-КАРТИНКА]: Генерация по промпту: {full_prompt}")
+        
+        # Генерируем изображение
+        image = pipe(prompt=full_prompt, num_inference_steps=1, guidance_scale=0.0).images[0]
+        
+        # Находим папку art проекта игры
+        server_script_dir = Path(__file__).resolve().parent
+        game_art_dir = server_script_dir.parent / "art"
+        game_art_dir.mkdir(parents=True, exist_ok=True)
+        
+        final_path = game_art_dir / "dynamic_generated.png"
+        
+        # БРОНЕБОЙНОЕ РЕШЕНИЕ: Если старый файл существует, принудительно удаляем его перед записью!
+        if final_path.exists():
+            try:
+                final_path.unlink()
+                print("[ИИ-КАРТИНКА]: Старая заблокированная картинка успешно стёрта с диска.")
+            except Exception as e:
+                print(f"[ИИ-КАРТИНКА ПРЕДУПРЕЖДЕНИЕ]: Не удалось удалить файл напрямую (возможно, заблокирован Godot): {e}")
+        
+        # Сохраняем новую картинку
+        image.save(str(final_path))
+        print(f"[ИИ-КАРТИНКА АВТОПУТЬ]: Новая картинка успешно записана: {final_path}")
+        
+    except Exception as e:
+        print(f"[ИИ-КАРТИНКА ОШИБКА]: Не удалось сгенерировать изображение: {e}")
 
 
 # ── Эндпоинты ──
 @app.post("/event", response_model=EventResponse)
 async def handle_event(req: EventRequest) -> EventResponse:
     async with _state_lock:
-        # 1. Обновляем state
         if req.location:
             state.location = req.location
         state.add_memory(f"{req.type}:{req.target}")
 
-        # 2. Спрашиваем правила
         decision = should_speak(req.type, req.target, state)
-
         if not decision["speak"]:
             return EventResponse(speak=False, source="silent")
 
-        # 3. Если прекеш — отдаём мгновенно
         if not decision.get("use_llm", True):
             state.interventions_this_scene += 1
             state.relationship = max(-10, min(10, state.relationship + decision.get("delta", 0)))
             return EventResponse(
                 speak=True,
-                text=decision["cached_text"],
+                text=decision.get("text", ""),
                 emotion=decision.get("emotion", "neutral"),
                 delta_relationship=decision.get("delta", 0),
-                source="cached",
+                source="cached"
             )
 
-        # 4. Иначе — зовём LLM
-        state.interventions_this_scene += 1
-        system = build_system_prompt(state)
-        user = f"Событие: {req.type} с {req.target}. {req.context or ''}"
+        # ИСПРАВЛЕНО: убрали req.context, передаем только state
+        system_prompt = build_system_prompt(state)
+        user_prompt = f"Произошло событие: {req.type} с объектом {req.target} в комнате {state.location}."
+        
+        # Требуем от Ollama вернуть команду генерации при важных событиях
+        system_prompt += "\nДобавь в массив действий ('actions') объект типа {'type': 'generate_image', 'prompt': 'описание жуткой картинки на английском'}, если ситуация заслуживает визуализации."
 
         try:
-            text = ask_ollama(system, user)
-        except LLMError as e:
-            print(f"[LLM ERROR] {e}")
-            return EventResponse(
-                speak=True,
-                text=fallback_line(decision.get("emotion", "neutral")),
-                emotion=decision.get("emotion", "neutral"),
-                source="fallback",
-            )
+            raw_reply = ask_ollama(system_prompt, user_prompt)
+            parsed = json.loads(raw_reply)
+        except Exception:
+            parsed = {"text": "Что-то пошло не так...", "actions": []}
 
-        # 5. Фильтр
-        ok, reason = is_safe(text, state.forbidden_keywords)
-        if not ok:
-            print(f"[FILTER BLOCK] {reason}: {text}")
-            return EventResponse(
-                speak=True,
-                text=fallback_line(decision.get("emotion", "neutral")),
-                emotion=decision.get("emotion", "neutral"),
-                source="fallback",
-            )
+        text = parsed.get("text", "")
+        raw_actions = parsed.get("actions", [])
+        
+        for act in raw_actions:
+            if isinstance(act, dict) and act.get("type") == "generate_image":
+                generate_ai_image(act.get("prompt", "scary ghost shadow"))
 
-        # 6. Успех
+        safe_actions = validate_actions(raw_actions, req.context)
+        text += action_reaction(safe_actions)
+
         return EventResponse(
             speak=True,
             text=text,
-            emotion=decision.get("emotion", "neutral"),
-            delta_relationship=decision.get("delta", 0),
             source="llm",
+            actions=safe_actions
         )
 
 
 @app.post("/chat", response_model=EventResponse)
-async def chat_with_svetik(req: ChatRequest) -> EventResponse:
-    """Свободное сообщение игрока компаньону Светику."""
-    message = req.message.strip()
-    if not message:
-        return EventResponse(speak=False, source="silent")
-
+async def handle_chat(req: ChatRequest) -> EventResponse:
     async with _state_lock:
         if req.location:
             state.location = req.location
-        state.add_memory(f"Миша сказал Светику: {message}")
-        system = build_system_prompt(state) + """
 
-## УПРАВЛЕНИЕ МИРОМ
-Отвечай JSON-объектом с полями
-"text" (короткая реплика Светика) и "actions" (массив команд; если действий нет — пустой).
-Если игрок прямо просит изменить мир, обязательно добавь соответствующую команду в actions.
-Не отказывайся от действия и не подменяй его одной репликой, если предмет и команда есть в доступном списке.
-Можно выполнить до пяти действий за ответ.
-Допустимые type:
-- set_brightness: value от 0.2 до 1.8; обычная яркость 1.0.
-- rotate_screen: degrees — угол поворота экрана.
-- move_object: room, object, to_room, x, y. Координаты комнаты: x 30..2150, y 30..850.
-- break_object: room, object.
-- steal_object: room, object. Предмет исчезнет из комнаты и будет считаться украденным Светиком.
-Список комнат и предметов, их текущее местоположение и состояние доступны в контексте сообщения.
-Для перемещения указывай исходные room/object предмета, а затем to_room и координаты x/y.
-Для разрушения обязательно используй break_object и точные исходные room/object предмета. Например, разбить сковороду — {"type":"break_object","room":"Kitchen","object":"Pan"}. Используй только имена из списка.
-Для кражи обязательно используй steal_object и точные исходные room/object предмета. Например, украсть вазу/кувшин — {"type":"steal_object","room":"Kitchen","object":"Jug"}.
-Например, при просьбе передвинуть кувшин используй move_object для Kitchen/Jug; левая часть комнаты — x около 250,
-середина — x около 1000, правая — x около 1900; высота обычно y около 500.
-При просьбе сделать темнее используй set_brightness с числом ниже 1.0; сделать ярче — выше 1.0.
-При просьбе повернуть экран на N градусов используй rotate_screen и передай N в degrees.
-Если actions не пустой, в text оставь короткую ехидную реплику; сервер добавит отдельную реакцию Светика на каждое выполненное действие.
-Не выдумывай действия, если игрок просит только поговорить. Сначала оставайся в образе.
-"""
-        context_json = json.dumps(req.context or {"room": req.location or state.location}, ensure_ascii=False)
+        system_prompt = build_system_prompt(state)
+        
+        # Строгая и лаконичная инструкция для ИИ
+        system_prompt += (
+            "\n[ИНСТРУКЦИЯ ИИ-РЕЖИССЕРА]:\n"
+            "Ты управляешь хоррор-игрой. Отвечай СТРОГО в формате JSON с ключами 'text' и 'actions'.\n"
+            "Правила для массива 'actions':\n"
+            "Если игрок просит предмет, добавь две команды:\n"
+            "1. {'type': 'spawn_object', 'id': 'uniqu_id', 'name': 'Имя предмета на РУССКОМ'}\n"
+            "2. {'type': 'generate_image', 'prompt': 'SHORT_ENGLISH_DESCRIPTION'}\n\n"
+            "KРИТИЧЕСКОЕ ПРАВИЛО ДЛЯ 'prompt':\n"
+            "Промпт должен быть СТРОГО НА АНГЛИЙСКОМ ЯЗЫКЕ и очень коротким (максимум 5-8 слов).\n"
+            "Описывай только сам предмет. Никакого фона, никаких стен.\n"
+            "Пример правильного промпта: 'ancient glowing wizard staff, blue energy pulse'\n"
+            "Пример неправильного промпта: 'Магический посох в темной комнате на полу'"
+        )
+
+        user_prompt = req.message
+        
+        # Объявляем переменные ЗАРАНЕЕ, чтобы избежать ошибок инициализации (UnboundLocalError)
+        ai_text = "Я соткал это из темноты... Взгляни на пол."
+        raw_actions = []
+        image_prompt = "dark horror cryptic occult artifact item object"
+        should_generate_visual = False
+        is_json_valid = False
+        raw_reply = ""
+
         try:
-            raw_response = ask_ollama(
-                system,
-                f"Контекст игры: {context_json}\nСообщение Михаила: {message}",
-                temperature=0.55,
-                max_tokens=300,
-                timeout=120,
-                response_format=ACTION_SCHEMA,
-            )
-        except LLMError as e:
-            print(f"[LLM ERROR] {e}")
-            text = f"Я потерял связь с голосом. Проверь, запущена ли Ollama и загружена ли модель {MODEL}."
-            source = "fallback"
-            actions = []
-        else:
-            try:
-                result = json.loads(raw_response)
-                text = str(result.get("text", "")).strip()
-                actions = validate_actions(result.get("actions", []), req.context)
-                forced_steal = validate_actions(explicit_steal_actions(message, req.context), req.context)
-                for forced_action in forced_steal:
-                    if forced_action not in actions:
-                        actions.append(forced_action)
-                if forced_steal:
-                    text = "О, смотри-ка!"
-                if not text:
-                    raise ValueError("empty dialogue text")
-            except (json.JSONDecodeError, AttributeError, TypeError, ValueError):
-                text = raw_response.strip()
-                actions = []
-            text = (text + action_reaction(actions)).strip()
-            ok, reason = is_safe(text, state.forbidden_keywords)
-            if not ok:
-                print(f"[FILTER BLOCK] {reason}: {text}")
-                text = fallback_line("neutral")
-                actions = []
-                source = "fallback"
+            # УБРАЛИ await перед функцией, чтобы избежать сбоев
+            raw_reply = ask_ollama(system_prompt, user_prompt)
+            if not raw_reply or not raw_reply.strip():
+                raise ValueError("Оллама вернула пустой ответ")
+                
+            clean_reply = raw_reply.strip()
+            
+            # Извлекаем JSON из фигурных скобок, даже если ИИ написал лишний текст
+            start_idx = clean_reply.find("{")
+            end_idx = clean_reply.rfind("}")
+            if start_idx != -1 and end_idx != -1:
+                clean_reply = clean_reply[start_idx:end_idx + 1]
+            
+            parsed = json.loads(clean_reply)
+            ai_text = parsed.get("text", ai_text)
+            raw_actions = parsed.get("actions", [])
+            is_json_valid = True
+            print(f"[РЕЖИССЕР]: Успешно распарсен JSON. Ответ ИИ: {ai_text}")
+        except Exception as e:
+            print(f"[СВЕТИК СЕРВЕР ОШИБКА]: Ошибка парсинга Ollama JSON: {e}. Переходим на аварийный режим.")
+            # Если ИИ прислал обычный текст вместо JSON, используем его как реплику Светика
+            if raw_reply and len(raw_reply.strip()) > 5 and not "{" in raw_reply:
+                ai_text = raw_reply.strip()
+            
+            # УМНЫЙ АВАРИЙНЫЙ РЕЖИМ С ПРИОРИТЕТОМ НА АНГЛИЙСКОМ
+            user_lower = user_prompt.lower()
+            
+            # Расширили список корней для точного перехвата еды (кушать, хочу есть, конфеты)
+            if any(w in user_lower for w in ["ед", "кушат", "ешь", "ест", "конфет", "перекус"]):
+                image_prompt = "rotten creepy horror food ration, cursed candy bowl, dark meat on a plate"
+                should_generate_visual = True
+            elif any(w in user_lower for w in ["нож", "оруж", "меч", "кинж", "топор"]):
+                image_prompt = "rusty sharp ritual dagger, dark entity blade"
+                should_generate_visual = True
+            elif any(w in user_lower for w in ["свет", "зажигал", "фонар"]):
+                image_prompt = "vintage old creepy brass lighter, small flame"
+                should_generate_visual = True
             else:
-                source = "llm"
-        state.add_memory(f"Светик ответил: {text}")
-        return EventResponse(speak=True, text=text, source=source, actions=actions)
+                image_prompt = "mysterious glowing occult horror artifact object"
 
 
-@app.post("/scene_reset")
-async def scene_reset():
-    """Сброс счётчика вмешательств при переходе в новую сцену."""
-    async with _state_lock:
-        state.interventions_this_scene = 0
-    return {"ok": True}
+
+        # Извлекаем промпт из валидного JSON, если он есть
+        if is_json_valid:
+            for act in raw_actions:
+                if isinstance(act, dict) and act.get("type") == "generate_image":
+                    image_prompt = act.get("prompt", image_prompt)
+                    should_generate_visual = True
+                    break
+        else:
+            # Если игрок явно просил предмет, но JSON сломался — всё равно разрешаем генерацию
+            if any(w in user_prompt.lower() for w in ["дай", "нужен", "посох", "нож", "амулет", "предмет", "артефакт"]):
+                should_generate_visual = True
+
+        # ── ДИНАМИЧЕСКИЙ СТАРТ ГЕНЕРАЦИИ И ФИКС ТОКЕНОВ ДЛЯ CLIP (Лимит 77) ──
+                # ── ДИНАМИЧЕСКИЙ СТАРТ ГЕНЕРАЦИИ И ФИКС ТОКЕНОВ ДЛЯ CLIP ──
+        if should_generate_visual and image_prompt:
+            # ПРИОРИТЕТ: Сначала идет четкое описание предмета (image_prompt), 
+            # а технические стили хоррора и изоляция дописываются в самый конец!
+            optimized_prompt = f"{image_prompt}, isolated object asset, centered, pure black background, 2d indie horror sprite"
+            generate_ai_image(optimized_prompt)
+        else:
+            print("[РЕЖИССЕР]: Обычная беседа. Локальный генератор Stable Diffusion не задействуется.")
+
+        # Обрабатываем остальные команды (свет, погода)
+        safe_actions = validate_actions(raw_actions, req.context)
+        
+        # Синхронизируем спавн с генерацией
+        has_spawn = any(act.get("type") == "spawn_object" for act in safe_actions)
+        spawned_item_name = "загадочный предмет"
+        
+        if should_generate_visual and not has_spawn:
+            safe_actions.append({
+                "type": "spawn_object",
+                "id": "ai_artifact",
+                "name": spawned_item_name
+            })
+        elif has_spawn:
+            # Извлекаем красивое имя предмета, которое придумал ИИ
+            for act in safe_actions:
+                if act.get("type") == "spawn_object":
+                    spawned_item_name = act.get("name", spawned_item_name)
+                    break
+
+        # ДИНАМИЧЕСКИЙ ХОРРОР-КОНТЕКСТ:
+        # Если ИИ вызвал спавн предмета, мы прикрепим это к его реплике,
+        # чтобы Светик в игре звучал осознанно и понимал, что создал
+        if should_generate_visual:
+            if not any(w in ai_text.lower() for w in ["пол", "взгляни", "соткалось", "появился", spawned_item_name.lower()]):
+                ai_text += f" Смотри... Из осколков твоих мыслей на полу материализовался {spawned_item_name}. Возьми его, если осмелишься."
+
+        text_reply = ai_text + action_reaction(safe_actions)
+
+        return EventResponse(
+            speak=True,
+            text=text_reply,
+            emotion="neutral",
+            delta_relationship=0,
+            source="llm" if is_json_valid else "fallback",
+            actions=safe_actions
+        )
 
 
-@app.get("/state")
-async def get_state():
-    """Дебаг: посмотреть текущее состояние."""
-    return state.to_dict()
 
 
-@app.get("/health")
-async def health():
-    """Проверка: сервер жив."""
-    return {"ok": True}
-
-
-@app.on_event("shutdown")
-async def on_shutdown():
-    """Сохраняем state при выключении."""
-    state.save()
