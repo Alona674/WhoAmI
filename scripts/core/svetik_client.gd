@@ -146,7 +146,7 @@ func _on_request_completed(result: int, response_code: int, _headers: PackedStri
 	else:
 		chat_reply.emit("Светик задумался и не ответил на JSON.", [])
 
-# Вспомогательная функция, которая собирает предмет на полу и натягивает ИИ-текстуру
+# Функция сборки предмета на полу с парящей надписью "Нажмите E"
 func _spawn_generated_item_on_floor(item_id: String, item_name: String) -> void:
 	var current_scene = get_tree().current_scene
 	var player = current_scene.find_child("Player", true, false)
@@ -159,7 +159,7 @@ func _spawn_generated_item_on_floor(item_id: String, item_name: String) -> void:
 		drop_node.name = "AI_Spawned_" + item_id
 		
 		# Загружаем сгенерированную на Python картинку с диска
-		var img_path = "res://art/dynamic_generated.png"
+		var img_path = ProjectSettings.globalize_path("res://art/dynamic_generated.png")
 		var sprite = Sprite2D.new()
 		
 		if FileAccess.file_exists(img_path):
@@ -167,19 +167,34 @@ func _spawn_generated_item_on_floor(item_id: String, item_name: String) -> void:
 			if img:
 				var texture = ImageTexture.create_from_image(img)
 				sprite.texture = texture
-				# Ужимаем огромную картинку Stable Diffusion до аккуратного размера на полу
-				sprite.scale = Vector2(0.1, 0.1) 
+				sprite.scale = Vector2(0.08, 0.08) # Ужимаем до аккуратных размеров
 		
 		drop_node.add_child(sprite)
 		
-		# Создаем коллизию, чтобы Михаил мог наступить и поднять вещь
+		# СОЗДАЕМ ПАРЯЩУЮ НАДПИСЬ НАД ПРЕДМЕТОМ
+		var label = Label.new()
+		label.name = "PickupLabel"
+		label.text = "Нажмите E, чтобы подобрать"
+		
+		# Центрируем текст над объектом
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		# Сдвигаем надпись вверх (примерно на 40 пикселей выше центра спрайта)
+		label.position = Vector2(-100, -40) 
+		# Настраиваем размер зоны текста, чтобы он не переносился некрасиво
+		label.custom_minimum_size = Vector2(200, 20)
+		
+		# Делаем надпись изначально невидимой
+		label.visible = false
+		drop_node.add_child(label)
+		
+		# Создаем коллизию зоны взаимодействия
 		var collision = CollisionShape2D.new()
 		var circle_shape = CircleShape2D.new()
-		circle_shape.radius = 30.0
+		circle_shape.radius = 45.0 # Комфортный радиус для шага Михаила
 		collision.shape = circle_shape
 		drop_node.add_child(collision)
 		
-		# Навешиваем логику подбора в инвентарь (наш созданный менеджер)
+		# ЛОГИКА ВЗАИМОДЕЙСТВИЯ И ПОДБОРКА НА ПРЯМОМ GDSCRIPT
 		var pickup_script = GDScript.new()
 		pickup_script.source_code = """
 extends Area2D
@@ -189,14 +204,34 @@ var item_name: String
 var item_description: String = "Предмет, материализованный Светиком из подсознания."
 var icon_path: String = "res://art/dynamic_generated.png"
 
+var is_player_inside: bool = false
+@onready var pickup_label: Label = $PickupLabel
+
 func _ready():
 	body_entered.connect(_on_body_entered)
+	body_exited.connect(_on_body_exited)
+
+func _process(delta):
+	# Если игрок стоит вплотную и нажал кнопку взаимодействия "E"
+	if is_player_inside and Input.is_action_just_pressed("interact"):
+		# Добавляем предмет в глобальный инвентарь
+		InventoryManager.add_item(item_id, item_name, item_description, icon_path)
+		# Удаляем объект с пола
+		queue_free()
 
 func _on_body_entered(body):
 	if body.name.to_lower() == "player" or body.is_in_group("player"):
-		# Кладем в наш глобальный инвентарь!
-		InventoryManager.add_item(item_id, item_name, item_description, icon_path)
-		queue_free()
+		is_player_inside = true
+		# Включаем парящую надпись над предметом
+		if pickup_label:
+			pickup_label.visible = true
+
+func _on_body_exited(body):
+	if body.name.to_lower() == "player" or body.is_in_group("player"):
+		is_player_inside = false
+		# Прячем надпись, когда Михаил уходит в сторону
+		if pickup_label:
+			pickup_label.visible = false
 """
 		pickup_script.reload()
 		drop_node.set_script(pickup_script)
@@ -205,11 +240,10 @@ func _on_body_entered(body):
 		drop_node.item_id = item_id
 		drop_node.item_name = item_name
 		
-		# Размещаем объект в комнате чуть правее Михаила (на 90 пикселей)
+		# Размещаем объект в комнате чуть правее игрока
 		drop_node.global_position = player.global_position
 		drop_node.global_position.x += 90.0
 		drop_node.global_position.y -= 10.0 # Ровно на пол
 		
-		# Добавляем объект на карту уровня
 		current_scene.add_child(drop_node)
-		print("[РЕЖИССЕР]: Физический предмет '", item_name, "' с ИИ-текстурой успешно создан на полу!")
+		print("[РЕЖИССЕР]: Предмет с парящим текстом 'E' создан на полу!")
