@@ -4,6 +4,16 @@
 [ext_resource type="Texture2D" uid="uid://d2xk0jvv7vlgg" path="res://art/items/bedroom/diary_michael.png" id="2_w8mmd"]
 [ext_resource type="Texture2D" uid="uid://ch2vo1jhemlnf" path="res://art/items/bedroom/diary_blank.png" id="3_w8mmd"]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_0tc7x"]
+resource_local_to_scene = true
+atlas = ExtResource("2_w8mmd")
+region = Rect2(202.25221, 128.10092, 649.4734, 587.2235)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w8mmd"]
+resource_local_to_scene = true
+atlas = ExtResource("2_w8mmd")
+region = Rect2(895.3005, 136.40091, 643.24835, 566.47363)
+
 [node name="Diary" type="Control" unique_id=156815132]
 layout_mode = 3
 anchors_preset = 15
@@ -39,27 +49,68 @@ grow_vertical = 2
 texture = ExtResource("2_w8mmd")
 expand_mode = 3
 
-[node name="Tabs" type="HBoxContainer" parent="Background" unique_id=41365257]
+[node name="RightPage" type="Control" parent="Background" unique_id=8250110]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="QuestText" type="RichTextLabel" parent="Background/RightPage" unique_id=1286331202]
 layout_mode = 1
-anchors_preset = 10
+anchors_preset = 15
 anchor_right = 1.0
-offset_bottom = 160.0
+anchor_bottom = 1.0
+offset_left = 966.0
+offset_top = 219.0
+offset_right = 1628.0
+offset_bottom = 775.0
 grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0.21568628, 0.15686275, 0.03529412, 1)
+theme_override_font_sizes/normal_font_size = 18
+autowrap_mode = 2
 
-[node name="HistoryButton" type="Button" parent="Background/Tabs" unique_id=1942785169]
-custom_minimum_size = Vector2(15, 50)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 45
-text = "Записи и история"
+[node name="LeftPage" type="Control" parent="Background" unique_id=1253062437]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="QuestsButton" type="Button" parent="Background/Tabs" unique_id=162175508]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 45
-text = "Задания"
+[node name="HistoryText" type="RichTextLabel" parent="Background/LeftPage" unique_id=1728542577]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 222.0
+offset_top = 228.0
+offset_right = 845.0
+offset_bottom = 772.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0.21522775, 0.15575662, 0.036107592, 1)
+theme_override_font_sizes/normal_font_size = 18
+autowrap_mode = 2
+
+[node name="PageTurn" type="TextureRect" parent="Background" unique_id=1583815138]
+layout_mode = 0
+offset_left = 179.0
+offset_top = 211.0
+offset_right = 895.0
+offset_bottom = 853.0
+mouse_filter = 2
+texture = SubResource("AtlasTexture_0tc7x")
+expand_mode = 1
+
+[node name="PageTurnBack" type="TextureRect" parent="Background" unique_id=1781852148]
+layout_mode = 0
+offset_left = 953.0
+offset_top = 214.0
+offset_right = 1663.0
+offset_bottom = 837.0
+mouse_filter = 2
+texture = SubResource("AtlasTexture_w8mmd")
+expand_mode = 1
 
 [node name="TornPages" type="TextureRect" parent="Background" unique_id=405517503]
+visible = false
 layout_mode = 0
 offset_left = -15.0
 offset_top = 115.0

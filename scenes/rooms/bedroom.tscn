@@ -12,25 +12,19 @@
 [ext_resource type="Texture2D" uid="uid://cocyq7lskurvm" path="res://art/rooms/bedroom/87e1d269-48e0-44a7-9280-0a88eecf26dc.png" id="14_1c8ys"]
 [ext_resource type="PackedScene" uid="uid://hisq1d0ohn27" path="res://scenes/ui/PauseMenu.tscn" id="14_uq8jf"]
 [ext_resource type="PackedScene" uid="uid://t8svf7fsxox8" path="res://scenes/rooms/diary.tscn" id="15_ykv2i"]
-[ext_resource type="Texture2D" uid="uid://g2wyjg1jcghb" path="res://art/items/bedroom/bear.png" id="19_ypovm"]
-[ext_resource type="Texture2D" uid="uid://c54qe3bq2omeb" path="res://art/items/bedroom/beg.png" id="20_ug7ds"]
-[ext_resource type="Texture2D" uid="uid://qhkwp65p6hru" path="res://art/items/bedroom/book.png" id="21_bjanb"]
 [ext_resource type="Script" uid="uid://c0tvycnscamio" path="res://scripts/interaction/diary_interaction.gd" id="22_ah6rp"]
-[ext_resource type="Texture2D" uid="uid://cd3ys7o6daln5" path="res://art/items/bedroom/flower.png" id="23_3k0fl"]
-[ext_resource type="Texture2D" uid="uid://dtbvh5uaokt80" path="res://art/items/bedroom/lamp.png" id="24_mbbgn"]
-[ext_resource type="Texture2D" uid="uid://ckuhsrn88jl4w" path="res://art/items/bedroom/map.png" id="25_lwkqt"]
+[ext_resource type="Texture2D" uid="uid://c54qe3bq2omeb" path="res://art/items/bedroom/beg.png" id="bag_texture"]
+[ext_resource type="Texture2D" uid="uid://qhkwp65p6hru" path="res://art/items/bedroom/book.png" id="book_texture"]
 [ext_resource type="PackedScene" uid="uid://b1b43a1qe8u1t" path="res://scenes/rooms/objects/Wardrobe.tscn" id="cabinet"]
 [ext_resource type="Script" uid="uid://byku8vb135aw5" path="res://scripts/UI/container_panel.gd" id="container"]
+[ext_resource type="Texture2D" uid="uid://cd3ys7o6daln5" path="res://art/items/bedroom/flower.png" id="flower_texture"]
 [ext_resource type="PackedScene" uid="uid://bpngtabee34q0" path="res://scenes/ui/interaction_prompt.tscn" id="interaction_prompt"]
+[ext_resource type="Texture2D" uid="uid://dtbvh5uaokt80" path="res://art/items/bedroom/lamp.png" id="lamp_texture"]
+[ext_resource type="Texture2D" uid="uid://ckuhsrn88jl4w" path="res://art/items/bedroom/map.png" id="map_texture"]
 [ext_resource type="Texture2D" uid="uid://nwvhex7g6qgq" path="res://art/rooms/bedroom/dver (2).png" id="open_door"]
 [ext_resource type="PackedScene" path="res://scenes/characters/svetik.tscn" id="svetik_companion"]
+[ext_resource type="Texture2D" uid="uid://g2wyjg1jcghb" path="res://art/items/bedroom/bear.png" id="teddy_texture"]
 [ext_resource type="Script" uid="uid://bshjoqphy5l4k" path="res://scripts/interaction/window_view.gd" id="window_script"]
-[ext_resource type="Texture2D" path="res://art/items/bedroom/bear.png" id="teddy_texture"]
-[ext_resource type="Texture2D" path="res://art/items/bedroom/beg.png" id="bag_texture"]
-[ext_resource type="Texture2D" path="res://art/items/bedroom/book.png" id="book_texture"]
-[ext_resource type="Texture2D" path="res://art/items/bedroom/flower.png" id="flower_texture"]
-[ext_resource type="Texture2D" path="res://art/items/bedroom/lamp.png" id="lamp_texture"]
-[ext_resource type="Texture2D" path="res://art/items/bedroom/map.png" id="map_texture"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b2v72"]
 size = Vector2(89.5, 98.14264)
@@ -205,47 +199,26 @@ scale = Vector2(0.32, 0.39388022)
 texture = ExtResource("open_door")
 centered = false
 
-<<<<<<< HEAD
 [node name="beg" type="Sprite2D" parent="." unique_id=1237257507]
-position = Vector2(208.81407, 593.29169)
+position = Vector2(208.81407, 593.2917)
 scale = Vector2(0.09069059, 0.08878832)
 texture = ExtResource("bag_texture")
 
-[node name="book" type="Sprite2D" parent="." unique_id=1444996511]
-position = Vector2(1212.70876, 494.29684)
-scale = Vector2(0.06805846, 0.0655204)
-texture = ExtResource("book_texture")
-
-[node name="flower" type="Sprite2D" parent="." unique_id=846574127]
-position = Vector2(641.82284, 430.67448)
-scale = Vector2(0.09884072, 0.0864458)
-texture = ExtResource("flower_texture")
-
-[node name="lamp" type="Sprite2D" parent="." unique_id=936456228]
-position = Vector2(1383.37832, 446.75486)
-scale = Vector2(0.08137886, 0.06874755)
-texture = ExtResource("lamp_texture")
-
-[node name="map" type="Sprite2D" parent="." unique_id=876811089]
-position = Vector2(1021.17136, 336.28967)
-scale = Vector2(0.22123857, 0.20576542)
-texture = ExtResource("map_texture")
-=======
 [node name="bear" type="Sprite2D" parent="." unique_id=1795360650]
 z_index = 1
 position = Vector2(943.99994, 470.99997)
 scale = Vector2(0.06860468, 0.0773175)
-texture = ExtResource("19_ypovm")
+texture = ExtResource("teddy_texture")
 
-[node name="beg" type="Sprite2D" parent="." unique_id=1784082708]
+[node name="beg2" type="Sprite2D" parent="." unique_id=1784082708]
 position = Vector2(211, 590)
 scale = Vector2(0.087628864, 0.096203625)
-texture = ExtResource("20_ug7ds")
+texture = ExtResource("bag_texture")
 
 [node name="book" type="Sprite2D" parent="." unique_id=256590257]
 position = Vector2(1198.0001, 489)
 scale = Vector2(0.07229426, 0.07567648)
-texture = ExtResource("21_bjanb")
+texture = ExtResource("book_texture")
 
 [node name="InteractionArea" type="Area2D" parent="book" unique_id=1509142691]
 script = ExtResource("22_ah6rp")
@@ -258,17 +231,16 @@ shape = SubResource("RectangleShape2D_biue8")
 [node name="flower" type="Sprite2D" parent="." unique_id=251590616]
 position = Vector2(657, 418.99994)
 scale = Vector2(0.08079268, 0.10050042)
-texture = ExtResource("23_3k0fl")
+texture = ExtResource("flower_texture")
 
 [node name="lamp" type="Sprite2D" parent="." unique_id=1938211621]
 position = Vector2(1388, 436.99997)
 scale = Vector2(0.0993366, 0.08224757)
-texture = ExtResource("24_mbbgn")
+texture = ExtResource("lamp_texture")
 
 [node name="map" type="Sprite2D" parent="." unique_id=788447196]
 position = Vector2(1012.00006, 337)
 scale = Vector2(0.21010251, 0.2082972)
-texture = ExtResource("25_lwkqt")
->>>>>>> 787687f (Обновление проекта)
+texture = ExtResource("map_texture")
 
 [editable path="Player"]
