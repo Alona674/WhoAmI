@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://t8svf7fsxox8"]
 
-[ext_resource type="Script" uid="uid://qrq37atdp7tk" path="res://scripts/ui/diary.gd" id="1_bj67o"]
+[ext_resource type="Script" uid="uid://qrq37atdp7tk" path="res://scripts/UI/diary.gd" id="1_bj67o"]
 [ext_resource type="Texture2D" uid="uid://d2xk0jvv7vlgg" path="res://art/items/bedroom/diary_michael.png" id="2_w8mmd"]
+[ext_resource type="Texture2D" uid="uid://ch2vo1jhemlnf" path="res://art/items/bedroom/diary_blank.png" id="3_w8mmd"]
 
 [node name="Diary" type="Control" unique_id=156815132]
 layout_mode = 3
@@ -57,3 +58,12 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 45
 text = "Задания"
+
+[node name="TornPages" type="TextureRect" parent="Background" unique_id=405517503]
+layout_mode = 0
+offset_left = -15.0
+offset_top = 115.0
+offset_right = 1911.0
+offset_bottom = 1002.0
+mouse_filter = 2
+texture = ExtResource("3_w8mmd")

@@ -7,6 +7,8 @@ const SAVE_PATH: String = "user://savegame.json"
 
 var flags: Dictionary = {}
 var inventory: Array[String] = []
+var svetik_has_appeared: bool = false
+var diary_svetik_intro_seen: bool = false
 var inventory_details: Dictionary = {}
 var interaction_hints_enabled: bool = true
 # Состояние вступления в спальне
@@ -66,6 +68,8 @@ func save_game() -> bool:
 		return false
 
 	var save_data: Dictionary = {
+		"diary_svetik_intro_seen": diary_svetik_intro_seen,
+		"svetik_has_appeared": svetik_has_appeared,
 		"scene": current_scene.scene_file_path,
 		"player_position_x": player.global_position.x,
 		"player_position_y": player.global_position.y,
@@ -165,5 +169,11 @@ func load_game() -> bool:
 		has_pending_player_position = false
 		push_warning("Не удалось открыть сохранённую сцену.")
 		return false
+		
+	svetik_has_appeared = save_data.get("svetik_has_appeared", false)
+	
+	diary_svetik_intro_seen = save_data.get(
+		"diary_svetik_intro_seen", false
+	)
 
 	return true

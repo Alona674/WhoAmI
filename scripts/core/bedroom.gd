@@ -4,11 +4,16 @@ extends Node2D
 @onready var svetik = $Svetik
 @onready var dialogue_manager = $DialogueManager
 @onready var prompt: InteractionPrompt = $UILayer/InteractionPrompt
+@onready var diary = $UILayer/Diary
+@onready var diary_button: Button = $UILayer/DiaryButton
 var scene_stage: int = 0
 var busy: bool = false
 
+
 func _ready() -> void:
 	SvetikWorld.restore_room(self)
+	diary_button.pressed.connect(_on_diary_button_pressed)
+	
 	mama.hide()
 	svetik.visible = GameState.bedroom_intro_completed
 	scene_stage = 3 if GameState.bedroom_intro_completed else 0
@@ -96,6 +101,7 @@ func wardrobe_closed() -> void:
 	await get_tree().create_timer(0.3).timeout
 	await say("Светик", "Доброе утро, Михаил.")
 	GameState.bedroom_intro_completed = true
+	GameState.svetik_has_appeared = true
 	svetik.start_following()
 	scene_stage = 3
 	busy = false
@@ -107,3 +113,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		$UILayer/PauseMenu.show()
 		get_tree().paused = true
 		get_viewport().set_input_as_handled()
+		
+func _on_diary_button_pressed() -> void:
+	diary.toggle_diary()
