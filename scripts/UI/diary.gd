@@ -9,8 +9,8 @@ signal diary_closed
 @onready var right_page: Control = $Background/RightPage
 @onready var history_text: RichTextLabel = $Background/LeftPage/HistoryText
 @onready var quest_text: RichTextLabel = $Background/RightPage/QuestText
-@onready var page_turn: TextureRect = $Background/PageTurn
-@onready var page_turn_back: TextureRect = $Background/PageTurnBack
+@onready var page_turn: TextureRect = $Background/LeftPage/PageTurn
+@onready var page_turn_back: TextureRect = $Background/RightPage/PageTurnBack
 
 const DIARY_MICHAEL: Texture2D = preload("res://art/items/bedroom/diary_blank.png")
 const DIARY_BLANK: Texture2D = preload("res://art/items/bedroom/diary_michael.png")
@@ -37,18 +37,6 @@ func _ready() -> void:
 
 	page_turn.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	page_turn_back.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	
-	page_turn.pivot_offset = Vector2(0, page_turn.size.y / 2.0)
-
-	page_turn_back.pivot_offset = Vector2(
-		page_turn_back.size.x,
-		page_turn_back.size.y / 2.0
-	)
-	
-	page_turn.pivot_offset = Vector2(
-		page_turn.size.x,
-		page_turn.size.y / 2.0
-	)
 	
 	torn_pages.hide()
 	
@@ -343,17 +331,12 @@ func animate_page_turn(is_right: bool) -> void:
 
 	turning_page = true
 
-	var page: TextureRect
-
-	if is_right:
-		page = page_turn
-		page.pivot_offset = Vector2(page.size.x, page.size.y / 2.0)
-	else:
-		page = page_turn_back
-		page.pivot_offset = Vector2(0, page.size.y / 2.0)
-
+	# Transform the page and its text together around the book spine.
+	var page: Control = right_page if is_right else left_page
+	var overlay: TextureRect = page_turn_back if is_right else page_turn
+	page.pivot_offset = Vector2(0 if is_right else page.size.x, page.size.y / 2.0)
 	page.scale.x = 1.0
-	page.show()
+	overlay.show()
 
 	# Страница складывается.
 	var tween := create_tween()
@@ -383,5 +366,5 @@ func animate_page_turn(is_right: bool) -> void:
 
 	await tween_back.finished
 
-	page.hide()
+	overlay.hide()
 	turning_page = false
