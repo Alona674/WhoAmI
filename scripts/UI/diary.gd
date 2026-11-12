@@ -68,7 +68,7 @@ func _ready() -> void:
 
 
 func open_diary() -> void:
-	if visible:
+	if visible or _is_editing_text() or _is_dialogue_active():
 		return
 
 	show()
@@ -76,6 +76,19 @@ func open_diary() -> void:
 
 	if GameState.svetik_has_appeared and not GameState.diary_svetik_intro_seen:
 		await play_svetik_page_scene()
+
+
+func _is_editing_text() -> bool:
+	var focus := get_viewport().gui_get_focus_owner()
+	return focus is LineEdit or focus is TextEdit
+
+
+func _is_dialogue_active() -> bool:
+	var scene := get_tree().current_scene
+	if scene == null:
+		return false
+	var dialogue := scene.get_node_or_null("DialogueManager")
+	return dialogue != null and (dialogue.is_open or dialogue.closing)
 
 
 func close_diary() -> void:
@@ -226,6 +239,8 @@ func play_svetik_page_scene() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("open_diary") and not event.is_echo():
+		if _is_editing_text() or (not visible and _is_dialogue_active()):
+			return
 		toggle_diary()
 		get_viewport().set_input_as_handled()
 		return
