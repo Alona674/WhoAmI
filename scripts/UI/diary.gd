@@ -285,6 +285,12 @@ func _input(event: InputEvent) -> void:
 	if not visible:
 		return
 
+	if event.is_action_pressed("ui_cancel") and not event.is_echo():
+		close_diary()
+		# Also consume Esc during an animation, while closing is blocked.
+		get_viewport().set_input_as_handled()
+		return
+
 	# Keep gameplay windows from taking control while the diary owns movement.
 	if event.is_action("chat") or event.is_action("inventory") or event.is_action("interact"):
 		get_viewport().set_input_as_handled()
