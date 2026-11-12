@@ -170,7 +170,8 @@ func load_game() -> bool:
 		push_warning("Не удалось открыть сохранённую сцену.")
 		return false
 		
-	svetik_has_appeared = save_data.get("svetik_has_appeared", false)
+	# Saves from before the diary used the bedroom intro as the greeting flag.
+	svetik_has_appeared = save_data.get("svetik_has_appeared", bedroom_intro_completed)
 	
 	diary_svetik_intro_seen = save_data.get(
 		"diary_svetik_intro_seen", false
