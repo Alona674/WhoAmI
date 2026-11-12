@@ -20,12 +20,18 @@ var turning_page: bool = false
 var locked_player: CharacterBody2D
 
 # История Светика
-var history_pages: Array[String] = [""]
+var history_pages: Array[String]:
+	get:
+		return GameState.diary_history_pages
 var history_page_index: int = 0
 
 # Задания
-var active_quests: Array[Dictionary] = []
-var completed_quests: Array[Dictionary] = []
+var active_quests: Array[Dictionary]:
+	get:
+		return GameState.diary_active_quests
+var completed_quests: Array[Dictionary]:
+	get:
+		return GameState.diary_completed_quests
 var quest_page_index: int = 0
 
 
