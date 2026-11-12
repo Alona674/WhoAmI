@@ -139,11 +139,11 @@ func toggle_diary() -> void:
 
 # Добавить запись в историю Светика
 func add_history_entry(entry: String) -> void:
-	if history_pages[history_page_index] != "":
-		history_pages.append("")
-		history_page_index += 1
-
-	history_pages[history_page_index] = entry
+	if history_pages.size() == 1 and history_pages[0].is_empty():
+		history_pages[0] = entry
+	else:
+		history_pages.append(entry)
+	history_page_index = history_pages.size() - 1
 	_update_pages()
 
 
