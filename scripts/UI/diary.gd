@@ -11,6 +11,11 @@ signal diary_closed
 @onready var quest_text: RichTextLabel = $Background/RightPage/QuestText
 @onready var page_turn: TextureRect = $Background/LeftPage/PageTurn
 @onready var page_turn_back: TextureRect = $Background/RightPage/PageTurnBack
+@onready var navigation: Control = $Background/Navigation
+@onready var history_previous: Button = $Background/Navigation/History/Previous
+@onready var history_next: Button = $Background/Navigation/History/Next
+@onready var history_counter: Label = $Background/Navigation/History/Counter
+@onready var quests_toggle: Button = $Background/Navigation/QuestsToggle
 
 const DIARY_MICHAEL: Texture2D = preload("res://art/items/bedroom/diary_blank.png")
 const DIARY_BLANK: Texture2D = preload("res://art/items/bedroom/diary_michael.png")
@@ -50,6 +55,9 @@ func _ready() -> void:
 
 	history_text.bbcode_enabled = true
 	quest_text.bbcode_enabled = true
+	history_previous.pressed.connect(func(): animate_page_turn(false, -1))
+	history_next.pressed.connect(func(): animate_page_turn(false, 1))
+	quests_toggle.pressed.connect(func(): animate_page_turn(true))
 
 	if GameState.diary_svetik_intro_seen:
 		spread.texture = DIARY_BLANK
@@ -172,6 +180,7 @@ func complete_quest(title: String) -> void:
 func _update_pages() -> void:
 	if history_pages.is_empty():
 		history_pages.append("")
+	_update_navigation()
 
 	history_text.text = history_pages[history_page_index]
 	quest_text.text = ""
@@ -193,6 +202,15 @@ func _update_pages() -> void:
 		for quest in completed_quests:
 			quest_text.text += "[b]" + quest["title"] + "[/b]\n"
 			quest_text.text += quest["description"] + "\n\n"
+
+
+func _update_navigation() -> void:
+	navigation.visible = GameState.diary_svetik_intro_seen
+	history_previous.disabled = turning_page or history_page_index <= 0
+	history_next.disabled = turning_page or history_page_index >= history_pages.size() - 1
+	history_counter.text = "%d / %d" % [history_page_index + 1, history_pages.size()]
+	quests_toggle.disabled = turning_page
+	quests_toggle.text = "Выполненные задания →" if quest_page_index == 0 else "← Активные задания"
 
 func turn_history(direction: int) -> void:
 	var new_index: int = history_page_index + direction
@@ -303,11 +321,11 @@ func _input(event: InputEvent) -> void:
 			return
 
 		if event.keycode == KEY_LEFT:
-			animate_page_turn(false)
+			animate_page_turn(false, -1)
 			get_viewport().set_input_as_handled()
 
 		elif event.keycode == KEY_RIGHT:
-			animate_page_turn(true)
+			animate_page_turn(false, 1)
 			get_viewport().set_input_as_handled()
 
 	# Перелистывание мышью
@@ -318,24 +336,32 @@ func _input(event: InputEvent) -> void:
 		if not GameState.diary_svetik_intro_seen:
 			return
 
-		var diary_rect = spread.get_global_rect()
-
-		if not diary_rect.has_point(event.position):
-			return
-
-		if event.position.x < diary_rect.get_center().x:
-			animate_page_turn(false)
-		else:
+		# Leave scrollbars and navigation buttons to the GUI.
+		for label in [history_text, quest_text]:
+			var scrollbar = label.get_v_scroll_bar()
+			if scrollbar.is_visible_in_tree() and scrollbar.get_global_rect().has_point(event.position):
+				return
+		var history_rect := left_page.get_global_rect()
+		if history_rect.has_point(event.position):
+			animate_page_turn(false, -1 if event.position.x < history_rect.get_center().x else 1)
+		elif right_page.get_global_rect().has_point(event.position):
 			animate_page_turn(true)
+		else:
+			return
 
 		get_viewport().set_input_as_handled()
 			
 
-func animate_page_turn(is_right: bool) -> void:
+func animate_page_turn(is_right: bool, history_direction: int = -1) -> void:
 	if turning_page or not GameState.diary_svetik_intro_seen:
 		return
+	if not is_right:
+		var next_index := history_page_index + history_direction
+		if next_index < 0 or next_index >= history_pages.size():
+			return
 
 	turning_page = true
+	_update_navigation()
 
 	# Transform the page and its text together around the book spine.
 	var page: Control = right_page if is_right else left_page
@@ -359,7 +385,7 @@ func animate_page_turn(is_right: bool) -> void:
 	if is_right:
 		turn_quests()
 	else:
-		turn_history(-1)
+		turn_history(history_direction)
 
 	# Страница раскрывается обратно.
 	var tween_back := create_tween()
@@ -374,3 +400,4 @@ func animate_page_turn(is_right: bool) -> void:
 
 	overlay.hide()
 	turning_page = false
+	_update_navigation()
