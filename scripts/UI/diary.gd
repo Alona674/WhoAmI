@@ -182,7 +182,7 @@ func _update_pages() -> void:
 		history_pages.append("")
 	_update_navigation()
 
-	history_text.text = history_pages[history_page_index]
+	history_text.text = ""
 	quest_text.text = ""
 
 	# Пока Светик не закончил переделывать дневник,
@@ -190,6 +190,7 @@ func _update_pages() -> void:
 	if not GameState.diary_svetik_intro_seen:
 		return
 
+	history_text.text = history_pages[history_page_index]
 	if quest_page_index == 0:
 		quest_text.text = "[center][b]АКТИВНЫЕ ЗАДАНИЯ[/b][/center]\n\n"
 
