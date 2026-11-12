@@ -17,6 +17,7 @@ const DIARY_BLANK: Texture2D = preload("res://art/items/bedroom/diary_michael.pn
 
 var page_scene_playing: bool = false
 var turning_page: bool = false
+var locked_player: CharacterBody2D
 
 # История Светика
 var history_pages: Array[String] = [""]
@@ -68,8 +69,18 @@ func _ready() -> void:
 
 
 func open_diary() -> void:
-	if visible or _is_editing_text() or _is_dialogue_active():
+	if visible or _is_editing_text() or _has_other_modal() or get_tree().paused:
 		return
+
+	var player := get_tree().get_first_node_in_group("player") as CharacterBody2D
+	if player != null:
+		if not player.can_move:
+			return
+		locked_player = player
+		locked_player.can_move = false
+		locked_player.velocity = Vector2.ZERO
+		if is_instance_valid(locked_player.interaction_prompt):
+			locked_player.interaction_prompt.hide()
 
 	show()
 	_update_pages()
@@ -91,11 +102,37 @@ func _is_dialogue_active() -> bool:
 	return dialogue != null and (dialogue.is_open or dialogue.closing)
 
 
+func _has_other_modal() -> bool:
+	if _is_dialogue_active():
+		return true
+	var scene := get_tree().current_scene
+	if scene == null:
+		return false
+	if scene.get("busy") == true:
+		return true
+	for path in ["UILayer/WindowView", "UILayer/ContainerPanel", "UILayer/PauseMenu"]:
+		var panel := scene.get_node_or_null(path) as Control
+		if panel != null and panel.visible:
+			return true
+	return false
+
+
+func _release_player() -> void:
+	if is_instance_valid(locked_player) and not _has_other_modal():
+		locked_player.can_move = true
+	locked_player = null
+
+
+func _exit_tree() -> void:
+	_release_player()
+
+
 func close_diary() -> void:
 	if page_scene_playing or turning_page:
 		return
 
 	hide()
+	_release_player()
 	diary_closed.emit()
 
 
@@ -245,7 +282,14 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 
-	if not visible or page_scene_playing or turning_page:
+	if not visible:
+		return
+
+	# Keep gameplay windows from taking control while the diary owns movement.
+	if event.is_action("chat") or event.is_action("inventory") or event.is_action("interact"):
+		get_viewport().set_input_as_handled()
+
+	if page_scene_playing or turning_page:
 		return
 
 	if event.is_action_pressed("interact") and not event.is_echo():
