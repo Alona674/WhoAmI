@@ -9,6 +9,9 @@ var flags: Dictionary = {}
 var inventory: Array[String] = []
 var svetik_has_appeared: bool = false
 var diary_svetik_intro_seen: bool = false
+var diary_history_pages: Array[String] = [""]
+var diary_active_quests: Array[Dictionary] = []
+var diary_completed_quests: Array[Dictionary] = []
 var inventory_details: Dictionary = {}
 var interaction_hints_enabled: bool = true
 # Состояние вступления в спальне
@@ -70,6 +73,11 @@ func save_game() -> bool:
 	var save_data: Dictionary = {
 		"diary_svetik_intro_seen": diary_svetik_intro_seen,
 		"svetik_has_appeared": svetik_has_appeared,
+		"diary": {
+			"history": diary_history_pages,
+			"active_quests": diary_active_quests,
+			"completed_quests": diary_completed_quests,
+		},
 		"scene": current_scene.scene_file_path,
 		"player_position_x": player.global_position.x,
 		"player_position_y": player.global_position.y,
@@ -170,10 +178,35 @@ func load_game() -> bool:
 		push_warning("Не удалось открыть сохранённую сцену.")
 		return false
 		
-	svetik_has_appeared = save_data.get("svetik_has_appeared", false)
+	# Saves from before the diary used the bedroom intro as the greeting flag.
+	svetik_has_appeared = save_data.get("svetik_has_appeared", bedroom_intro_completed)
 	
 	diary_svetik_intro_seen = save_data.get(
 		"diary_svetik_intro_seen", false
 	)
+	_load_diary_content(save_data.get("diary", {}))
 
 	return true
+
+
+func _load_diary_content(value: Variant) -> void:
+	var data: Dictionary = value if value is Dictionary else {}
+	diary_history_pages.clear()
+	var history = data.get("history", [])
+	if history is Array:
+		for entry in history:
+			if entry is String:
+				diary_history_pages.append(entry)
+	if diary_history_pages.is_empty():
+		diary_history_pages.append("")
+	_load_diary_quests(data.get("active_quests", []), diary_active_quests)
+	_load_diary_quests(data.get("completed_quests", []), diary_completed_quests)
+
+
+func _load_diary_quests(value: Variant, target: Array[Dictionary]) -> void:
+	target.clear()
+	if not value is Array:
+		return
+	for quest in value:
+		if quest is Dictionary and quest.get("title") is String and quest.get("description") is String:
+			target.append({"title": quest["title"], "description": quest["description"]})
