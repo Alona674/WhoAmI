@@ -36,7 +36,7 @@ size = Vector2(516.0989, 1424.7606)
 size = Vector2(219, 726)
 
 [sub_resource type="RectangleShape2D" id="window_shape"]
-size = Vector2(120, 300)
+size = Vector2(89, 333)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_biue8"]
 size = Vector2(1644.1338, 553.38696)
@@ -45,6 +45,8 @@ size = Vector2(1644.1338, 553.38696)
 script = ExtResource("1_thvn2")
 
 [node name="Background" type="Sprite2D" parent="." unique_id=815008149]
+position = Vector2(18, 38)
+scale = Vector2(1, 1.0065963)
 texture = ExtResource("2_1wu2a")
 centered = false
 
@@ -56,6 +58,15 @@ left_limit = 80.0
 right_limit = 1995.0
 floor_y = 706.0
 
+[node name="Sprite2D" parent="Player" index="0" unique_id=110808135]
+position = Vector2(1.9999999, -119)
+
+[node name="CollisionShape2D" parent="Player" index="1" unique_id=1510550749]
+position = Vector2(2, -111)
+
+[node name="CollisionShape2D" parent="Player/InteractionArea" parent_id_path=PackedInt32Array(32208314, 1163850667) index="0" unique_id=206142140]
+position = Vector2(2.5, -110.25)
+
 [node name="Camera2D" parent="Player" index="3" unique_id=380615917]
 limit_right = 2075
 limit_bottom = 758
@@ -66,14 +77,9 @@ scale = Vector2(0.74528, 0.69915)
 script = ExtResource("4_khs6t")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Teddy" unique_id=229909424]
-position = Vector2(41.84607, 332.97803)
+position = Vector2(63.31451, 389.74966)
 scale = Vector2(1, 0.99999994)
 shape = SubResource("RectangleShape2D_b2v72")
-
-[node name="Sprite2D" type="Sprite2D" parent="Teddy" unique_id=1224593710]
-position = Vector2(41.84607, 332.97803)
-scale = Vector2(0.075, 0.08)
-texture = ExtResource("teddy_texture")
 
 [node name="DialogueManager" parent="." unique_id=1465301247 instance=ExtResource("6_u2o5o")]
 script = ExtResource("7_v47ap")
@@ -84,13 +90,13 @@ script = ExtResource("8_ohr7v")
 
 [node name="Sprite2D" type="Sprite2D" parent="Mama" unique_id=140265819]
 z_index = 1
-position = Vector2(-467, -179)
+position = Vector2(-471, -143)
 scale = Vector2(0.22, 0.22)
 texture = ExtResource("9_63ydc")
 flip_h = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Mama" unique_id=906429439]
-position = Vector2(-467.7709, -167.2763)
+position = Vector2(-468, -130)
 scale = Vector2(0.22, 0.22)
 shape = SubResource("RectangleShape2D_ispgn")
 
@@ -157,6 +163,7 @@ text = "E / Esc — Вернуться в комнату"
 horizontal_alignment = 1
 
 [node name="Diary" parent="UILayer" unique_id=156815132 instance=ExtResource("15_ykv2i")]
+visible = false
 
 [node name="DiaryButton" type="Button" parent="UILayer" unique_id=1455249297]
 custom_minimum_size = Vector2(160, 55)
@@ -178,45 +185,40 @@ position = Vector2(1930, 450)
 script = ExtResource("window_script")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WindowArea" unique_id=1232820988]
-position = Vector2(48, -125)
+position = Vector2(78.5, -101.5)
 shape = SubResource("window_shape")
 
 [node name="InteractionPromptAnchor" type="Marker2D" parent="WindowArea" unique_id=1772969386]
 position = Vector2(0, -220)
 
 [node name="DoorOpen" type="Node2D" parent="." unique_id=1894370306]
-visible = false
 
 [node name="Interior" type="Polygon2D" parent="DoorOpen" unique_id=1016054044]
-position = Vector2(-10, 4)
+position = Vector2(10, 45.618942)
+scale = Vector2(1, 1.0066079)
 color = Color(0.035, 0.025, 0.02, 1)
 polygon = PackedVector2Array(49, 209, 143, 235, 143, 638, 49, 663)
 
 [node name="Door" type="Sprite2D" parent="DoorOpen" unique_id=107707869]
 z_index = 2
-position = Vector2(-118, 136)
+position = Vector2(-99, 183)
 scale = Vector2(0.32, 0.39388022)
 texture = ExtResource("open_door")
 centered = false
 
 [node name="beg" type="Sprite2D" parent="." unique_id=1237257507]
-position = Vector2(208.81407, 593.2917)
+position = Vector2(215.00002, 634)
 scale = Vector2(0.09069059, 0.08878832)
 texture = ExtResource("bag_texture")
 
 [node name="bear" type="Sprite2D" parent="." unique_id=1795360650]
 z_index = 1
-position = Vector2(943.99994, 470.99997)
-scale = Vector2(0.06860468, 0.0773175)
+position = Vector2(960, 509.00003)
+scale = Vector2(0.06763566, 0.06983185)
 texture = ExtResource("teddy_texture")
 
-[node name="beg2" type="Sprite2D" parent="." unique_id=1784082708]
-position = Vector2(211, 590)
-scale = Vector2(0.087628864, 0.096203625)
-texture = ExtResource("bag_texture")
-
 [node name="book" type="Sprite2D" parent="." unique_id=256590257]
-position = Vector2(1198.0001, 489)
+position = Vector2(1202, 529)
 scale = Vector2(0.07229426, 0.07567648)
 texture = ExtResource("book_texture")
 
@@ -224,23 +226,35 @@ texture = ExtResource("book_texture")
 script = ExtResource("22_ah6rp")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="book/InteractionArea" unique_id=1060195439]
-position = Vector2(-33.625, -14.018066)
+position = Vector2(13.832547, 0.00018310547)
 scale = Vector2(0.99999976, 0.99999976)
 shape = SubResource("RectangleShape2D_biue8")
 
 [node name="flower" type="Sprite2D" parent="." unique_id=251590616]
-position = Vector2(657, 418.99994)
-scale = Vector2(0.08079268, 0.10050042)
+position = Vector2(654, 474)
+scale = Vector2(0.08079268, 0.07944117)
 texture = ExtResource("flower_texture")
 
 [node name="lamp" type="Sprite2D" parent="." unique_id=1938211621]
-position = Vector2(1388, 436.99997)
-scale = Vector2(0.0993366, 0.08224757)
+position = Vector2(1397.0001, 491)
+scale = Vector2(0.06606182, 0.060667746)
 texture = ExtResource("lamp_texture")
 
 [node name="map" type="Sprite2D" parent="." unique_id=788447196]
-position = Vector2(1012.00006, 337)
+position = Vector2(1039, 380)
 scale = Vector2(0.21010251, 0.2082972)
 texture = ExtResource("map_texture")
+
+[node name="IntroFade" type="CanvasLayer" parent="." unique_id=1345472615]
+layer = 10
+visible = false
+
+[node name="Fade" type="ColorRect" parent="IntroFade" unique_id=557448185]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
 
 [editable path="Player"]

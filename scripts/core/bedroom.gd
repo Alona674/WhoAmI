@@ -11,6 +11,20 @@ var busy: bool = false
 
 
 func _ready() -> void:
+	var intro_fade: ColorRect = $IntroFade/Fade
+
+	if GameState.intro_fade_pending:
+		intro_fade.modulate.a = 1.0
+		GameState.intro_fade_pending = false
+
+		var tween := create_tween()
+		tween.tween_property(intro_fade, "modulate:a", 0.0, 2.5)
+
+		await tween.finished
+		intro_fade.queue_free()
+	else:
+		intro_fade.queue_free()
+		
 	SvetikWorld.restore_room(self)
 	diary_button.pressed.connect(_on_diary_button_pressed)
 	

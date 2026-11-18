@@ -14,6 +14,7 @@ var diary_active_quests: Array[Dictionary] = []
 var diary_completed_quests: Array[Dictionary] = []
 var inventory_details: Dictionary = {}
 var interaction_hints_enabled: bool = true
+var intro_fade_pending: bool = false
 # Состояние вступления в спальне
 var bedroom_intro_completed: bool = false
 

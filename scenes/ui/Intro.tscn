@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://dt47yh0iwir0"]
+
+[ext_resource type="Script" uid="uid://ddmxti6ny68ff" path="res://scenes/ui/intro.gd" id="1_h5dgs"]
+[ext_resource type="FontFile" uid="uid://c6nq3oblim1n3" path="res://assets/fonts/21063.otf" id="2_rm0p8"]
+
+[node name="Intro" type="Control" unique_id=1137335719]
+custom_minimum_size = Vector2(1, 0)
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_h5dgs")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1962108974]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1925.0
+offset_bottom = 1090.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="StoryText" type="RichTextLabel" parent="." unique_id=158832134]
+custom_minimum_size = Vector2(1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = 38.0
+offset_right = 1859.0
+offset_bottom = 1057.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0.6484881, 0.6484881, 0.6484881, 1)
+theme_override_fonts/normal_font = ExtResource("2_rm0p8")
+theme_override_font_sizes/normal_font_size = 38
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ContinueHint" type="Label" parent="." unique_id=1783736188]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 23.0
+offset_right = 838.0
+offset_bottom = 416.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=758846006]
+
+[node name="Fade" type="ColorRect" parent="." unique_id=1822330056]
+z_index = 100
+layout_mode = 0
+offset_right = 1933.0
+offset_bottom = 1092.0
+color = Color(0, 0, 0, 1)
